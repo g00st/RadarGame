@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadarGame", "RadarGame\RadarGame.csproj", "{04170AA1-7098-4C51-9354-C3080A5DC1FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{CF91AD22-B0DF-4258-8E8F-E84EA65E77B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04170AA1-7098-4C51-9354-C3080A5DC1FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04170AA1-7098-4C51-9354-C3080A5DC1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04170AA1-7098-4C51-9354-C3080A5DC1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04170AA1-7098-4C51-9354-C3080A5DC1FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF91AD22-B0DF-4258-8E8F-E84EA65E77B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF91AD22-B0DF-4258-8E8F-E84EA65E77B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF91AD22-B0DF-4258-8E8F-E84EA65E77B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF91AD22-B0DF-4258-8E8F-E84EA65E77B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
