@@ -23,7 +23,7 @@ public class App : EngineWindow
         double time = args.Time;  
         base.OnUpdateFrame(args);
         
-        PhysicsSystem.Update(time);
+        PhysicsSystem.PhysicsSystem.Update(time);
         
         
        
