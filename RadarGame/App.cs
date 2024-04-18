@@ -8,7 +8,7 @@ namespace RadarGame;
 
 public class App : EngineWindow
 {
-    private PhysicsSystem.PhysicsSystem _physicsSystem = new PhysicsSystem.PhysicsSystem();
+    
     
     public App() : base(1000, 1000, "Radargame")
     {
@@ -23,7 +23,7 @@ public class App : EngineWindow
         double time = args.Time;  
         base.OnUpdateFrame(args);
         
-        _physicsSystem.Update(time);
+        PhysicsSystem.Update(time);
         
         
        

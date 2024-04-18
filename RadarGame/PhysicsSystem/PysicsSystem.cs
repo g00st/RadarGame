@@ -1,9 +1,9 @@
 namespace RadarGame.PhysicsSystem;
 
-public class PhysicsSystem
+public  static class PhysicsSystem
 {
-    private readonly List<IPhysicsObject> _physicsObjects = new List<IPhysicsObject>();
-    public void Update( double deltaTime)
+    private static readonly List<IPhysicsObject> _physicsObjects = new List<IPhysicsObject>();
+    public static void Update( double deltaTime)
     {
         foreach (var physicsObject in _physicsObjects)
         {
@@ -15,16 +15,16 @@ public class PhysicsSystem
         }
         Console.WriteLine("PhysicsSystem Update");
     }
-    public void AddObject(IPhysicsObject physicsObject)
+    public static void AddObject(IPhysicsObject physicsObject)
     {
         _physicsObjects.Add(physicsObject);
     }
-    public void RemoveObject(IPhysicsObject physicsObject)
+    public static void RemoveObject(IPhysicsObject physicsObject)
     {
         _physicsObjects.Remove(physicsObject);
     }
     
-    public void ClearObjects()
+    public static void ClearObjects()
     {
         _physicsObjects.Clear();
     }

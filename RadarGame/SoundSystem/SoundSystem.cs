@@ -1,6 +1,6 @@
 namespace RadarGame.SoundSystem;
 
-public class SoundSystem
+public static  class SoundSystem
 {
     
 }

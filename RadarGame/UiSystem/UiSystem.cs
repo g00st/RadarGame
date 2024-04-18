@@ -1,6 +1,6 @@
 namespace RadarGame.UiSystem;
 
-public class UiSystem
+public static class UiSystem
 {
     
 }
