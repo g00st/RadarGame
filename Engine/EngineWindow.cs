@@ -47,7 +47,6 @@ public class EngineWindow : GameWindow
         _controller.Update(this, (float)args.Time);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
         MainView.draw();
-            
         DrawInfo.darwImguiDebugWindow();
         ImGuiController.CheckGLError("End of frame");
         _controller.Render();
