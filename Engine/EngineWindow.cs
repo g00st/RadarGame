@@ -50,7 +50,7 @@ public class EngineWindow : GameWindow
         DrawInfo.darwImguiDebugWindow();
         ImGuiController.CheckGLError("End of frame");
         _controller.Render();
-        this.SwapBuffers();
+        
 
     }
 

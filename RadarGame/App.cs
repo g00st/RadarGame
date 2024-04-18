@@ -1,3 +1,4 @@
+using App.Engine;
 using App.Engine.Template;
 using Engine;
 using OpenTK.Mathematics;
@@ -9,10 +10,12 @@ namespace RadarGame;
 public class App : EngineWindow
 {
     ColoredRectangle test;   
+    TexturedRectangle test2;
     
     public App() : base(1000, 1000, "Radargame")
     {
          test = new ColoredRectangle(new Vector2(0f, 0f), new Vector2(100f, 100f), Color4.Aqua);
+         test2  =new TexturedRectangle(new Vector2(0f, 0f), new Vector2(100f, 100f), new Texture("resources/lol.jpg"));
         
         
         
@@ -32,6 +35,10 @@ public class App : EngineWindow
     {
         base.OnRenderFrame(args);
         MainView.draw(test);
+        MainView.draw(test2);
+        
+        this.SwapBuffers();
+
     }
     
     
