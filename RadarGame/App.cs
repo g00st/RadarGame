@@ -8,12 +8,12 @@ namespace RadarGame;
 
 public class App : EngineWindow
 {
-    
+    ColoredRectangle test;   
     
     public App() : base(1000, 1000, "Radargame")
     {
-        ColoredRectangle test = new ColoredRectangle(new Vector2(0f, 0f), new Vector2(100f, 100f), Color4.Aqua);
-        MainView.addObject(test);
+         test = new ColoredRectangle(new Vector2(0f, 0f), new Vector2(100f, 100f), Color4.Aqua);
+        
         
         
     }
@@ -25,9 +25,13 @@ public class App : EngineWindow
         
         PhysicsSystem.PhysicsSystem.Update(time);
         
-        
-       
                         
+    }
+    
+    protected override void OnRenderFrame(FrameEventArgs args)
+    {
+        base.OnRenderFrame(args);
+        MainView.draw(test);
     }
     
     
