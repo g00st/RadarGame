@@ -1,3 +1,7 @@
+
+using ImGuiNET;
+using OpenTK.Mathematics;
+
 namespace RadarGame.PhysicsSystem;
 
 public  static class PhysicsSystem
@@ -32,5 +36,41 @@ public  static class PhysicsSystem
     {
         _physicsObjects.Clear();
     }
-    
+
+    public static void DebugDraw()
+    {
+        ImGui.Begin("Physics Debug Window");
+        ImGui.BeginChild("scrolling", new System.Numerics.Vector2(0, 0), ImGuiChildFlags.Border,
+            ImGuiWindowFlags.HorizontalScrollbar);
+
+        foreach (var physicsObject in _physicsObjects)
+        {
+            if (ImGui.CollapsingHeader(physicsObject.Name))
+            {
+                ImGui.PushID(physicsObject.GetHashCode());
+                System.Numerics.Vector2 position =
+                    new System.Numerics.Vector2(physicsObject.Position.X, physicsObject.Position.Y);
+                ImGui.Text("Position X: " + physicsObject.Position.X + " Y: " + physicsObject.Position.Y);
+                ImGui.Text("Velocity X: " + physicsObject.PhysicsData.Velocity.X + " Y: " +
+                           physicsObject.PhysicsData.Velocity.Y);
+                ImGui.Text("Acceleration X: " + physicsObject.PhysicsData.Acceleration.X + " Y: " +
+                           physicsObject.PhysicsData.Acceleration.Y);
+                ImGui.Text("Angular Velocity: " + physicsObject.PhysicsData.AngularVelocity);
+                ImGui.Text("Angular Acceleration: " + physicsObject.PhysicsData.AngularAcceleration);
+                ImGui.Text("Rotation: " + physicsObject.Rotation);
+                ImGui.Text("Mass: " + physicsObject.PhysicsData.Mass);
+                ImGui.Text("Drag: " + physicsObject.PhysicsData.Drag);
+                ImGui.Text("Center X: " + physicsObject.Center.X + " Y: " + physicsObject.Center.Y);
+                ImGui.PopID();
+             
+              
+            }  
+            
+        }
+        ImGui.EndChild();
+        ImGui.End();
+        
+        
+    }
+
 }

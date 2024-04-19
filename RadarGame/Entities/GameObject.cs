@@ -1,27 +1,34 @@
 using App.Engine;
 using OpenTK.Mathematics;
 using App.Engine.Template;
+using OpenTK.Windowing.Common;
 using RadarGame.PhysicsSystem;
 
 namespace RadarGame.Entities;
 
 public class GameObject : IEntitie, IPhysicsObject , IDrawObject
 {
-    public ColoredRectangle DebugColoredRectangle { get; set; }
+    public TexturedRectangle DebugColoredRectangle { get; set; }
     
     public PhysicsDataS PhysicsData { get; set; }
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
     public float Rotation { get; set; }
-    
-    public GameObject()
+    public string Name { get; set; }
+
+    public GameObject( Vector2 position, float rotation, string name)
     {
-        PhysicsData = PhysicsData with { Acceleration = new Vector2(0,1) };  
-        DebugColoredRectangle = new ColoredRectangle(new OpenTK.Mathematics.Vector2(0f, 0f), new OpenTK.Mathematics.Vector2(100f, 100f), OpenTK.Mathematics.Color4.Aqua);
+        Position = position;
+        Rotation = rotation;
+        Name = name;
+        Random random = new Random();
+        PhysicsData = PhysicsData with { Acceleration = new Vector2((float)random.NextDouble()*2-1 ,(float)random.NextDouble()*2-1) };  
+        DebugColoredRectangle = new TexturedRectangle(new OpenTK.Mathematics.Vector2(0f, 0f), new OpenTK.Mathematics.Vector2(200f, 200f), new Texture("resources/lol.jpg"), Name);
     }
+    
 
 
-    public void Update(double deltaTime)
+    public void Update(FrameEventArgs args)
     {
         DebugColoredRectangle.drawInfo.Position = Position;
         DebugColoredRectangle.drawInfo.Rotation = Rotation;

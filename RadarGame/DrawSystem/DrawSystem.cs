@@ -22,4 +22,9 @@ public static class DrawSystem
     {
         _drawObjects.Remove(drawObject);
     }
+    
+    public static void ClearObjects()
+    {
+        _drawObjects.Clear();
+    }
 }

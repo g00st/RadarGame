@@ -1,10 +1,11 @@
 ﻿using App.Engine;
+using App.Engine.ImGuisStuff;
 using ImGuiNET;
 using OpenTK.Mathematics;
 
 namespace App.Engine;
 
-public class DrawInfo
+public class DrawInfo 
 {
     static List<DrawInfo> _drawInfos = new List<DrawInfo>();
     public Vector2 Position;
@@ -28,7 +29,7 @@ public class DrawInfo
         _drawInfos.Remove(this);
     }
     
-   public static void darwImguiDebugWindow()
+   public static void DebugDraw()
 {
     ImGui.Begin("Debug Window");
     ImGui.BeginChild("scrolling", new System.Numerics.Vector2(0, 0), ImGuiChildFlags.Border, ImGuiWindowFlags.HorizontalScrollbar);

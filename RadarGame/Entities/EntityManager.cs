@@ -1,3 +1,4 @@
+using OpenTK.Windowing.Common;
 using RadarGame.PhysicsSystem;
 
 namespace RadarGame.Entities;
@@ -8,11 +9,11 @@ public static class EntityManager
     
     
 
-    public static void Update(double deltaTime)
+    public static void Update(FrameEventArgs args)
     {
         foreach (var gameObject in GameObjects)
         {
-            gameObject.Update(deltaTime);
+            gameObject.Update(args);
         }
     }
     
@@ -41,5 +42,12 @@ public static class EntityManager
         {
             DrawSystem.DrawSystem.RemoveObject(drawObject);
         }
+    }
+    
+    public static void ClearObjects()
+    {
+        GameObjects.Clear();
+        PhysicsSystem.PhysicsSystem.ClearObjects();
+        DrawSystem.DrawSystem.ClearObjects();
     }
 }

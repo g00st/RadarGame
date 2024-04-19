@@ -5,7 +5,6 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using RadarGame.Entities;
-using RadarGame.PhysicsSystem;
 using RadarGame.DrawSystem;
 
 namespace RadarGame;
@@ -18,10 +17,13 @@ public class App : EngineWindow
     
     public App() : base(1000, 1000, "Radargame")
     {
-         test = new ColoredRectangle(new Vector2(0f, 0f), new Vector2(100f, 100f), Color4.Aqua);
-         test2  =new TexturedRectangle(new Vector2(0f, 0f), new Vector2(100f, 100f), new Texture("resources/lol.jpg"));
-         GameObject gameObject = new GameObject();
-         EntityManager.AddObject(gameObject);
+        for (int i = 0; i < 10; i++)
+        {
+            GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
+            EntityManager.AddObject(gameObject);
+        }
+       
+        
         
         
     }
@@ -30,19 +32,20 @@ public class App : EngineWindow
     {
         double time = args.Time;  
         base.OnUpdateFrame(args);
-        
+        EntityManager.Update( args);
         PhysicsSystem.PhysicsSystem.Update(time);
         
                         
     }
     
-    protected override void OnRenderFrame(FrameEventArgs args)
+    protected override void Draw()
     {
-        base.OnRenderFrame(args);
         DrawSystem.DrawSystem.Draw(MainView);
-        
-        this.SwapBuffers();
-
+    }
+    
+    protected override void Debugdraw()
+    {
+        PhysicsSystem.PhysicsSystem.DebugDraw();
     }
     
     
