@@ -7,11 +7,15 @@ public  static class PhysicsSystem
     {
         foreach (var physicsObject in _physicsObjects)
         {
-            physicsObject.PhysicsData = physicsObject.PhysicsData with
-            {
-                AngularVelocity = physicsObject.PhysicsData.AngularAcceleration * (float)deltaTime + physicsObject.PhysicsData.AngularVelocity,
-                Velocity = physicsObject.PhysicsData.Velocity * physicsObject.PhysicsData.Drag, 
-            };
+            
+            var newVel = physicsObject.PhysicsData.Velocity  +physicsObject.PhysicsData.Acceleration * (float)deltaTime;
+            newVel = newVel * (1 - physicsObject.PhysicsData.Drag);
+            var newAngVel = physicsObject.PhysicsData.AngularVelocity + physicsObject.PhysicsData.AngularAcceleration * (float)deltaTime;
+            
+            physicsObject.PhysicsData = physicsObject.PhysicsData with {Velocity = newVel, AngularVelocity = newAngVel};
+            physicsObject.Position += physicsObject.PhysicsData.Velocity * (float)deltaTime;
+            physicsObject.Rotation += physicsObject.PhysicsData.AngularVelocity * (float)deltaTime;
+            
         }
         Console.WriteLine("PhysicsSystem Update");
     }

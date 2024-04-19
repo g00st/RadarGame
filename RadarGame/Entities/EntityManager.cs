@@ -2,16 +2,13 @@ using RadarGame.PhysicsSystem;
 
 namespace RadarGame.Entities;
 
-public class EntityManager
+public static class EntityManager
 {
-    public List<IEntitie> GameObjects { get; set; }
+    public static List<IEntitie> GameObjects { get; set; } = new List<IEntitie>();
     
-    public EntityManager()
-    {
-        GameObjects = new List<IEntitie>();
-    }
+    
 
-    public void Update(double deltaTime)
+    public static void Update(double deltaTime)
     {
         foreach (var gameObject in GameObjects)
         {
@@ -19,7 +16,7 @@ public class EntityManager
         }
     }
     
-    public void AddObject(IEntitie gameObject)
+    public static void AddObject(IEntitie gameObject)
     {
         GameObjects.Add(gameObject);
         if (gameObject is IPhysicsObject physicsObject)
@@ -27,7 +24,22 @@ public class EntityManager
             PhysicsSystem.PhysicsSystem.AddObject(physicsObject);
         }
 
-       
-        
+        if (gameObject is IDrawObject drawObject)
+        {
+            DrawSystem.DrawSystem.AddObject(drawObject);
+        }
+    }
+    public static void RemoveObject(IEntitie gameObject)
+    {
+        GameObjects.Remove(gameObject);
+        if (gameObject is IPhysicsObject physicsObject)
+        {
+            PhysicsSystem.PhysicsSystem.RemoveObject(physicsObject);
+        }
+
+        if (gameObject is IDrawObject drawObject)
+        {
+            DrawSystem.DrawSystem.RemoveObject(drawObject);
+        }
     }
 }

@@ -4,6 +4,9 @@ using Engine;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using RadarGame.Entities;
+using RadarGame.PhysicsSystem;
+using RadarGame.DrawSystem;
 
 namespace RadarGame;
 
@@ -11,12 +14,14 @@ public class App : EngineWindow
 {
     ColoredRectangle test;   
     TexturedRectangle test2;
+    List<IDrawObject> scene = new List<IDrawObject>();
     
     public App() : base(1000, 1000, "Radargame")
     {
          test = new ColoredRectangle(new Vector2(0f, 0f), new Vector2(100f, 100f), Color4.Aqua);
          test2  =new TexturedRectangle(new Vector2(0f, 0f), new Vector2(100f, 100f), new Texture("resources/lol.jpg"));
-        
+         GameObject gameObject = new GameObject();
+         EntityManager.AddObject(gameObject);
         
         
     }
@@ -34,8 +39,7 @@ public class App : EngineWindow
     protected override void OnRenderFrame(FrameEventArgs args)
     {
         base.OnRenderFrame(args);
-        MainView.draw(test);
-        MainView.draw(test2);
+        DrawSystem.DrawSystem.Draw(MainView);
         
         this.SwapBuffers();
 

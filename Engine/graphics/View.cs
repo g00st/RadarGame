@@ -72,7 +72,7 @@ public class View
         
         
     }
-        public void draw(DrawObject todraw)
+        public void Draw(DrawObject todraw)
         {
             GL.Viewport(0, 0, Width, Height);
             _rendertarget.Bind();
