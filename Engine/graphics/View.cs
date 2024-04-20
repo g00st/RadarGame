@@ -107,6 +107,7 @@ public class View
             
                 Vector3 cameraRotationAxis = new Vector3(0, 0, 1);
                 Matrix4 cameraRotationMatrix = Matrix4.CreateFromAxisAngle(cameraRotationAxis, MathHelper.DegreesToRadians(rotation));
+                cameraRotationMatrix = Matrix4.CreateRotationZ(rotation);
                 Matrix4 comb =   objectransform* Matrix4.CreateTranslation(-vpossition.X,-vpossition.Y,0) * cameraRotationMatrix *Matrix4.CreateTranslation(vpossition.X,vpossition.Y,0)  * camera;
                 //prüfe was gamestate
 

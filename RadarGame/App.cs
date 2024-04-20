@@ -13,12 +13,13 @@ namespace RadarGame;
 
 public class App : EngineWindow
 {
-    ColoredRectangle test;   
-    TexturedRectangle test2;
-    List<IDrawObject> scene = new List<IDrawObject>();
+   
+  
     
-    public App() : base(1000, 1000, "Radargame")
-    {
+    public App() : base(1000, 1000, "Radargame"){ 
+        EntityManager.AddObject(new Background());
+        EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
+        
         for (int i = 0; i < 10; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
@@ -35,33 +36,10 @@ public class App : EngineWindow
     {
         double time = args.Time;
         base.OnUpdateFrame(args);
-        EntityManager.Update(args);
+        EntityManager.Update(args, KeyboardState);
         PhysicsSystem.Update(time);
-        
-        
-        // TODO: inputsystem needed oder KeyboardState im update immer an alle entetys mitgeben 
-        if (KeyboardState.IsKeyDown(Keys.W))
-        {
-            PhysicsSystem.ApplyForce((IPhysicsObject)EntityManager.GetObject("test0"),
-                
-                new Vector2(0f, 100f));
-        }
-        if (KeyboardState.IsKeyDown(Keys.A))
-        {
-            PhysicsSystem.ApplyForce((IPhysicsObject)EntityManager.GetObject("test0"),
-                new Vector2(-100f, 0f));
-        }
-        if (KeyboardState.IsKeyDown(Keys.S))
-        {
-            PhysicsSystem.ApplyForce((IPhysicsObject)EntityManager.GetObject("test0"),
-                new Vector2(0f, -100f));
-        }
-        if (KeyboardState.IsKeyDown(Keys.D))
-        {
-            PhysicsSystem.ApplyForce((IPhysicsObject)EntityManager.GetObject("test0"),
-                new Vector2(100f, 0f));
-        }
-        Console.WriteLine(((IPhysicsObject)EntityManager.GetObject("test0")).PhysicsData.Velocity);
+
+
     }
 
     protected override void Draw()

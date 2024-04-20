@@ -45,6 +45,13 @@ public  static class PhysicsSystem
     {
         physicsObject.PhysicsData = physicsObject.PhysicsData with {Acceleration = physicsObject.PhysicsData.Acceleration + force / physicsObject.PhysicsData.Mass};
     }
+
+    public static void ApplyAngularForce(IPhysicsObject physicsObject, float torque)
+    {
+        physicsObject.PhysicsData = physicsObject.PhysicsData with {AngularAcceleration = physicsObject.PhysicsData.AngularAcceleration + torque / physicsObject.PhysicsData.Mass};
+    }
+    
+    
     public static void AddObject(IPhysicsObject physicsObject)
     {
         _physicsObjects.Add(physicsObject);
