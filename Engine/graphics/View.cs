@@ -77,9 +77,8 @@ public class View
             GL.Viewport(0, 0, Width, Height);
             _rendertarget.Bind();
             Matrix4 camera =  calcCameraProjection();
-            GL.Enable(EnableCap.Blend);
-            GL.Enable(EnableCap.Multisample);
-           
+
+
 
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             //statt liste an drawobjects dann eine liste an renderables

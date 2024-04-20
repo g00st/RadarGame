@@ -14,14 +14,26 @@ public class EngineWindow : GameWindow
     private const int TargetFPS = 60; // Set your target FPS here
     private DateTime _lastFrameTime;
     protected bool _debug = true;
+    
   
 
-    public EngineWindow(int width, int height, string title) : base(new GameWindowSettings(),
-        new NativeWindowSettings() { ClientSize = ( width, height), Title = "hi", Profile = ContextProfile.Core })
+    public EngineWindow(int width, int height, string title) 
+        : base(
+            new GameWindowSettings() 
+            {
+                UpdateFrequency = 60.0 
+            },
+            new NativeWindowSettings() 
+            { 
+                ClientSize = ( width, height), 
+                Title = "hi", 
+                Profile = ContextProfile.Core 
+            })
     {
-        ErrorChecker.InitializeGLDebugCallback(); 
+        ErrorChecker.InitializeGLDebugCallback();
         _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
         this.Resize += e => this.resize();
+        GL.Enable(EnableCap.Blend);
     }
     
     
