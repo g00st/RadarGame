@@ -1,6 +1,6 @@
 using OpenTK.Mathematics;
 
-namespace RadarGame.PhysicsSystem;
+namespace RadarGame.Physics;
 
 public interface IPhysicsObject
 {

@@ -2,7 +2,7 @@
 using ImGuiNET;
 using OpenTK.Mathematics;
 
-namespace RadarGame.PhysicsSystem;
+namespace RadarGame.Physics;
 
 public  static class PhysicsSystem
 {
@@ -13,15 +13,37 @@ public  static class PhysicsSystem
         {
             
             var newVel = physicsObject.PhysicsData.Velocity  +physicsObject.PhysicsData.Acceleration * (float)deltaTime;
-            newVel = newVel * (1 - physicsObject.PhysicsData.Drag);
-            var newAngVel = physicsObject.PhysicsData.AngularVelocity + physicsObject.PhysicsData.AngularAcceleration * (float)deltaTime;
+            var dragforce = 0.5f * newVel.Length * newVel.Length * Math.Clamp(  physicsObject.PhysicsData.Drag , 0f, 10f);
+            Vector2 vectordragforce;
+            if (newVel.LengthSquared > 0)
+            {
+                vectordragforce = newVel.Normalized() * dragforce * (float)deltaTime;
+            }
+            else
+            {
+                vectordragforce = Vector2.Zero;
+            }
+            newVel -= vectordragforce / Math.Clamp( physicsObject.PhysicsData.Mass, 0.1f, 1000f);
             
-            physicsObject.PhysicsData = physicsObject.PhysicsData with {Velocity = newVel, AngularVelocity = newAngVel};
+            
+            
+
+            var newAngVel = physicsObject.PhysicsData.AngularVelocity  +physicsObject.PhysicsData.AngularAcceleration* (float)deltaTime;
+            var angDragforce = 0.5f * newAngVel* newAngVel * Math.Clamp(  physicsObject.PhysicsData.Drag , 0f, 10f) * (float)deltaTime;
+            newAngVel -= angDragforce / Math.Clamp( physicsObject.PhysicsData.Mass, 0.1f, 1000f);
+          
+           
+            
+            physicsObject.PhysicsData = physicsObject.PhysicsData with {Velocity = newVel, AngularVelocity = newAngVel, Acceleration = Vector2.Zero, AngularAcceleration = 0f};
             physicsObject.Position += physicsObject.PhysicsData.Velocity * (float)deltaTime;
-            physicsObject.Rotation += physicsObject.PhysicsData.AngularVelocity * (float)deltaTime;
+            physicsObject.Rotation += newAngVel * (float)deltaTime;
             
         }
         Console.WriteLine("PhysicsSystem Update");
+    }
+    public static void ApplyForce(IPhysicsObject physicsObject, Vector2 force)
+    {
+        physicsObject.PhysicsData = physicsObject.PhysicsData with {Acceleration = physicsObject.PhysicsData.Acceleration + force / physicsObject.PhysicsData.Mass};
     }
     public static void AddObject(IPhysicsObject physicsObject)
     {
@@ -61,6 +83,26 @@ public  static class PhysicsSystem
                 ImGui.Text("Mass: " + physicsObject.PhysicsData.Mass);
                 ImGui.Text("Drag: " + physicsObject.PhysicsData.Drag);
                 ImGui.Text("Center X: " + physicsObject.Center.X + " Y: " + physicsObject.Center.Y);
+                //add cloapsable submenu for editing menu for editing
+                ImGui.Indent(10f);
+                if (ImGui.CollapsingHeader("Edit"))
+                {
+                   
+                    ImGui.InputFloat2("Position", ref position);
+                    float drag = physicsObject.PhysicsData.Drag;
+                    float mass = physicsObject.PhysicsData.Mass;
+                     System.Numerics.Vector2 velocity = new System.Numerics.Vector2( physicsObject.PhysicsData.Velocity.X, physicsObject.PhysicsData.Velocity.Y);
+
+                    ImGui.InputFloat("Drag", ref drag);
+                    ImGui.InputFloat("Mass", ref mass);
+                    ImGui.InputFloat2("Velocety", ref velocity);
+                    physicsObject.PhysicsData = physicsObject.PhysicsData with {Drag = drag, Mass = mass, Velocity = new Vector2(velocity.X, velocity.Y)};
+                    physicsObject.Position = new Vector2(position.X, position.Y);
+                   
+                } 
+                ImGui.Unindent(10f);
+                
+                
                 ImGui.PopID();
              
               

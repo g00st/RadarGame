@@ -1,13 +1,14 @@
 using OpenTK.Windowing.Common;
-using RadarGame.PhysicsSystem;
+using RadarGame.Physics;
 
 namespace RadarGame.Entities;
 
 public static class EntityManager
 {
     public static List<IEntitie> GameObjects { get; set; } = new List<IEntitie>();
-    
-    
+    public static List<String> Names { get; set; } = new List<string>();
+
+
 
     public static void Update(FrameEventArgs args)
     {
@@ -19,10 +20,15 @@ public static class EntityManager
     
     public static void AddObject(IEntitie gameObject)
     {
+        if (Names.Contains(gameObject.Name))
+        {
+            throw new Exception("Name already exists");
+        }
+        Names.Add(gameObject.Name);
         GameObjects.Add(gameObject);
         if (gameObject is IPhysicsObject physicsObject)
         {
-            PhysicsSystem.PhysicsSystem.AddObject(physicsObject);
+            Physics.PhysicsSystem.AddObject(physicsObject);
         }
 
         if (gameObject is IDrawObject drawObject)
@@ -32,10 +38,11 @@ public static class EntityManager
     }
     public static void RemoveObject(IEntitie gameObject)
     {
+        Names.Remove(gameObject.Name);
         GameObjects.Remove(gameObject);
         if (gameObject is IPhysicsObject physicsObject)
         {
-            PhysicsSystem.PhysicsSystem.RemoveObject(physicsObject);
+            Physics.PhysicsSystem.RemoveObject(physicsObject);
         }
 
         if (gameObject is IDrawObject drawObject)
@@ -43,11 +50,21 @@ public static class EntityManager
             DrawSystem.DrawSystem.RemoveObject(drawObject);
         }
     }
-    
+    public static IEntitie GetObject(string name)
+    {
+        return GameObjects.Find(x => x.Name == name);
+    }
+    public static List<T> GetObjectsbyType<T>( T type)
+    {
+        return GameObjects.FindAll(x => x is T).Cast<T>().ToList();
+    }
+   
+
+
     public static void ClearObjects()
     {
         GameObjects.Clear();
-        PhysicsSystem.PhysicsSystem.ClearObjects();
+        Physics.PhysicsSystem.ClearObjects();
         DrawSystem.DrawSystem.ClearObjects();
     }
 }
