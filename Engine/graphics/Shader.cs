@@ -9,7 +9,7 @@ struct UniformData
      public int Location;
 }
 
-public class Shader
+public class Shader : IDisposable
 {
     private int vertexHandle;
     private int fragmentHandle;
@@ -55,12 +55,6 @@ public class Shader
         GenerateUniforms();
     }
     
-    ~Shader()
-    {
-        GL.DeleteProgram(_Handle);
-        GL.DeleteShader(vertexHandle);
-        GL.DeleteShader(fragmentHandle);
-    }
 
     private void GenerateUniforms()
     {
@@ -111,6 +105,13 @@ public class Shader
     public void setUniform4v(string name,float v1,float v2,float v3,float v4)
     {
         GL.Uniform4( GL.GetUniformLocation(_Handle, name),v1,v2,v3,v4);
-    }   
-    
+    }
+
+    public void Dispose()
+    {
+        GL.DeleteProgram(_Handle);
+        GL.DeleteShader(vertexHandle);
+        GL.DeleteShader(fragmentHandle);
+        GC.SuppressFinalize(this);
+    }
 }

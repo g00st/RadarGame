@@ -2,7 +2,7 @@
 
 namespace App.Engine;
 
-public class VBO
+public class VBO 
 {
     private uint _handle;
     private Texture? _texture;

@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace App.Engine;
 
-public class DrawInfo 
+public class DrawInfo :IDisposable
 {
     static List<DrawInfo> _drawInfos = new List<DrawInfo>();
     public Vector2 Position;
@@ -24,11 +24,6 @@ public class DrawInfo
         this.Name = name;
     }
     
-    ~DrawInfo()
-    {
-        Console.WriteLine("DrawInfo destroyed");
-        _drawInfos.Remove(this);
-    }
     
    public static void DebugDraw()
 {
@@ -65,9 +60,13 @@ public class DrawInfo
     ImGui.EndChild();
     ImGui.End();
 }
-    
-    
-    
-    
-    
+
+
+   public void Dispose()
+   {
+       mesh.Dispose();
+       _drawInfos.Remove(this);
+       Console.WriteLine( "DrawInfo disposed");
+       GC.SuppressFinalize(this);
+   }
 }

@@ -27,6 +27,7 @@ public static class EntityManager
         
         foreach (var gameObject in _toRemove)
         {
+            gameObject.onDeleted();
             GameObjects.Remove(gameObject);
         }
         _toAdd.Clear();
@@ -55,7 +56,7 @@ public static class EntityManager
     public static void RemoveObject(IEntitie gameObject)
     {
         Names.Remove(gameObject.Name);
-        _toRemove.Remove(gameObject);
+        _toRemove.Add(gameObject);
         if (gameObject is IPhysicsObject physicsObject)
         {
             Physics.PhysicsSystem.RemoveObject(physicsObject);
@@ -79,6 +80,10 @@ public static class EntityManager
 
     public static void ClearObjects()
     {
+        foreach (var gameObject in GameObjects)
+        {
+            gameObject.onDeleted();
+        }
         GameObjects.Clear();
         Physics.PhysicsSystem.ClearObjects();
         DrawSystem.DrawSystem.ClearObjects();

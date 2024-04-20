@@ -7,4 +7,5 @@ public interface IEntitie
 { 
     public String Name { get; set; }
     public void Update(FrameEventArgs args, KeyboardState keyboardState);
+    public void onDeleted();
 }

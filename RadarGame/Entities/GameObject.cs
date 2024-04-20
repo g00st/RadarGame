@@ -52,12 +52,13 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject
             AngularAcceleration = 0f,
             AngularVelocity = angVel };  
         DebugColoredRectangle = new TexturedRectangle(
-            new OpenTK.Mathematics.Vector2(0f, 0f),
+            position,
             new OpenTK.Mathematics.Vector2(50f, 50f), 
             new Texture("resources/cirno.png"),
             Name,
             true
             );
+        DebugColoredRectangle.drawInfo.Rotation = rotation;
     }
     
 
@@ -67,7 +68,13 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject
         DebugColoredRectangle.drawInfo.Position = Position;
         DebugColoredRectangle.drawInfo.Rotation = Rotation;
     }
- 
+
+    public void onDeleted()
+    {
+        Console.WriteLine("Deleted");
+        DebugColoredRectangle.Dispose();
+    }
+
 
     public void Draw(View surface)
     {

@@ -20,6 +20,11 @@ public class Background : IEntitie , IDrawObject
        
     }
 
+    public void onDeleted()
+    {
+        _background.Dispose();
+    }
+
     public void Draw(View surface)
     {
       surface.Draw(_background);

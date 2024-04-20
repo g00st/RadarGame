@@ -102,6 +102,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject
             }
             if (over1000)
             {
+                Console.WriteLine("Bullet"+bulletCount + " removed in Player" );
                 EntityManager.RemoveObject(EntityManager.GetObject("Bullet"+bulletCount));
             }
         }
@@ -123,9 +124,14 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject
 
     }
 
+    public void onDeleted()
+    {
+        DebugColoredRectangle.Dispose();
+    }
+
     public void Draw(View surface)
     {
-        surface.rotation = - lastRotation;
+     //   surface.rotation = - lastRotation;
        // Console.WriteLine(surface.rotation);
         surface.vpossition = lastPosition;
         surface.vsize = new Vector2(1920/1.5f  + Math.Abs(PhysicsData.Velocity.Length*5) , 1080/1.5f + Math.Abs(PhysicsData.Velocity.Length*5));

@@ -4,7 +4,7 @@ using VertexAttribType = OpenTK.Graphics.OpenGL4.VertexAttribType;
 
 namespace App.Engine;
 //vertex array object = VAO
-public class VAO
+public class VAO:IDisposable
 {
     private uint _handle;
     private uint _elementBuffer;
@@ -91,8 +91,17 @@ public class VAO
     {
         return buffers[location];
     }
-   
-    
+
+
+    public void Dispose()
+    {
+        GL.DeleteVertexArray(_handle);
+        foreach( var buffer in buffers)
+        {
+            GL.DeleteBuffer(buffer.Value);
+        }
+        GC.SuppressFinalize(this);
+    }
 }
 
 

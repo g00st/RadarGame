@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace App.Engine.Template;
 
-public class ColoredRectpParticles : DrawObject
+public class ColoredRectpParticles : DrawObject , IDisposable
 {
     
     public DrawInfo drawInfo { get; }
@@ -153,5 +153,11 @@ public class ColoredRectpParticles : DrawObject
         SetColor(new Color4(color.X, color.Y, color.Z, color.W));
         ImGui.PopID();
         ImGui.End();   
+    }
+
+    public void Dispose()
+    {
+        drawInfo.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

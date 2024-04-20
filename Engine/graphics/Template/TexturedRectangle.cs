@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace App.Engine.Template;
 
-public class TexturedRectangle : DrawObject
+public class TexturedRectangle : DrawObject , IDisposable
 {
 public DrawInfo drawInfo { get; }
 
@@ -48,4 +48,8 @@ public DrawInfo drawInfo { get; }
         this.drawInfo.mesh.Shader = shader;
     }
 
+    public void Dispose()
+    {
+        drawInfo.Dispose();
+    }
 }
