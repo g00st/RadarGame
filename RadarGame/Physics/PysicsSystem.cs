@@ -39,7 +39,7 @@ public  static class PhysicsSystem
             physicsObject.Rotation += newAngVel * (float)deltaTime;
             
         }
-        Console.WriteLine("PhysicsSystem Update");
+      
     }
     public static void ApplyForce(IPhysicsObject physicsObject, Vector2 force)
     {

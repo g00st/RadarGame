@@ -26,6 +26,7 @@ public class DrawInfo
     
     ~DrawInfo()
     {
+        Console.WriteLine("DrawInfo destroyed");
         _drawInfos.Remove(this);
     }
     

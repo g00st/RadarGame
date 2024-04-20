@@ -31,6 +31,10 @@ public class Texture
         GL.GenerateTextureMipmap(_handle);
 
     }
+    ~Texture()
+    {
+        GL.DeleteTexture(_handle);
+    }
 
     public Texture(int width, int height)
     {

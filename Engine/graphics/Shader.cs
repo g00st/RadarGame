@@ -15,6 +15,7 @@ public class Shader
     private int fragmentHandle;
     private int _Handle;
     private Dictionary<string, UniformData> uniformLocations;
+    
     public Shader(string vertex, string fragment)
     {
         uniformLocations = new Dictionary<string, UniformData>();
@@ -52,6 +53,13 @@ public class Shader
         GL.LinkProgram(_Handle);
         GL.ValidateProgram(_Handle);
         GenerateUniforms();
+    }
+    
+    ~Shader()
+    {
+        GL.DeleteProgram(_Handle);
+        GL.DeleteShader(vertexHandle);
+        GL.DeleteShader(fragmentHandle);
     }
 
     private void GenerateUniforms()
