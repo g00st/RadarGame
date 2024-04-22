@@ -7,9 +7,16 @@ using RadarGame.Physics;
 
 namespace RadarGame.Entities;
 
-public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject
+public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObject
 {
     public PhysicsDataS PhysicsData { get; set; }
+    public List<Vector2> CollisonShape { get; set; }
+    public void OnColision(IColisionObject colidedObject)
+    {
+        Console.WriteLine("Colision with " + colidedObject);
+    }
+
+    public bool Static { get; set; }
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
     public float Rotation { get; set; }
@@ -21,9 +28,11 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject
     private Vector2 lastPosition;
     private float lastRotation;
     private Random random = new Random();
+    private float timer = 0;
     
     public PlayerObject(Vector2 position, float rotation, string name = "Player")
     {
+        Static = false;
         Name = name;
         Position = position;
         Rotation = rotation;
@@ -43,9 +52,17 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject
             Name,
             true
         );
+        CollisonShape = new List<Vector2>
+        {
+            new Vector2(-100, -100),
+            new Vector2(100, -100),
+            new Vector2(100, 100),
+            new Vector2(-100, 100)
+        };
     }
     public void Update(FrameEventArgs args, KeyboardState keyboardState)
     {
+        timer += (float)args.Time;
         
         lastPosition = Position;
         lastRotation = Rotation;
@@ -84,10 +101,14 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject
             force += new Vector2(0, 1000);
         }
 
-        if (keyboardState.IsKeyDown(Keys.Space))
+        if (keyboardState.IsKeyDown(Keys.Space) && timer > 0.1f)
         {
+            
+            timer = 0;
+        
+        
             string name = "Bullet"+bulletCount;
-
+                
             Vector2 bulletvell = new Vector2(
                 0 * (float)Math.Cos(Rotation) - 1000 * (float)Math.Sin(Rotation),
                 0 * (float)Math.Sin(Rotation) + 1000 * (float)Math.Cos(Rotation)

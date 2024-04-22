@@ -23,10 +23,36 @@ public static class EntityManager
         foreach (var gameObject in _toAdd)
         {
             GameObjects.Add(gameObject);
+            if (gameObject is IPhysicsObject physicsObject)
+            {
+                Physics.PhysicsSystem.AddObject(physicsObject);
+            }
+
+            if (gameObject is IDrawObject drawObject)
+            {
+                DrawSystem.DrawSystem.AddObject(drawObject);
+            }
+            if (gameObject is IColisionObject colisionObject)
+            {
+                Physics.ColisionSystem.AddObject(colisionObject);
+            }
         }
         
         foreach (var gameObject in _toRemove)
         {
+            if (gameObject is IPhysicsObject physicsObject)
+            {
+                Physics.PhysicsSystem.RemoveObject(physicsObject);
+            }
+
+            if (gameObject is IDrawObject drawObject)
+            {
+                DrawSystem.DrawSystem.RemoveObject(drawObject);
+            }
+            if (gameObject is IColisionObject colisionObject)
+            {
+                Physics.ColisionSystem.RemoveObject(colisionObject);
+            }
             gameObject.onDeleted();
             GameObjects.Remove(gameObject);
         }
@@ -43,29 +69,12 @@ public static class EntityManager
         }
         Names.Add(gameObject.Name);
         _toAdd.Add(gameObject);
-        if (gameObject is IPhysicsObject physicsObject)
-        {
-            Physics.PhysicsSystem.AddObject(physicsObject);
-        }
-
-        if (gameObject is IDrawObject drawObject)
-        {
-            DrawSystem.DrawSystem.AddObject(drawObject);
-        }
     }
     public static void RemoveObject(IEntitie gameObject)
     {
         Names.Remove(gameObject.Name);
-        _toRemove.Add(gameObject);
-        if (gameObject is IPhysicsObject physicsObject)
-        {
-            Physics.PhysicsSystem.RemoveObject(physicsObject);
-        }
-
-        if (gameObject is IDrawObject drawObject)
-        {
-            DrawSystem.DrawSystem.RemoveObject(drawObject);
-        }
+        if (!_toRemove.Contains(gameObject))
+            _toRemove.Add(gameObject);
     }
     public static IEntitie GetObject(string name)
     {

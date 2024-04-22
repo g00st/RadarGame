@@ -7,11 +7,31 @@ using RadarGame.Physics;
 
 namespace RadarGame.Entities;
 
-public class GameObject : IEntitie, IPhysicsObject , IDrawObject
+public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject
 {
     public TexturedRectangle DebugColoredRectangle { get; set; }
     
     public PhysicsDataS PhysicsData { get; set; }
+    public List<Vector2> CollisonShape { get; set; }
+    public void OnColision(IColisionObject colidedObject)
+    {
+        if (((IEntitie)colidedObject).Name.Contains("Bullet"))
+        {
+            Console.WriteLine("Colision with " + colidedObject);
+            EntityManager.RemoveObject((IEntitie)colidedObject);
+            EntityManager.RemoveObject(this);
+        }
+        else
+        {
+
+
+            IPhysicsObject physicsObject = (IPhysicsObject)colidedObject;
+            var differencevector = physicsObject.Position - Position;
+            PhysicsSystem.ApplyForce(this, -differencevector * 100);
+        }
+    }
+
+    public bool Static { get; set; }
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
     public float Rotation { get; set; }
@@ -21,6 +41,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject
     {
         Position = position;
         Rotation = rotation;
+        Static = false;
         Name = name;
         Random random = new Random();
         PhysicsData = PhysicsData with { 
@@ -38,9 +59,17 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject
             Name,
             true
             );
+        CollisonShape = new List<Vector2>
+        {
+            new Vector2(-50, -50),
+            new Vector2(50, -50),
+            new Vector2(50, 50),
+            new Vector2(-50, 50)
+        };
     }
     public GameObject  (Vector2 position, float rotation, string name, Vector2 vel , float angVel)
     {
+        Static = false;
         Position = position;
         Rotation = rotation;
         Name = name;
@@ -59,6 +88,13 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject
             true
             );
         DebugColoredRectangle.drawInfo.Rotation = rotation;
+        CollisonShape = new List<Vector2>
+        {
+            new Vector2(-25, -25),
+            new Vector2(25, -25),
+            new Vector2(25, 25),
+            new Vector2(-25, 25)
+        };
     }
     
 

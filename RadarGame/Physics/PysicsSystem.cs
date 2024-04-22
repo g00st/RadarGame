@@ -13,6 +13,7 @@ public  static class PhysicsSystem
         {
             
             var newVel = physicsObject.PhysicsData.Velocity  +physicsObject.PhysicsData.Acceleration * (float)deltaTime;
+            newVel = new Vector2( Math.Clamp(newVel.X, -1000f, 1000f), Math.Clamp(newVel.Y, -1000f, 1000f)  );
             var dragforce = 0.5f * newVel.Length * newVel.Length * Math.Clamp(  physicsObject.PhysicsData.Drag , 0f, 10f);
             Vector2 vectordragforce;
             if (newVel.LengthSquared > 0)
