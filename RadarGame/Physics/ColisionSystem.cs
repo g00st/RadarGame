@@ -9,7 +9,7 @@ public static class ColisionSystem
     {
         public IColisionObject O { get; set; }
         public float Distance { get; set; }
-        
+         
     }
 
     public static void AddObject(IColisionObject colisionObject)

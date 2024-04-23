@@ -42,6 +42,7 @@ public  static class PhysicsSystem
         }
       
     }
+    
     public static void ApplyForce(IPhysicsObject physicsObject, Vector2 force)
     {
         physicsObject.PhysicsData = physicsObject.PhysicsData with {Acceleration = physicsObject.PhysicsData.Acceleration + force / physicsObject.PhysicsData.Mass};
