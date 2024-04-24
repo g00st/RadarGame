@@ -7,7 +7,7 @@ using PrimitiveType = OpenTK.Graphics.OpenGL4.PrimitiveType;
 
 namespace App.Engine;
 
-public class Mesh
+public class Mesh : IDisposable
 {
     public Mesh()
     {
@@ -94,6 +94,10 @@ public class Mesh
     }
 
 
-
-
+    public void Dispose()
+    {
+        _shader.Dispose();
+        _vao.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

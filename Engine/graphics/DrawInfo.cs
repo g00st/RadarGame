@@ -1,10 +1,11 @@
 ﻿using App.Engine;
+using App.Engine.ImGuisStuff;
 using ImGuiNET;
 using OpenTK.Mathematics;
 
 namespace App.Engine;
 
-public class DrawInfo
+public class DrawInfo :IDisposable
 {
     static List<DrawInfo> _drawInfos = new List<DrawInfo>();
     public Vector2 Position;
@@ -23,12 +24,8 @@ public class DrawInfo
         this.Name = name;
     }
     
-    ~DrawInfo()
-    {
-        _drawInfos.Remove(this);
-    }
     
-   public static void darwImguiDebugWindow()
+   public static void DebugDraw()
 {
     ImGui.Begin("Debug Window");
     ImGui.BeginChild("scrolling", new System.Numerics.Vector2(0, 0), ImGuiChildFlags.Border, ImGuiWindowFlags.HorizontalScrollbar);
@@ -63,9 +60,13 @@ public class DrawInfo
     ImGui.EndChild();
     ImGui.End();
 }
-    
-    
-    
-    
-    
+
+
+   public void Dispose()
+   {
+       mesh.Dispose();
+       _drawInfos.Remove(this);
+       Console.WriteLine( "DrawInfo disposed");
+       GC.SuppressFinalize(this);
+   }
 }

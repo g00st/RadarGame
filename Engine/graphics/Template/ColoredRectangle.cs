@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace App.Engine.Template;
 
-public class ColoredRectangle : DrawObject
+public class ColoredRectangle : DrawObject , IDisposable
 {
 
     public DrawInfo drawInfo { get; }
@@ -32,6 +32,12 @@ public class ColoredRectangle : DrawObject
         this.drawInfo.mesh.AddIndecies(new uint[] { 0, 1, 2, 2, 3, 0 });
         this.drawInfo.mesh.Shader = new SimpleColorShader(color);
 
+    }
+
+    public void Dispose()
+    {
+        drawInfo.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
     

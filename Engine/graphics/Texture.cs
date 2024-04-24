@@ -3,7 +3,7 @@ using StbImageSharp;
 
 namespace App.Engine;
 
-public class Texture
+public class Texture : IDisposable
 {
     private uint _handle;
     private int _width;
@@ -49,5 +49,10 @@ public class Texture
         public void Bind(uint slot)
     {
         GL.BindTextureUnit(slot,_handle);
+    }
+
+    public void Dispose()
+    {
+        GL.DeleteTexture(_handle);
     }
 }

@@ -4,9 +4,10 @@ using VertexAttribType = OpenTK.Graphics.OpenGL4.VertexAttribType;
 
 namespace App.Engine;
 //vertex array object = VAO
-public class VAO
+public class VAO:IDisposable
 {
     private uint _handle;
+    private uint _elementBuffer;
     private uint counter = 0;
     private Dictionary<uint,uint> buffers = new Dictionary<uint, uint>();
     public VAO()
@@ -14,6 +15,15 @@ public class VAO
         GL.CreateVertexArrays(1, out _handle);
         //handle= GL.GenVertexArray();
         ErrorChecker.CheckForGLErrors("A");
+    }
+    
+    ~VAO()
+    {
+        GL.DeleteVertexArray(_handle);
+        foreach( var buffer in buffers)
+        {
+            GL.DeleteBuffer(buffer.Value);
+        }
     }
 
     public uint   LinkAtribute(float[] bufferData,Bufferlayout layout,uint divisor = 0)
@@ -59,14 +69,15 @@ public class VAO
 
     public void LinkElements(uint[]bufferData)
     {
-        uint vbe  = 0;
+        _elementBuffer = 0;
         ErrorChecker.CheckForGLErrors("chh");
-        GL.CreateBuffers(1, out  vbe);
+        GL.CreateBuffers(1, out  _elementBuffer);
+        ErrorChecker.CheckForGLErrors("c");
         Console.WriteLine(bufferData.Length);
         ErrorChecker.CheckForGLErrors("c0");
-        GL.NamedBufferData(vbe, bufferData.Length*sizeof(uint),bufferData ,BufferUsageHint.StaticDraw );
+        GL.NamedBufferData(_elementBuffer, bufferData.Length*sizeof(uint),bufferData ,BufferUsageHint.StaticDraw );
         ErrorChecker.CheckForGLErrors("c1");
-        GL.VertexArrayElementBuffer(_handle, vbe);
+        GL.VertexArrayElementBuffer(_handle, _elementBuffer);
         ErrorChecker.CheckForGLErrors("c");
     }
 
@@ -80,8 +91,17 @@ public class VAO
     {
         return buffers[location];
     }
-   
-    
+
+
+    public void Dispose()
+    {
+        GL.DeleteVertexArray(_handle);
+        foreach( var buffer in buffers)
+        {
+            GL.DeleteBuffer(buffer.Value);
+        }
+        GC.SuppressFinalize(this);
+    }
 }
 
 

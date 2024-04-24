@@ -1,5 +1,6 @@
 using App.Engine;
 using App.Engine.ImGuisStuff;
+using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -12,13 +13,27 @@ public class EngineWindow : GameWindow
     protected View MainView = new View();
     private const int TargetFPS = 60; // Set your target FPS here
     private DateTime _lastFrameTime;
+    protected bool _debug = true;
+    
+  
 
-    public EngineWindow(int width, int height, string title) : base(GameWindowSettings.Default,
-        new NativeWindowSettings() { ClientSize = ( width, height), Title = "hi", Profile = ContextProfile.Core })
+    public EngineWindow(int width, int height, string title) 
+        : base(
+            new GameWindowSettings() 
+            {
+                UpdateFrequency = 60.0 
+            },
+            new NativeWindowSettings() 
+            { 
+                ClientSize = ( width, height), 
+                Title = "hi", 
+                Profile = ContextProfile.Core 
+            })
     {
-        ErrorChecker.InitializeGLDebugCallback(); 
+      //  ErrorChecker.InitializeGLDebugCallback();
         _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
         this.Resize += e => this.resize();
+        GL.Enable(EnableCap.Blend);
     }
     
     
@@ -33,6 +48,10 @@ public class EngineWindow : GameWindow
     {
         base.OnTextInput(e);
         _controller.PressChar((char)e.Unicode);
+        if ((char)e.Unicode == 'p')
+        {
+            _debug = !_debug;
+        }
     }
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -42,17 +61,33 @@ public class EngineWindow : GameWindow
     }
     
     protected override void OnRenderFrame(FrameEventArgs args)
-    {
-        base.OnRenderFrame(args);
-        _controller.Update(this, (float)args.Time);
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-        MainView.draw();
-            
-        DrawInfo.darwImguiDebugWindow();
-        ImGuiController.CheckGLError("End of frame");
-        _controller.Render();
+    {   
+     
+        base.OnRenderFrame(args);  
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);  
+        Draw();
+        if (_debug)
+        {
+            _controller.Update(this, (float)args.Time);
+            Debugdraw();
+            ImGuiController.CheckGLError("End of frame");
+            DrawInfo.DebugDraw();
+            _controller.Render();
+        }
+
         this.SwapBuffers();
 
     }
+    
+    protected virtual void Debugdraw()
+    {
+       
+    }
+    protected virtual void Draw()
+    {
+       
+    }
+    
+    
 
 }
