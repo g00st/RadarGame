@@ -36,10 +36,15 @@ public class App : EngineWindow
     private int _AudioVolumeListIndex = 0;
     private float[] AudioVolumeList = new float[100];
 
+    private string path = @"C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav";
+
+
 
     public App() : base(1000, 1000, "Radargame"){
 
         SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
+
+        // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
 
         /*
         EntityManager.AddObject(new Background());
