@@ -8,6 +8,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Entities;
 using RadarGame.DrawSystem;
 using RadarGame.Physics;
+using RadarGame.SoundSystem;
 
 namespace RadarGame;
 
@@ -32,8 +33,15 @@ public class App : EngineWindow
     private float[] _ColisionTimeList = new float[100];
     private int _ColisionTimeListIndex = 0;
 
+    private int _AudioVolumeListIndex = 0;
+    private float[] AudioVolumeList = new float[100];
 
-    public App() : base(1000, 1000, "Radargame"){ 
+
+    public App() : base(1000, 1000, "Radargame"){
+
+        SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
+
+        /*
         EntityManager.AddObject(new Background());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
         
@@ -43,14 +51,17 @@ public class App : EngineWindow
             EntityManager.AddObject(gameObject);
         }
        
-        
-        
-        
+*/
+
+
     }
 
 
     protected override void OnUpdateFrame(FrameEventArgs args)
     {
+
+        
+
         fpsList[fpsListindex] = 1/ (float)args.Time;
         fpsListindex = (fpsListindex + 1) % fpsList.Length;
         fps = 1/ args.Time;
@@ -93,6 +104,8 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("Entity Update Time", ref _EntityTimeList[0], _EntityTimeList.Length, _EntityTimeListIndex, "Entity Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Physics Update Time", ref _PhysicsTimeList[0], _PhysicsTimeList.Length, _PhysicsTimeListIndex, "Physics Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Colision Update Time", ref _ColisionTimeList[0], _ColisionTimeList.Length, _ColisionTimeListIndex, "Colision Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
+        // Wenn Lautstärke auslesbar hier verzeichnen bitte
+        ImGuiNET.ImGui.PlotLines("LautStärke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStärke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
     }
