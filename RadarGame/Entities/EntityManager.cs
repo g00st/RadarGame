@@ -1,6 +1,7 @@
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
+using RadarGame.Radarsystem;
 
 namespace RadarGame.Entities;
 
@@ -36,6 +37,10 @@ public static class EntityManager
             {
                 Physics.ColisionSystem.AddObject(colisionObject);
             }
+            if (gameObject is IRadarObject radarObject)
+            {
+                RadarSystem.RadarObjects.Add(radarObject);
+            }
         }
         
         foreach (var gameObject in _toRemove)
@@ -52,6 +57,10 @@ public static class EntityManager
             if (gameObject is IColisionObject colisionObject)
             {
                 Physics.ColisionSystem.RemoveObject(colisionObject);
+            }
+            if (gameObject is IRadarObject radarObject)
+            {
+                RadarSystem.RadarObjects.Remove(radarObject);
             }
             gameObject.onDeleted();
             GameObjects.Remove(gameObject);
@@ -96,5 +105,6 @@ public static class EntityManager
         GameObjects.Clear();
         Physics.PhysicsSystem.ClearObjects();
         DrawSystem.DrawSystem.ClearObjects();
+        RadarSystem.RadarObjects.Clear();
     }
 }

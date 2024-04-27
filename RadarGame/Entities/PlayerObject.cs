@@ -63,7 +63,8 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public void Update(FrameEventArgs args, KeyboardState keyboardState)
     {
         timer += (float)args.Time;
-        
+        Radarsystem.RadarSystem.SetPosition( Position);
+        Radarsystem.RadarSystem.SetRotation(Rotation);
         lastPosition = Position;
         lastRotation = Rotation;
         DebugColoredRectangle.drawInfo.Position = Position;

@@ -15,6 +15,7 @@ public class Texture : IDisposable
     private int _height;
 
     public uint Handle => _handle;
+    public IntPtr PtrHandle => (IntPtr)_handle;
     public Texture(string name)
     {
        ImageResult image =  Loader.LoadTexture(name);

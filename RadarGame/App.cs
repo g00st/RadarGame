@@ -8,6 +8,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Entities;
 using RadarGame.DrawSystem;
 using RadarGame.Physics;
+using RadarGame.Radarsystem;
 using RadarGame.SoundSystem;
 
 namespace RadarGame;
@@ -25,8 +26,12 @@ public class App : EngineWindow
     private float[] _PhysicsTimeList = new float[100];
     private int _PhysicsTimeListIndex = 0;
     
+    private double RadarTime = 0;
+    private  float[] RadarTimeList = new float[100];
+    private int RadarTimeListIndex = 0;
+    
     private double _DrawTime = 0;
-    private double[] _DrawTimeList = new double[100];
+    private float[] _DrawTimeList = new float[100];
     private int _DrawTimeListIndex = 0;
     private double _DebugDrawTime = 0;
     private double _ColisionTime = 0;
@@ -42,21 +47,20 @@ public class App : EngineWindow
 
     public App() : base(1000, 1000, "Radargame"){
 
-        SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
+       // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
 
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
 
-        /*
+        
         EntityManager.AddObject(new Background());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
         
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 1; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
             EntityManager.AddObject(gameObject);
         }
-       
-*/
+        
 
 
     }
@@ -87,13 +91,29 @@ public class App : EngineWindow
         _ColisionTime = _stopwatch.Elapsed.TotalMilliseconds;
         _ColisionTimeList[_ColisionTimeListIndex] = (float)_ColisionTime ;
         _ColisionTimeListIndex = (_ColisionTimeListIndex + 1) % _ColisionTimeList.Length;
+        _stopwatch.Restart();
+        RadarSystem.Update( args);
+        RadarTime = _stopwatch.Elapsed.TotalMilliseconds;
+        RadarTimeList[RadarTimeListIndex] = (float)RadarTime;
+        RadarTimeListIndex = (RadarTimeListIndex + 1) % RadarTimeList.Length;
+        
+        
 
 
     }
 
     protected override void Draw()
     {
-        DrawSystem.DrawSystem.Draw(MainView);
+        _stopwatch.Restart();
+      
+        DrawSystem.DrawSystem.Draw(MainView); 
+        RadarSystem.render();
+        
+        _DrawTime = _stopwatch.Elapsed.TotalMilliseconds;
+        _DrawTimeList[_DrawTimeListIndex] = (float) _DrawTime;
+        _DrawTimeListIndex = (_DrawTimeListIndex + 1) % _DrawTimeList.Length;
+      
+        
     }
     
     protected override void Debugdraw()
@@ -109,10 +129,13 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("Entity Update Time", ref _EntityTimeList[0], _EntityTimeList.Length, _EntityTimeListIndex, "Entity Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Physics Update Time", ref _PhysicsTimeList[0], _PhysicsTimeList.Length, _PhysicsTimeListIndex, "Physics Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Colision Update Time", ref _ColisionTimeList[0], _ColisionTimeList.Length, _ColisionTimeListIndex, "Colision Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
+        ImGuiNET.ImGui.PlotLines("Radar Update Time", ref RadarTimeList[0], RadarTimeList.Length, RadarTimeListIndex, "Radar Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
+        ImGuiNET.ImGui.PlotLines("Draw Time", ref _DrawTimeList[0], _DrawTimeList.Length, _DrawTimeListIndex, "Draw Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         // Wenn Lautstärke auslesbar hier verzeichnen bitte
         ImGuiNET.ImGui.PlotLines("LautStärke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStärke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
+        RadarSystem.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

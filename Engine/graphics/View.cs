@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-
+//TODO: Fix horrible code and mvp mess
 namespace App.Engine;
 
 public class View
@@ -111,6 +111,7 @@ public class View
                 //prüfe was gamestate
 
                 obj.mesh.Draw(comb, obj, view, projection);
+                _rendertarget.Unbind();
         }
     
 

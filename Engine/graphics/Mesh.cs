@@ -90,6 +90,11 @@ public class Mesh : IDisposable
         _shader.setUniformM4 ("u_Projection" ,Projection); 
         
         GL.DrawElements(PrimitiveType.Triangles, _Indecies.Length, DrawElementsType.UnsignedInt, 0);
+        
+        //unbind
+        _vao.Unbind();
+        _shader.Unbind();
+        
 
     }
 

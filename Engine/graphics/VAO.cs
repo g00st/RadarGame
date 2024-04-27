@@ -87,6 +87,11 @@ public class VAO:IDisposable
         ErrorChecker.CheckForGLErrors("Bind VAO");
     }
     
+    public void Unbind()
+    {
+        GL.BindVertexArray(0);
+    }
+    
     public uint GetBuffer(uint location)
     {
         return buffers[location];

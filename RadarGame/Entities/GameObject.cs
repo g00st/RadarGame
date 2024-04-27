@@ -4,10 +4,11 @@ using App.Engine.Template;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
+using RadarGame.Radarsystem;
 
 namespace RadarGame.Entities;
 
-public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject
+public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject, IRadarObject
 {
     public TexturedRectangle DebugColoredRectangle { get; set; }
     
@@ -35,6 +36,12 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
     public float Rotation { get; set; }
+    public float RadarSdf(Vector2 Position)
+    {
+       //use circular sdf
+        return (Position - this.Position).Length - 50;
+    }
+
     public string Name { get; set; }
 
     public GameObject( Vector2 position, float rotation, string name)

@@ -37,8 +37,17 @@ public  static class PhysicsSystem
             
             physicsObject.PhysicsData = physicsObject.PhysicsData with {Velocity = newVel, AngularVelocity = newAngVel, Acceleration = Vector2.Zero, AngularAcceleration = 0f};
             physicsObject.Position += physicsObject.PhysicsData.Velocity * (float)deltaTime;
-            physicsObject.Rotation += newAngVel * (float)deltaTime;
             
+            physicsObject.Rotation += newAngVel * (float)deltaTime;
+            if(physicsObject.Rotation > 2 * MathF.PI)
+            {
+                physicsObject.Rotation -= 2 * MathF.PI;
+            }
+               if(physicsObject.Rotation < 0)
+                {
+                    physicsObject.Rotation += 2 * MathF.PI;
+                }
+           
         }
       
     }
