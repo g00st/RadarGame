@@ -55,7 +55,7 @@ public class App : EngineWindow
         EntityManager.AddObject(new Background());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
         
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 500; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
             EntityManager.AddObject(gameObject);

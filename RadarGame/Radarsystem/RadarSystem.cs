@@ -8,9 +8,9 @@ namespace RadarGame.Radarsystem;
 
 public  static class RadarSystem
 {
+    public static List<System.Numerics.Vector3> Debugpoints { get; set; } = new List<System.Numerics.Vector3>();
     public static List<IRadarObject> RadarObjects { get; set; } = new List<IRadarObject>();
-    private static TexturedRectangle testRectangle = new TexturedRectangle(new Vector2(0, 0), new Vector2(100, 100), new Texture("resources/cirno.png"));
-   //-----------------AntennaStuff-----------------
+    //-----------------AntennaStuff-----------------
     private static float AntanaRotation = 0;
     private static float Rotation = 0;
     private static bool sweep = false;
@@ -34,12 +34,13 @@ public  static class RadarSystem
     private static SubView RadarView = new SubView(screenVBO);
     private static RadarShader _radarShader = new RadarShader();
     private static TexturedRectangle radarRectangle = new TexturedRectangle(new Vector2(0, 0), new Vector2(1000, 1000), _Screentexture, _radarShader);
+    
     public static void Update( FrameEventArgs args)
     {
         UpdateRotation();
-        float direction = Rotation + AntanaRotation;
-        rotated = new Vector2((float)Math.Sin(direction), (float)Math.Cos(direction));
-        Vector2 newpoint = Raymarch(Position,rotated , 1000);
+        float direction = Rotation + AntanaRotation + (float) (Math.PI /2.0f);
+        rotated = new Vector2((float)Math.Cos(direction), (float)Math.Sin(direction));
+        Vector2 newpoint = Raymarch(Position,rotated , 10000);
         LastDistance = (newpoint - Position).Length;
         
     }
@@ -82,6 +83,7 @@ public  static class RadarSystem
     }
     private static Vector2 Raymarch(Vector2 start, Vector2 direction, float maxDistance)
     {
+        Debugpoints.Clear();
         float distance = 0;
         for (int i = 0; i < 100; i++)
         {
@@ -96,6 +98,7 @@ public  static class RadarSystem
                 return position;
             }
             distance += sdf;
+            Debugpoints.Add(new System.Numerics.Vector3(position.X, position.Y, sdf));
             if (distance > maxDistance)
             {
                 return start + direction * maxDistance;
@@ -145,8 +148,6 @@ public  static class RadarSystem
             ImGuiNET.ImGui.Image( _Screentexture.PtrHandle , new System.Numerics.Vector2(100,100));
            var d = ImGuiNET.ImGui.GetWindowDrawList() ;
            d.AddLine( new System.Numerics.Vector2(100,500), new System.Numerics.Vector2(100,500) + new System.Numerics.Vector2(rotated.X, rotated.Y) * 10, 0xFFFFFFFF);
-           
-       
     }
     
     public static void CleanUp()

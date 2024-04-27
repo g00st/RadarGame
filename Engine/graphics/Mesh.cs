@@ -15,6 +15,7 @@ public class Mesh : IDisposable
         _Vertecies = new List<float[]>();
         _vao = new VAO();
     }
+    protected PrimitiveType _primitiveType = PrimitiveType.Triangles; 
     protected int _verteciesLenght;
     protected Shader _shader;
     protected VAO _vao;
@@ -35,6 +36,14 @@ public class Mesh : IDisposable
         get { return _texture[0]; }
         set { _texture.Add(value); }
     }
+    
+    public PrimitiveType PrimitiveType
+    {
+        get { return _primitiveType; }
+        set { _primitiveType = value; }
+    }
+    
+    
 
 
     public void AddAtribute(Bufferlayout bufferlayout, float[] data)
@@ -89,8 +98,7 @@ public class Mesh : IDisposable
         _shader.setUniformM4 ("u_View",view);
         _shader.setUniformM4 ("u_Projection" ,Projection); 
         
-        GL.DrawElements(PrimitiveType.Triangles, _Indecies.Length, DrawElementsType.UnsignedInt, 0);
-        
+        GL.DrawElements(_primitiveType, _Indecies.Length, DrawElementsType.UnsignedInt, 0);
         //unbind
         _vao.Unbind();
         _shader.Unbind();
