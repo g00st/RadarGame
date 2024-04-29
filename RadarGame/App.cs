@@ -107,7 +107,7 @@ public class App : EngineWindow
         _stopwatch.Restart();
       
         DrawSystem.DrawSystem.Draw(MainView); 
-        RadarSystem.render();
+        RadarSystem.Render();
         
         _DrawTime = _stopwatch.Elapsed.TotalMilliseconds;
         _DrawTimeList[_DrawTimeListIndex] = (float) _DrawTime;

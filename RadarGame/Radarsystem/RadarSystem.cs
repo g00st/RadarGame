@@ -29,25 +29,35 @@ public  static class RadarSystem
     private static float AntanaRotationSpeed = 0.0f;
     
     //-----------------RadarView-----------------
+    private static double lastTime = 0;
+    private static double delta = 0;
+    private static float _RadarScreenrange = 10000;
     private static Texture _Screentexture = new Texture(1000, 1000);
+    private static Texture _lastScreentexture = new Texture(1000, 1000);
     private static  VBO screenVBO  = new VBO(_Screentexture);
+    private static  VBO lastScreenVBO  = new VBO(_lastScreentexture);
     private static SubView RadarView = new SubView(screenVBO);
+    private static SubView LastRadarView = new SubView(lastScreenVBO);
     private static RadarShader _radarShader = new RadarShader();
-    private static TexturedRectangle radarRectangle = new TexturedRectangle(new Vector2(0, 0), new Vector2(1000, 1000), _Screentexture, _radarShader);
+    private static TexturedRectangle radarRectangle = new TexturedRectangle(new Vector2(0, 0), new Vector2(1000, 1000), _lastScreentexture, _radarShader);
+    private static TexturedRectangle lastRadarRectangle = new TexturedRectangle(new Vector2(0, 0), new Vector2(1000, 1000),_Screentexture );
+    
     
     public static void Update( FrameEventArgs args)
     {
+        delta = args.Time - lastTime;
+        lastTime = args.Time;
         UpdateRotation();
         float direction = Rotation + AntanaRotation + (float) (Math.PI /2.0f);
         rotated = new Vector2((float)Math.Cos(direction), (float)Math.Sin(direction));
-        Vector2 newpoint = Raymarch(Position,rotated , 10000);
+        Vector2 newpoint = Raymarch(Position,rotated , _RadarScreenrange);
         LastDistance = (newpoint - Position).Length;
         
     }
 
 
     private static void UpdateRotation()
-    {
+    {  var lastRotation = AntanaRotation;
         if (rotationDir == RotationDir.Right)
         {
             AntanaRotation += AntanaRotationSpeed;
@@ -59,27 +69,17 @@ public  static class RadarSystem
 
         if (sweep)
         {
-            if (AntanaRotation > MaxAngle)
+            if ( (lastRotation < MinAngle && AntanaRotation  >= MinAngle) ||
+                 (lastRotation  > MaxAngle  && AntanaRotation <= MaxAngle)||
+                 (lastRotation > MinAngle && AntanaRotation  <= MinAngle && false) ||
+                 (lastRotation  < MaxAngle  && AntanaRotation >= MaxAngle && false)
+                 )
             {
-                rotationDir = RotationDir.Left;
-            }
-            if (AntanaRotation < MinAngle)
-            {
-                rotationDir = RotationDir.Right;
-            }
-        }else
-        {
-            if (AntanaRotation > 360)
-            {
-                AntanaRotation = 0;
-            }
-            if (AntanaRotation < 0)
-            {
-                AntanaRotation = 360;
+                rotationDir = (rotationDir == RotationDir.Right) ? RotationDir.Left : RotationDir.Right;
+                AntanaRotation = lastRotation;
             }
         }
-
-
+        AntanaRotation = (AntanaRotation + 2.0f * (float)Math.PI) % (2.0f *(float) Math.PI);
     }
     private static Vector2 Raymarch(Vector2 start, Vector2 direction, float maxDistance)
     {
@@ -120,15 +120,22 @@ public  static class RadarSystem
         RadarObjects.Clear();
     }
     
-    public static void render(){
-        _radarShader.setAntennaRotation(Rotation);
+    public static void Render( ){
+       
+        
+        
+        _radarShader.setAntennaRotation(AntanaRotation + MathHelper.DegreesToRadians(180));
         _radarShader.setDistance( LastDistance);
         _radarShader.setTextureSize(new Vector2(1000, 1000));
+        _radarShader.setRadarScreenrange(_RadarScreenrange);
         RadarView._rendertarget.Bind();
-        GL.ClearColor(Color4.Red);
         GL.Clear(ClearBufferMask.ColorBufferBit);
         RadarView.Draw(radarRectangle);
         RadarView._rendertarget.Unbind();
+        LastRadarView._rendertarget.Bind();
+        GL.Clear(ClearBufferMask.ColorBufferBit);
+        LastRadarView.Draw(lastRadarRectangle);
+        LastRadarView._rendertarget.Unbind();
     }
     public static void DebugDraw()
     {
@@ -145,7 +152,13 @@ public  static class RadarSystem
             ImGuiNET.ImGui.Text("AntanaRotationSpeed: " + AntanaRotationSpeed);
             ImGuiNET.ImGui.Text("RadarObjects: " + RadarObjects.Count);
             ImGuiNET.ImGui.Text("LastDistance: " + LastDistance);
-            ImGuiNET.ImGui.Image( _Screentexture.PtrHandle , new System.Numerics.Vector2(100,100));
+            ImGuiNET.ImGui.SliderFloat("RadarscrenRange" , ref _RadarScreenrange, 0, 10000);
+            ImGuiNET.ImGui.SliderFloat("AntanaRotation" , ref AntanaRotation, 0, 2 * (float)Math.PI);
+            ImGuiNET.ImGui.SliderFloat("rotationspeed" , ref AntanaRotationSpeed, 0, 0.1f);
+            ImGuiNET.ImGui.Checkbox("Sweep", ref sweep);
+            ImGuiNET.ImGui.SliderFloat("MaxAngle" , ref MaxAngle, 0, MathF.PI * 2);
+            ImGuiNET.ImGui.SliderFloat("MinAngle" , ref MinAngle, 0, MathF.PI * 2);
+            ImGuiNET.ImGui.Image( _Screentexture.PtrHandle , new System.Numerics.Vector2(500,500));
            var d = ImGuiNET.ImGui.GetWindowDrawList() ;
            d.AddLine( new System.Numerics.Vector2(100,500), new System.Numerics.Vector2(100,500) + new System.Numerics.Vector2(rotated.X, rotated.Y) * 10, 0xFFFFFFFF);
     }

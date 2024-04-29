@@ -30,4 +30,10 @@ public class RadarShader : Shader
         this.Bind();
         this.setUniformV2f("u_TextureSize", TextureSize);
     }
+    public void setRadarScreenrange(float RadaScrenrange)
+    {
+        
+        this.Bind();
+        this.setUniform1v("u_RadaScrenrange", RadaScrenrange);
+    }
 }

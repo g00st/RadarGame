@@ -31,7 +31,15 @@ public  static class PhysicsSystem
 
             var newAngVel = physicsObject.PhysicsData.AngularVelocity  +physicsObject.PhysicsData.AngularAcceleration* (float)deltaTime;
             var angDragforce = 0.5f * newAngVel* newAngVel * Math.Clamp(  physicsObject.PhysicsData.Drag , 0f, 10f) * (float)deltaTime;
-            newAngVel -= angDragforce / Math.Clamp( physicsObject.PhysicsData.Mass, 0.1f, 1000f);
+            if (newAngVel > 0)
+            {
+                newAngVel -= angDragforce / Math.Clamp( physicsObject.PhysicsData.Mass, 0.1f, 1000f);
+            }
+            else
+            {
+                newAngVel += angDragforce / Math.Clamp( physicsObject.PhysicsData.Mass, 0.1f, 1000f);
+            }
+           // newAngVel -=  angDragforce / Math.Clamp( physicsObject.PhysicsData.Mass, 0.1f, 1000f);
           
            
             
@@ -39,6 +47,10 @@ public  static class PhysicsSystem
             physicsObject.Position += physicsObject.PhysicsData.Velocity * (float)deltaTime;
             
             physicsObject.Rotation += newAngVel * (float)deltaTime;
+            if (!float.IsFinite(physicsObject.Rotation))
+            {
+                throw new  System.Exception("Rotation is not finite");
+            }
             if(physicsObject.Rotation > 2 * MathF.PI)
             {
                 physicsObject.Rotation -= 2 * MathF.PI;
@@ -47,6 +59,10 @@ public  static class PhysicsSystem
                 {
                     physicsObject.Rotation += 2 * MathF.PI;
                 }
+               if (!float.IsFinite(physicsObject.Rotation))
+               {
+                   throw new  System.Exception("Rotation is not finite");
+               }
            
         }
       
