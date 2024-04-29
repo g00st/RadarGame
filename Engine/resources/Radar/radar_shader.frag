@@ -5,7 +5,7 @@ out vec4 fragColor;
 in vec2 VC; // Vertex coordinates in screen space
 uniform vec2 u_TextureSize; // Size of the texture we are rendering to
 uniform float u_RadaScrenrange; // Range of the radar screen in meters
-uniform float u_Radarrange; // Range of the radar in meters
+uniform float u_RadarRange; // Range of the radar in meters
 uniform float u_Distance; // Distance from antenne of radar point intersection
 uniform float u_AntennaRotation; // Rotation of the radar antenne in rads
 const float PI = 3.14159265359;
@@ -40,12 +40,13 @@ void main()
     float f = length (ofccenter);
    
     float mult = 0.005;
+    if(distancef < u_RadarRange ){
     if (abs(adjustedAntennaRotation - roationVC) < mult / f ||
         abs(adjustedAntennaRotation - roationVC + 2.0 * PI) <mult/ f ||
-        abs(adjustedAntennaRotation - roationVC - 2.0 * PI) <mult / f) {
-        newColor.g = 0.02 +1 * 1/ (pointdistance*0.05);
+        abs(adjustedAntennaRotation - roationVC - 2.0 * PI) <mult / f ) {
+        newColor.g = 0.02 +1 * 1/ (pointdistance*    (10000-u_RadarRange)/10000 );
         
-    }
+    }}
 
     newColor.g =newColor.g +clamp( texture(lastFrame, VC).g* 0.95, 0.0,0.8);
     

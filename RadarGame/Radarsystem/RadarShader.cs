@@ -36,4 +36,10 @@ public class RadarShader : Shader
         this.Bind();
         this.setUniform1v("u_RadaScrenrange", RadaScrenrange);
     }
+    
+    public void setRadarRange(float range)
+    {
+        this.Bind();
+        this.setUniform1v("u_RadarRange", range);
+    }
 }
