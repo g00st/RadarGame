@@ -31,6 +31,8 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
             PhysicsSystem.ApplyForce(this, -differencevector * 100);
         }
     }
+    private Polygon DebugPolygon = Polygon.Circle( new Vector2(0, 0), 50, 100,new SimpleColorShader(Color4.Ivory), "SDF", true);
+    
 
     public bool Static { get; set; }
     public Vector2 Position { get; set; }
@@ -110,6 +112,8 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     {
         DebugColoredRectangle.drawInfo.Position = Position;
         DebugColoredRectangle.drawInfo.Rotation = Rotation;
+        DebugPolygon.Position = Position;
+        DebugPolygon.Rotation = Rotation;
     }
 
     public void onDeleted()
@@ -122,5 +126,6 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     public void Draw(View surface)
     {
         surface.Draw(DebugColoredRectangle);
+        surface.Draw(DebugPolygon);
     }
 }

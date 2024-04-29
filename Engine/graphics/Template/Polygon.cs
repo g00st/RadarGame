@@ -17,12 +17,14 @@ public class Polygon : DrawObject , IDisposable
     {
         if (lines)
         {
-            this.drawInfo = new DrawInfo(position, size, rotation, CreateLineMesh(Points, lines), name);
+            this.drawInfo = new DrawInfo(position, size, rotation, CreateLineMesh(Points), name);
             
         }
         else
         {
-            this.drawInfo = new DrawInfo(position, size, rotation, CreateLineMesh(Points, lines), name);
+            
+            this.drawInfo = new DrawInfo(position, size, rotation, CreateMesh(Points), name);
+            
         }
         this.drawInfo.mesh.Shader = shader;
 
@@ -39,13 +41,7 @@ public class Polygon : DrawObject , IDisposable
             points.Add(new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)));
         }
 
-        foreach (var point in points)
-        {
-            Console.WriteLine(point);
-        }
-        Console.WriteLine("Circle Created: "+ points.Count + " points");
-
-        return new Polygon(points,shader, Position, new Vector2(Radius, Radius),0, name);
+        return new Polygon(points,shader, Position, new Vector2(Radius, Radius),0, name,lines);
     }
     public static Polygon Rectangle(Vector2 Position, Vector2 Size,float rotation , Shader shader, string name = "Rectangle", bool center = false, bool lines = true)
     {
@@ -71,11 +67,11 @@ public class Polygon : DrawObject , IDisposable
         List<Vector2> points = new List<Vector2>();
         points.Add(start);
         points.Add(end);
-        return new Polygon(points, shader, new Vector2(0,0), new Vector2(1,1), 0, name, true);
+        return new Polygon(points, shader, new Vector2(0,0), new Vector2(1,1), 0, name , true);
     }
    
     
-    private Mesh CreateLineMesh(List<Vector2> Points, bool lines)
+    private Mesh CreateLineMesh(List<Vector2> Points )
     {
         Mesh mesh = new Mesh();
         Bufferlayout bufferlayout = new Bufferlayout();
@@ -95,11 +91,57 @@ public class Polygon : DrawObject , IDisposable
         
         mesh.AddAtribute(bufferlayout, vertices);
         mesh.AddIndecies(indecies.Select(i => (uint)i).ToArray());
-        mesh.PrimitiveType = PrimitiveType.LineLoop;
+       
+            mesh.PrimitiveType = PrimitiveType.LineLoop;
+       
+
+        
+        return mesh;
+    }
+    
+    private Mesh CreateMesh(List<Vector2> Points)
+    {
+        Mesh mesh = new Mesh();
+        Bufferlayout bufferlayout = new Bufferlayout();
+        bufferlayout.count = 2;
+        bufferlayout.normalized = false;
+        bufferlayout.offset = 0;
+        bufferlayout.type = VertexAttribType.Float;
+        bufferlayout.typesize = sizeof(float);
+        mesh.AddAtribute(bufferlayout, Points.SelectMany(v => new float[] { v.X, v.Y }).ToArray());
+        List<int> indecies = TriangulateConvexPolygon( Points);
+        var indecies2 = indecies.Select(i => (uint)i).ToArray();
+       
+        if (indecies2  == null)
+        {
+             throw new ArgumentException("Indecies are null");
+        }
+        mesh.AddIndecies(indecies2);
+        mesh.PrimitiveType = PrimitiveType.Triangles;
         return mesh;
     }
     
     
+    public static List<int> TriangulateConvexPolygon(List<Vector2> convexHullPoints)
+    {
+        List<int> trianglesIndices = new List<int>();
+
+        for (int i = 2; i < convexHullPoints.Count; i++)
+        {
+            
+
+            trianglesIndices.Add(0);
+            trianglesIndices.Add(i - 1);
+            trianglesIndices.Add(i);
+
+        }
+
+        return trianglesIndices;
+    
+    }
+
+   
+
 
 
 
@@ -109,3 +151,4 @@ public class Polygon : DrawObject , IDisposable
     }
 }
 
+//Questionable chtgtp code, aber hab es 2h aselber probiert und keine lut mehr darauf
