@@ -7,6 +7,8 @@ using Engine.Audio;
 using OpenTK.Mathematics;
 using OpenTK;
 using OpenTK.Audio.OpenAL;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace RadarGame.SoundSystem;
 
@@ -17,6 +19,12 @@ public static class SoundSystem
     private static List<int>Sources = new List<int>();
     private static ALDevice device;
     private static ALContext context;
+    static int sampleFreq = 44100;
+    static int freq = 440;
+    static int dataCount = sampleFreq / freq;
+    static short[] sinData = new short[dataCount];
+    private static int sinDataIndex = 0;
+
 
     public static void CleanUp()
     {
@@ -28,17 +36,11 @@ public static class SoundSystem
            foreach (var buffer in Buffers)
             {
                 AL.DeleteBuffer(buffer);
-            }
-          
+            }      
         
            ALC.DestroyContext(context);
            ALC.CloseDevice(device);
-           
-           
-      
-           
-           
-       
+            
     }
 
     public static  void TrySinusIsUnsafe()
@@ -68,16 +70,16 @@ public static class SoundSystem
         Buffers.Add(buffers);
         Sources.Add(source);
 
-        int sampleFreq = 44100;   // example freq is sinus curve speed  c
+        // sampleFreq = 44100;   // example freq is sinus curve speed  c
         double dt = 2 * Math.PI / sampleFreq;
         double amp = 0.5;
 
         // ------------
-        int freq = 440;  // standard freqlänge  lambda
-        var dataCount = sampleFreq / freq;   // f = c / lambda
-        // System.IntPtr testsinData = new short[dataCount];
-        
-        var sinData = new short[dataCount];
+        // freq = 440;  // standard freqlänge  lambda
+
+        dataCount = sampleFreq / freq; // f = c / lambda
+        sinData = new short[dataCount];
+
         for (int i = 0; i < sinData.Length; ++i)
         {
             sinData[i] = (short)(amp * short.MaxValue * Math.Sin(i * dt * freq));
@@ -88,27 +90,31 @@ public static class SoundSystem
         // AL.BufferData(buffers, ALFormat.Mono16,ref  sinData, sinData.Length, sampleFreq); // ??? short[] nicht zu IntPtr konvertierbar
 
         AL.Source(source, ALSourcei.Buffer, buffers);
-        AL.Source(source, ALSourceb.Looping, true);
+        AL.Source(source, ALSourceb.Looping, false);
 
         AL.SourcePlay(source);
 
-        
-        /*
-        ///Dispose
-        if (context != ContextHandle.Zero)
-        {
-            ALC.MakeContextCurrent(ContextHandle.Zero);
-            ALC.DestroyContext(context);
-        }
-        context = ContextHandle.Zero;
 
-        if (device != IntPtr.Zero)
+    }
+
+    public static void Update(FrameEventArgs args, KeyboardState keyboardState)
+    {
+        if(keyboardState.IsKeyDown(Keys.K))
         {
-            ALC.CloseDevice(device);
+            // kill frequenz
+            CleanUp();
         }
-        // ALDevice.Null
-        device = IntPtr.Zero;
-        */
+        if(keyboardState.IsKeyDown(Keys.P))
+        {
+            // play frequenz
+            TrySinusIsUnsafe();
+        }
+    }
+
+    public static void DebugDraw()
+    {
+        ImGuiNET.ImGui.SliderInt("Frequenz", ref sampleFreq, 400, 60000);
+        // ImGuiNET.ImGui.PlotLines("sinData", ref sinData[0], sinData.Length, sinDataIndex, "sinData", 0, 100, new System.Numerics.Vector2(0, 100));
 
     }
 

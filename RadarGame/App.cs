@@ -96,8 +96,8 @@ public class App : EngineWindow
         RadarTime = _stopwatch.Elapsed.TotalMilliseconds;
         RadarTimeList[RadarTimeListIndex] = (float)RadarTime;
         RadarTimeListIndex = (RadarTimeListIndex + 1) % RadarTimeList.Length;
-        
-        
+
+        SoundSystem.SoundSystem.Update(args, KeyboardState);
 
 
     }
@@ -136,6 +136,7 @@ public class App : EngineWindow
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         RadarSystem.DebugDraw();
+        SoundSystem.SoundSystem.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
