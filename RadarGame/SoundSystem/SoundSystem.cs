@@ -24,6 +24,7 @@ public static class SoundSystem
     static int dataCount = sampleFreq / freq;
     static short[] sinData = new short[dataCount];
     private static int sinDataIndex = 0;
+    static int source = 0;
 
 
     public static void CleanUp()
@@ -43,15 +44,18 @@ public static class SoundSystem
             
     }
 
+    public static void SetUpSound()
+    {
+        device = ALC.OpenDevice(null);
+        int[] flags = new int[0];
+        context = ALC.CreateContext(device, flags);
+    }
+
     public static  void TrySinusIsUnsafe()
     {
         OpenALLoader.LoadLibrary();
         
         // Initialize
-         device = ALC.OpenDevice(null);
-        int[] flags = new int[0];
-        
-         context = ALC.CreateContext(device,flags );
 
         ALC.MakeContextCurrent(context);
 
@@ -63,7 +67,7 @@ public static class SoundSystem
         Console.WriteLine(renderer);
        
         // Process
-        int buffers = 0; int source = 0;  // no need for int* disgusting buffers
+        int buffers = 0;   // no need for int* disgusting buffers
        //  int otherbuffer = AL.GenBuffer(); int othersource = AL.GenBuffer(); // this is LEGAL
         AL.GenBuffers(1, ref buffers);       // no out ?
         AL.GenSources(1, ref source);
@@ -90,11 +94,25 @@ public static class SoundSystem
         // AL.BufferData(buffers, ALFormat.Mono16,ref  sinData, sinData.Length, sampleFreq); // ??? short[] nicht zu IntPtr konvertierbar
 
         AL.Source(source, ALSourcei.Buffer, buffers);
-        AL.Source(source, ALSourceb.Looping, false);
+        AL.Source(source, ALSourceb.Looping, true);
 
         AL.SourcePlay(source);
 
 
+    }
+
+    public static void StopPlayingSource()
+    {
+        foreach (var source in Sources)
+        {
+            AL.SourceStop(source);
+            AL.DeleteSource(source);
+
+        }
+        foreach (var buffer in Buffers)
+        {
+            AL.DeleteBuffer(buffer);
+        }
     }
 
     public static void Update(FrameEventArgs args, KeyboardState keyboardState)
@@ -102,9 +120,10 @@ public static class SoundSystem
         if(keyboardState.IsKeyDown(Keys.K))
         {
             // kill frequenz
-            CleanUp();
+            // CleanUp();
+            StopPlayingSource();
         }
-        if(keyboardState.IsKeyDown(Keys.P))
+        if(keyboardState.IsKeyDown(Keys.L))
         {
             // play frequenz
             TrySinusIsUnsafe();
@@ -113,7 +132,10 @@ public static class SoundSystem
 
     public static void DebugDraw()
     {
-        ImGuiNET.ImGui.SliderInt("Frequenz", ref sampleFreq, 400, 60000);
+        ImGuiNET.ImGui.Begin("Sound");
+        ImGuiNET.ImGui.SliderInt("SampleFrequenz", ref sampleFreq, 40000, 60000);
+        ImGuiNET.ImGui.SliderInt("Frequenz", ref freq, 40, 1000);
+        ImGuiNET.ImGui.End();
         // ImGuiNET.ImGui.PlotLines("sinData", ref sinData[0], sinData.Length, sinDataIndex, "sinData", 0, 100, new System.Numerics.Vector2(0, 100));
 
     }
