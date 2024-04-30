@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Audio;
 using OpenTK.Mathematics;
 using OpenTK;
 using OpenTK.Audio.OpenAL;
@@ -12,13 +13,43 @@ namespace RadarGame.SoundSystem;
 public static class SoundSystem
 {
     // List<SoundObject> soundObjects = new List<SoundObject>();
+    private static List<int>Buffers = new List<int>();
+    private static List<int>Sources = new List<int>();
+    private static ALDevice device;
+    private static ALContext context;
 
-    public static unsafe void TrySinusIsUnsafe()
+    public static void CleanUp()
     {
+          foreach (var source in Sources)
+                   {   AL.SourceStop(source);
+                       AL.DeleteSource(source);
+                      
+                   }
+           foreach (var buffer in Buffers)
+            {
+                AL.DeleteBuffer(buffer);
+            }
+          
+        
+           ALC.DestroyContext(context);
+           ALC.CloseDevice(device);
+           
+           
+      
+           
+           
+       
+    }
+
+    public static  void TrySinusIsUnsafe()
+    {
+        OpenALLoader.LoadLibrary();
         
         // Initialize
-        var device = ALC.OpenDevice(null);
-        var context = ALC.CreateContext(device, (int*)null);
+         device = ALC.OpenDevice(null);
+        int[] flags = new int[0];
+        
+         context = ALC.CreateContext(device,flags );
 
         ALC.MakeContextCurrent(context);
 
@@ -28,12 +59,14 @@ public static class SoundSystem
         Console.WriteLine(version);
         Console.WriteLine(vendor);
         Console.WriteLine(renderer);
-
+       
         // Process
         int buffers = 0; int source = 0;  // no need for int* disgusting buffers
        //  int otherbuffer = AL.GenBuffer(); int othersource = AL.GenBuffer(); // this is LEGAL
         AL.GenBuffers(1, ref buffers);       // no out ?
         AL.GenSources(1, ref source);
+        Buffers.Add(buffers);
+        Sources.Add(source);
 
         int sampleFreq = 44100;   // example freq is sinus curve speed  c
         double dt = 2 * Math.PI / sampleFreq;

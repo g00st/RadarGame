@@ -11,7 +11,7 @@ public class EngineWindow : GameWindow
 {
     ImGuiController _controller;
     protected View MainView = new View();
-    private const int TargetFPS = 60; // Set your target FPS here
+    private const int TargetFPS = 90; // Set your target FPS here
     private DateTime _lastFrameTime;
     protected bool _debug = true;
     
@@ -21,7 +21,7 @@ public class EngineWindow : GameWindow
         : base(
             new GameWindowSettings() 
             {
-                UpdateFrequency = 60.0 
+                UpdateFrequency = 90.0 
             },
             new NativeWindowSettings() 
             { 
@@ -65,16 +65,19 @@ public class EngineWindow : GameWindow
      
         base.OnRenderFrame(args);  
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);  
-        Draw();
+        Draw();  
+        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0) ;
+        GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
         if (_debug)
         {
+           
             _controller.Update(this, (float)args.Time);
             Debugdraw();
             ImGuiController.CheckGLError("End of frame");
             DrawInfo.DebugDraw();
             _controller.Render();
         }
-
+      
         this.SwapBuffers();
 
     }
@@ -87,7 +90,8 @@ public class EngineWindow : GameWindow
     {
        
     }
-    
+ 
+
     
 
 }

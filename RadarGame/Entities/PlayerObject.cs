@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
+using RadarGame.Radarsystem;
 
 namespace RadarGame.Entities;
 
@@ -13,7 +14,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public List<Vector2> CollisonShape { get; set; }
     public void OnColision(IColisionObject colidedObject)
     {
-        Console.WriteLine("Colision with " + colidedObject);
+        Console.WriteLine("Colision with " + ((IEntitie)colidedObject).Name);
     }
 
     public bool Static { get; set; }
@@ -23,6 +24,8 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public string Name { get; set; }
     
     public TexturedRectangle DebugColoredRectangle { get; set; }
+    private Polygon DebugPolygon { get; set; }
+    private Polygon DebugPolygon2 { get; set; }
     private int bulletCount = 0;
     bool over1000 = false;
     private Vector2 lastPosition;
@@ -59,15 +62,24 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
             new Vector2(100, 100),
             new Vector2(-100, 100)
         };
+        
+        DebugPolygon = Polygon.Circle(this.Position,10,50,new SimpleColorShader(Color4.Red),"DebugPolygon",true);
+        DebugPolygon2 = Polygon.Rectangle( this.Position, new Vector2(200,200),0, new SimpleColorShader(Color4.Azure),"DebugPolygon2",true);
+       // DebugPolygon = Polygon.Rectangle(this.Position, new  Vector2(200,200),0, new SimpleColorShader(Color4.Azure),"DebugPolygon",true);
     }
     public void Update(FrameEventArgs args, KeyboardState keyboardState)
     {
         timer += (float)args.Time;
-        
+        Radarsystem.RadarSystem.SetPosition( Position);
+        Radarsystem.RadarSystem.SetRotation(Rotation);
         lastPosition = Position;
         lastRotation = Rotation;
         DebugColoredRectangle.drawInfo.Position = Position;
         DebugColoredRectangle.drawInfo.Rotation = Rotation;
+        DebugPolygon.Position = Position;
+        DebugPolygon.Rotation = Rotation;
+        DebugPolygon2.Position = Position;
+        DebugPolygon2.Rotation = Rotation;
         Vector2 force = new Vector2(0, 0);
         float   torque = 0;
         
@@ -157,6 +169,15 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         surface.vpossition = lastPosition;
         surface.vsize = new Vector2(1920/1.5f  + Math.Abs(PhysicsData.Velocity.Length*5) , 1080/1.5f + Math.Abs(PhysicsData.Velocity.Length*5));
         surface.Draw(DebugColoredRectangle);
+        surface.Draw(DebugPolygon2);
+        Vector2 last = this.Position;
+        foreach (var point in RadarSystem.Debugpoints)
+        {
+            DebugPolygon.Position = new Vector2(point.X, point.Y);
+            DebugPolygon.Size = new Vector2(point.Z, point.Z);
+            surface.Draw(DebugPolygon);
+           
+        }
     }
     
 }
