@@ -11,7 +11,7 @@ public class EngineWindow : GameWindow
 {
     ImGuiController _controller;
     protected View MainView = new View();
-    private const int TargetFPS = 90; // Set your target FPS here
+    private const int TargetFPS = 60; // Set your target FPS here
     private DateTime _lastFrameTime;
     protected bool _debug = true;
     
@@ -21,7 +21,7 @@ public class EngineWindow : GameWindow
         : base(
             new GameWindowSettings() 
             {
-                UpdateFrequency = 90.0 
+                UpdateFrequency = 60.0 
             },
             new NativeWindowSettings() 
             { 

@@ -47,15 +47,15 @@ public class App : EngineWindow
 
     public App() : base(1000, 1000, "Radargame"){
 
-       // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
-
+        // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
+        SoundSystem.SoundSystem.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
 
         
         EntityManager.AddObject(new Background());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
         
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 5; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
             EntityManager.AddObject(gameObject);
@@ -96,8 +96,8 @@ public class App : EngineWindow
         RadarTime = _stopwatch.Elapsed.TotalMilliseconds;
         RadarTimeList[RadarTimeListIndex] = (float)RadarTime;
         RadarTimeListIndex = (RadarTimeListIndex + 1) % RadarTimeList.Length;
-        
-        
+
+        SoundSystem.SoundSystem.Update(args, KeyboardState);
 
 
     }
@@ -135,6 +135,7 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("LautStärke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStärke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
+        SoundSystem.SoundSystem.DebugDraw();
         RadarSystem.DebugDraw();
     }
     
