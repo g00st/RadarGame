@@ -44,7 +44,7 @@ void main()
     if (abs(adjustedAntennaRotation - roationVC) < mult / f ||
         abs(adjustedAntennaRotation - roationVC + 2.0 * PI) <mult/ f ||
         abs(adjustedAntennaRotation - roationVC - 2.0 * PI) <mult / f ) {
-        newColor.g = 0.02 +1 * 1/ (pointdistance*    (10000-u_RadarRange)/10000 );
+        newColor.g = 0.02 +1 * 1/ pointdistance *4 ;
         
     }}
 
