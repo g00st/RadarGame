@@ -39,17 +39,24 @@ void main()
 
     float f = length (ofccenter);
    
-    float mult = 0.005;
+    float mult = 0.009;
     if(distancef < u_RadarRange ){
     if (abs(adjustedAntennaRotation - roationVC) < mult / f ||
         abs(adjustedAntennaRotation - roationVC + 2.0 * PI) <mult/ f ||
         abs(adjustedAntennaRotation - roationVC - 2.0 * PI) <mult / f ) {
         newColor.g = 0.02 +1 * 1/ pointdistance *4 ;
         
+        
     }}
+   
+    if (mod (distancef,  1000)  < 50) {
+        newColor.b = mod (distancef,  1000)/100;
+    }
+   
+    if (length(ofccenter) > 0.5) { newColor.a = 0.0; }
 
-    newColor.g =newColor.g +clamp( texture(lastFrame, VC).g* 0.95, 0.0,0.8);
-    
+    newColor.g =newColor.g + texture(lastFrame, VC).g* 0.98;
+    newColor.b += newColor.g/2;
     
   
     

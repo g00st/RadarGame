@@ -108,7 +108,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     
 
 
-    public void Update(FrameEventArgs args, KeyboardState keyboardState)
+    public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         DebugColoredRectangle.drawInfo.Position = Position;
         DebugColoredRectangle.drawInfo.Rotation = Rotation;

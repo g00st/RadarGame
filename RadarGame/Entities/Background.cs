@@ -15,7 +15,7 @@ public class Background : IEntitie , IDrawObject
         Name = "Background";
         _background = new TexturedRectangle(new Texture("resources/background.jpg"));
     }
-    public void Update(FrameEventArgs args, KeyboardState keyboardState)
+    public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
        
     }

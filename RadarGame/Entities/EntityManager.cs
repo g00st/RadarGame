@@ -15,11 +15,11 @@ public static class EntityManager
 
 
 
-    public static void Update(FrameEventArgs args, KeyboardState keyboardState)
+    public static void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         foreach (var gameObject in GameObjects)
         {
-            gameObject.Update(args, keyboardState);
+            gameObject.Update(args, keyboardState, mouseState);
         }
         foreach (var gameObject in _toAdd)
         {

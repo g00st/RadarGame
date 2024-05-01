@@ -53,13 +53,18 @@ public class App : EngineWindow
 
         
         EntityManager.AddObject(new Background());
+        EntityManager.AddObject(new cursor());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
+        EntityManager.AddObject( new cursor( "cursor4"));
         
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 50; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
             EntityManager.AddObject(gameObject);
         }
+        EntityManager.AddObject(new RadarPanel());
+       // EntityManager.AddObject( new cursor( "cursore"));
+       
         
 
 
@@ -69,7 +74,7 @@ public class App : EngineWindow
     protected override void OnUpdateFrame(FrameEventArgs args)
     {
 
-        
+       
 
         fpsList[fpsListindex] = 1/ (float)args.Time;
         fpsListindex = (fpsListindex + 1) % fpsList.Length;
@@ -77,7 +82,7 @@ public class App : EngineWindow
         double time = args.Time;
         base.OnUpdateFrame(args);
         _stopwatch.Restart();
-        EntityManager.Update(args, KeyboardState);
+        EntityManager.Update(args, KeyboardState, MouseState);
         _EntityTime = _stopwatch.Elapsed.TotalMilliseconds;
         _EntityTimeList[_EntityTimeListIndex] = (float)_EntityTime;
         _EntityTimeListIndex = (_EntityTimeListIndex + 1) % _EntityTimeList.Length;

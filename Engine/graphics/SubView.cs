@@ -76,6 +76,8 @@ public class SubView
     public void Draw()
     {
         _rendertarget.Bind();
+        GL.ClearColor(Color4.Black);
+        GL.Clear(ClearBufferMask.ColorBufferBit);
         Matrix4 camera =  calcCameraProjection();
 
         //statt liste an drawobjects dann eine liste an renderables
