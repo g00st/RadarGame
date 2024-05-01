@@ -27,7 +27,7 @@ public  static class RadarSystem
         Right
     }
     private static RotationDir _rotationDir = RotationDir.Right;
-    private static float _antanaRotationSpeed = 0.05f;
+    private static float _antanaRotationSpeed = 0.02f;
     
     //-----------------RadarView-----------------
     private static double _lastTime = 0; 
