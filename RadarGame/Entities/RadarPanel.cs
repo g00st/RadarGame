@@ -100,7 +100,7 @@ public class RadarPanel : IEntitie, IDrawObject
         public float angle;
         public float deadzone;
         public TexturedRectangle slider;
-        public List<CircularSlider> sidergroup; //slider on same plan in same spot should be able to colide with each other
+        public List<CircularSlider> sidergroup; //slider on same plan in same spot should not  be able to colide with each other
 
         public enum State{
             Idle,
@@ -334,6 +334,97 @@ public class RadarPanel : IEntitie, IDrawObject
             _buttonOffHover.Dispose();
         }
     }
+
+    class LinearSlider 
+    {
+        public Vector2 Begin;
+        public Vector2 End;
+        public Vector2 Position;
+        public float length;
+        public TexturedRectangle slider;
+        public enum State
+        {
+            Idle,
+            hover,
+            dragging
+        }
+        public State state;
+        
+        public LinearSlider(Vector2 begin, Vector2 end, Texture texture, Vector2 size)
+        {   Position = begin;
+            Begin = begin;
+            End = end;
+            length = Vector2.Distance(begin, end);
+            slider = new TexturedRectangle(Begin, size, texture);
+        }
+        
+        public void Update(MouseState mouseState)
+        {
+            switch (state)
+            {
+                case State.Idle:
+                    if (checkHover(mouseState))
+                    {
+                        state = State.hover;
+                    }
+                    break;
+                case State.hover:
+                    if (checkHover(mouseState))
+                    {
+                        if (mouseState.IsButtonDown(MouseButton.Left))
+                        {
+                            state = State.dragging;
+                        }
+                    }
+                    else
+                    {
+                        state = State.Idle;
+                    }
+                    break;
+                case State.dragging:
+                    if (mouseState.IsButtonDown(MouseButton.Left))
+                    {
+                        
+                        // Assuming Slidervec, transformed, and other necessary variables are defined
+                        Vector2 Slidervec = End - Begin; // Define Slidervec as the vector from Begin to End
+                        Vector2 transformed = DrawSystem.DrawSystem.GetMainView().ScreenToViewSpace(new Vector2(mouseState.X, mouseState.Y)); // Get the transformed point
+                        // Step 1: Calculate the perpendicular vector to Slidervec
+                        Vector2 perpVector = new Vector2(-Slidervec.Y, Slidervec.X);
+                        // Step 2: Calculate the projection of the point transformed onto the perpendicular vector
+                        float projectionScalar = Vector2.Dot(transformed, perpVector) / perpVector.LengthSquared;
+                        Vector2 projection = perpVector * projectionScalar;
+                        // Step 3: Add this projection to the original vector to find the projected point
+                        Vector2 projectedPoint = Slidervec + projection;
+                        projectedPoint = Vector2.Clamp(projectedPoint, Begin, End);
+                        Position = projectedPoint;
+                    }
+                    else
+                    {
+                        state = State.Idle;
+                    }
+                    break;
+            }
+        }
+        
+        
+        private bool checkHover(MouseState mouseState)
+        {
+            var transformed = DrawSystem.DrawSystem.GetMainView().ScreenToViewSpace(new Vector2(mouseState.X, mouseState.Y));
+            // do colision with cirlce defined by slider.drawinfo.position and slider.drawinfo .size.max /2
+            if (Vector2.Distance(transformed, slider.drawInfo.Position) < slider.drawInfo.Size.Y*0.9 *0.5)
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        public void Draw(View surface)
+        {
+            slider.drawInfo.Position = Position;
+            surface.Draw(slider);
+        }
+    }
+    
     
 }
 
