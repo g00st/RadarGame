@@ -19,16 +19,19 @@ public class RadarPanel : IEntitie, IDrawObject
     private CircularSlider _cirlceslider1;
     private CircularSlider _cirlceslider2;
     private Button _SweepButton; //button to turn on and off radar sweep
+    
+    private LinearSlider _radaScreenRangeSlider; //slider for radar screen range
+    private LinearSlider _radarRangeSlider; //slider for radar range private LinearSlider _radarRangeSlider; //slider for radar range
     private TexturedRectangle _background ; //slider for radar screen range
     private TexturedRectangle _rim; //rim of radar
     private TexturedRectangle _ButtonLabel;
     private float maxangle = 0;
     private float minangle = 2 * (float)Math.PI;
     
-    public RadarPanel()
+    public RadarPanel( Vector2 position  , Vector2 size)
     {
-        Position = new Vector2(0, 0);
-        Size = new Vector2(800, 800);
+        Position = position;
+        Size = size;
         Center = new Vector2(Size.X / 2, Size.Y / 2) + Position + new Vector2(0, Size.Y / 30);
         Texture texture = new Texture("resources/Radar/slider_circular.png");
         
@@ -41,6 +44,8 @@ public class RadarPanel : IEntitie, IDrawObject
         _cirlceslider2.sidergroup = new List<CircularSlider>(){_cirlceslider1};
         _ButtonLabel = new TexturedRectangle(Position + Size - new Vector2(Size.X/8, Size.Y /16), new Vector2(Size.X /10.6f, Size.Y /32), new Texture("resources/Radar/Sweep.png"), "label",true);
         _SweepButton = new Button(Position +Size - new Vector2(Size.X/6.4f), new Vector2(Size.X /16), new Texture("resources/Radar/Button_on.png"), new Texture("resources/Radar/Button_of.png"), new Texture("resources/Radar/Button_on_hover.png"), new Texture("resources/Radar/Button_of_hover.png"));
+        _radaScreenRangeSlider= new LinearSlider( Position + new Vector2(50) , Position + new Vector2(250, 50), new Texture("resources/Radar/slider_circular.png"), new Vector2(Size.X /25,Size.Y /(25*0.5f)) , 1000, 10000);
+        _radarRangeSlider = new LinearSlider(Position + new Vector2(Size.X - (50 +200), 50), Position + new Vector2(Size.X - 50 , 50), new Texture("resources/Radar/slider_circular.png"), new Vector2(Size.X / 25, Size.Y / (25 * 0.5f)), 1000, 10000);
 
     }
 
@@ -52,6 +57,10 @@ public class RadarPanel : IEntitie, IDrawObject
         _cirlceslider1.Update(mouseState);
         _cirlceslider2.Update(mouseState);
         _SweepButton.Update(mouseState , args);
+        _radaScreenRangeSlider.Update(mouseState);
+        _radarRangeSlider.Update(mouseState);
+        RadarSystem.setRadarrange(_radarRangeSlider.getValue());
+        RadarSystem.setScreenRange( _radaScreenRangeSlider.getValue());
       
         minangle = _cirlceslider1.angle - (float)Math.PI/2;
         maxangle = _cirlceslider2.angle - (float)Math.PI/2;
@@ -67,7 +76,7 @@ public class RadarPanel : IEntitie, IDrawObject
 
     public void onDeleted()
     {
-        ///throw new NotImplementedException();
+        
         
         _background.Dispose();
         
@@ -76,17 +85,24 @@ public class RadarPanel : IEntitie, IDrawObject
         _cirlceslider1.slider.Dispose();
         _cirlceslider2.slider.Dispose();
         _SweepButton.Dispose();
+        _ButtonLabel.Dispose();
+        _radaScreenRangeSlider.Dispose();
+        _radarRangeSlider.Dispose();
     }
 
     public void Draw(View surface)
     {
-        surface.Draw( _background);
+      //  surface.Draw( _background);
         surface.Draw(_display);
         surface.Draw(_rim);
         //make normalized vector from angle
         
         _cirlceslider1.Draw(surface);
         _cirlceslider2.Draw(surface);
+        
+        _radaScreenRangeSlider.Draw(surface);
+        _radarRangeSlider.Draw(surface);
+        
         surface.Draw(_ButtonLabel);
         _SweepButton.Draw(surface);
 
@@ -335,13 +351,26 @@ public class RadarPanel : IEntitie, IDrawObject
         }
     }
 
-    class LinearSlider 
+    class LinearSlider : IDisposable
     {
         public Vector2 Begin;
         public Vector2 End;
         public Vector2 Position;
         public float length;
         public TexturedRectangle slider;
+        private Polygon _line; 
+        private Polygon _line2;
+        private Polygon _line3;
+        private float min;
+        private float max;
+
+        public float getValue()
+        {
+             //transform position betwine begina and end to value betwine min and max
+            float dot = Vector2.Dot(Position - Begin, Vector2.Normalize(End - Begin));
+            return MathHelper.Lerp(min, max, dot / length);
+        }
+        
         public enum State
         {
             Idle,
@@ -350,12 +379,16 @@ public class RadarPanel : IEntitie, IDrawObject
         }
         public State state;
         
-        public LinearSlider(Vector2 begin, Vector2 end, Texture texture, Vector2 size)
+        public LinearSlider(Vector2 begin, Vector2 end, Texture texture, Vector2 size,float min, float max)
         {   Position = begin;
             Begin = begin;
             End = end;
             length = Vector2.Distance(begin, end);
-            slider = new TexturedRectangle(Begin, size, texture);
+            _line = Polygon.Line( begin, end, new SimpleColorShader(Color4.Red), "line");
+            slider = new TexturedRectangle(Begin, size, texture, "RadarPanel_slider", true);
+            this.min = min;
+            this.max = max;
+            
         }
         
         public void Update(MouseState mouseState)
@@ -384,19 +417,15 @@ public class RadarPanel : IEntitie, IDrawObject
                 case State.dragging:
                     if (mouseState.IsButtonDown(MouseButton.Left))
                     {
+                        Vector2 Slidervec = End - Begin;
+                        Vector2 normSlidervec = Vector2.Normalize(Slidervec); 
+                        Vector2 transformed = DrawSystem.DrawSystem.GetMainView().ScreenToViewSpace(new Vector2(mouseState.X, mouseState.Y)); 
+                        Vector2 mousevec = transformed - Begin; 
+                        float dot = Vector2.Dot(mousevec, normSlidervec);
+                        dot = Math.Max(0, Math.Min(dot, length));
+                        dot = Math.Clamp(dot, 0,length);
+                        Position = Begin + dot * normSlidervec; 
                         
-                        // Assuming Slidervec, transformed, and other necessary variables are defined
-                        Vector2 Slidervec = End - Begin; // Define Slidervec as the vector from Begin to End
-                        Vector2 transformed = DrawSystem.DrawSystem.GetMainView().ScreenToViewSpace(new Vector2(mouseState.X, mouseState.Y)); // Get the transformed point
-                        // Step 1: Calculate the perpendicular vector to Slidervec
-                        Vector2 perpVector = new Vector2(-Slidervec.Y, Slidervec.X);
-                        // Step 2: Calculate the projection of the point transformed onto the perpendicular vector
-                        float projectionScalar = Vector2.Dot(transformed, perpVector) / perpVector.LengthSquared;
-                        Vector2 projection = perpVector * projectionScalar;
-                        // Step 3: Add this projection to the original vector to find the projected point
-                        Vector2 projectedPoint = Slidervec + projection;
-                        projectedPoint = Vector2.Clamp(projectedPoint, Begin, End);
-                        Position = projectedPoint;
                     }
                     else
                     {
@@ -421,7 +450,23 @@ public class RadarPanel : IEntitie, IDrawObject
         public void Draw(View surface)
         {
             slider.drawInfo.Position = Position;
+            var old = slider.drawInfo.Size;
+            slider.drawInfo.Rotation = (float)Math.Atan2(End.Y - Begin.Y, End.X - Begin.X);
+            if (state == State.dragging || state == State.hover)
+            {
+                slider.drawInfo.Size = new Vector2(slider.drawInfo.Size.X * 1.1f, slider.drawInfo.Size.Y * 1.1f);
+            }
             surface.Draw(slider);
+            surface.Draw(_line);
+            slider.drawInfo.Size = old;
+        }
+
+        public void Dispose()
+        {
+            slider.Dispose();
+            _line.Dispose();
+            _line2.Dispose();
+            _line3.Dispose();
         }
     }
     

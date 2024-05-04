@@ -55,7 +55,7 @@ void main()
    
     if (length(ofccenter) > 0.5) { newColor.a = 0.0; }
 
-    newColor.g =newColor.g + texture(lastFrame, VC).g* 0.98;
+    newColor.g =newColor.g + texture(lastFrame, VC).g* 0.985;
     newColor.b += newColor.g/2;
     
   

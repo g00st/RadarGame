@@ -51,7 +51,7 @@ public  static class RadarSystem
         UpdateRotation();
         float direction = _rotation + _antanaRotation + (float) (Math.PI /2.0f);
         _rotated = new Vector2((float)Math.Cos(direction), (float)Math.Sin(direction));
-        Vector2 newpoint = Raymarch(_position,_rotated , _radarScreenrange);
+        Vector2 newpoint = Raymarch(_position,_rotated , _radarScreenrange , _radarrange/100.0f);
         _lastDistance = (newpoint - _position).Length;
         
     }
@@ -82,7 +82,7 @@ public  static class RadarSystem
         }
         _antanaRotation = (_antanaRotation + 2.0f * (float)Math.PI) % (2.0f *(float) Math.PI);
     }
-    private static Vector2 Raymarch(Vector2 start, Vector2 direction, float maxDistance)
+    private static Vector2 Raymarch(Vector2 start, Vector2 direction, float maxDistance, float sdfDistance = 0.1f)
     {
         Debugpoints.Clear();
         float distance = 0;
@@ -94,7 +94,7 @@ public  static class RadarSystem
             {
                 sdf = Math.Min(sdf, radarObject.RadarSdf(position));
             }
-            if (sdf < 0.1f)
+            if (sdf <sdfDistance)
             {
                 return position;
             }
@@ -114,6 +114,15 @@ public  static class RadarSystem
 
     }
     
+    public static void setRadarrange(float range)
+    {
+        _radarrange = range;
+    }
+    public static void  setScreenRange(float distance)
+    {
+      _radarScreenrange = distance;
+    }
+
     public static float getMinAngle()
     {
         return  _minAngle;
@@ -159,7 +168,7 @@ public  static class RadarSystem
         _radarShader.setAntennaRotation(MathHelper.TwoPi- _antanaRotation );
         _radarShader.setDistance( _lastDistance);
         _radarShader.setTextureSize(new Vector2(1000, 1000));
-        _radarShader.setRadarScreenrange(_radarScreenrange);
+        _radarShader.setRadarScreenrange(_radarScreenrange *2);
         _radarView._rendertarget.Bind();
         _radarView.Draw(_radarRectangle);
         _radarView._rendertarget.Unbind();

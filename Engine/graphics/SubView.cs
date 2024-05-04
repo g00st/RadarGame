@@ -130,7 +130,7 @@ public class SubView
     }
     public SubView( VBO rendertarget)
     {
-        ClearColor = Color4.Black;
+        ClearColor = Color4.Transparent;
         _rendertarget = rendertarget;
         vsize = new Vector2(rendertarget.Widht(), rendertarget.Height());
         Width = rendertarget.Widht();
