@@ -7,7 +7,7 @@ public class TexturedRectangle : DrawObject , IDisposable
 {
 public DrawInfo drawInfo { get; }
 
-    public TexturedRectangle(Vector2 positon, Vector2 size, Texture texture, string name = "TexturedRectangle", bool originCenter = false)
+    public TexturedRectangle(Vector2 positon, Vector2 size, Texture? texture, string name = "TexturedRectangle", bool originCenter = false)
     {
         this.drawInfo = new DrawInfo(new Vector2(), new Vector2(), 0, null, name);
         this.drawInfo.Position = positon;
@@ -23,7 +23,11 @@ public DrawInfo drawInfo { get; }
         bufferlayout.typesize = sizeof(float);
 
         this.drawInfo.mesh = new Mesh();
-        this.drawInfo.mesh.Texture = texture;
+        if (texture != null)
+        { 
+            this.drawInfo.mesh.Texture = texture;
+        }
+       
         if (originCenter)
         {
             this.drawInfo.mesh.AddAtribute(bufferlayout, new float[] { -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f });
@@ -43,7 +47,7 @@ public DrawInfo drawInfo { get; }
         
     }
     
-    public TexturedRectangle(Vector2 positon, Vector2 size, Texture texture, Shader shader) : this(positon, size, texture)
+    public TexturedRectangle(Vector2 positon, Vector2 size, Texture? texture, Shader shader) : this(positon, size, texture)
     {
         this.drawInfo.mesh.Shader = shader;
     }

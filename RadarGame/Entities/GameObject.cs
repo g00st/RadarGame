@@ -4,11 +4,15 @@ using App.Engine.Template;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
+using RadarGame.Radarsystem;
 
 namespace RadarGame.Entities;
 
-public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject
+public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject, IRadarObject
 {
+    //--------------------------------------------------------------------------------
+    // THis is a simple game object that can be used to test the Project and Systems
+    //--------------------------------------------------------------------------------
     public TexturedRectangle DebugColoredRectangle { get; set; }
     
     public PhysicsDataS PhysicsData { get; set; }
@@ -30,11 +34,19 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
             PhysicsSystem.ApplyForce(this, -differencevector * 100);
         }
     }
+    private Polygon DebugPolygon = Polygon.Circle( new Vector2(0, 0), 50, 100,new SimpleColorShader(Color4.Ivory), "SDF", true);
+    
 
     public bool Static { get; set; }
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
     public float Rotation { get; set; }
+    public float RadarSdf(Vector2 Position)
+    {
+       //use circular sdf
+        return (Position - this.Position).Length - 50;
+    }
+
     public string Name { get; set; }
 
     public GameObject( Vector2 position, float rotation, string name)
@@ -99,10 +111,12 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     
 
 
-    public void Update(FrameEventArgs args, KeyboardState keyboardState)
+    public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         DebugColoredRectangle.drawInfo.Position = Position;
         DebugColoredRectangle.drawInfo.Rotation = Rotation;
+        DebugPolygon.Position = Position;
+        DebugPolygon.Rotation = Rotation;
     }
 
     public void onDeleted()
@@ -115,5 +129,6 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     public void Draw(View surface)
     {
         surface.Draw(DebugColoredRectangle);
+        surface.Draw(DebugPolygon);
     }
 }

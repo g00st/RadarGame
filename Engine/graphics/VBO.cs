@@ -42,7 +42,7 @@ public class VBO
     
     public void Unbind()
     {
-        GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
     
     public void linkTexure(Texture texture)

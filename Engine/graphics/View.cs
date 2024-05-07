@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-
+//TODO: Fix horrible code and mvp mess
 namespace App.Engine;
 
 public class View
@@ -111,6 +111,7 @@ public class View
                 //prüfe was gamestate
 
                 obj.mesh.Draw(comb, obj, view, projection);
+                _rendertarget.Unbind();
         }
     
 
@@ -126,6 +127,44 @@ public class View
         return  Matrix4.CreateOrthographicOffCenter(left, right, bottom, top, -1.0f, 1.0f);
 
         
+    }
+    
+    public Vector2 ScreenToViewSpace(Vector2 screenCoordinate)
+    {
+        float centerX = Width / 2.0f;
+        float centerY = Height / 2.0f;
+    
+        // Center the screen coordinates around the center of the viewport
+        float centeredX = screenCoordinate.X - centerX;
+        float centeredY = centerY - screenCoordinate.Y; // Y-axis is inverted in screen coordinates
+    
+        // Normalize centered screen coordinates
+        float normalizedX = (2.0f * centeredX / Width);
+        float normalizedY = (2.0f * centeredY / Height);
+    
+        // Create the camera projection matrix
+        Matrix4 projectionMatrix = calcCameraProjection();
+    
+        // Create the camera rotation matrix
+        Matrix4 cameraRotationMatrix = Matrix4.CreateRotationZ(rotation);
+    
+        // Calculate the translation to move the camera position to the origin
+        Matrix4 translateToOrigin = Matrix4.CreateTranslation(-vpossition.X, -vpossition.Y, 0);
+    
+        // Calculate the translation to move back to the original position after rotation
+        Matrix4 translateBack = Matrix4.CreateTranslation(vpossition.X, vpossition.Y, 0);
+    
+        // Combine the translations, rotation, and projection matrices
+        Matrix4 combinedMatrix = translateToOrigin * cameraRotationMatrix * translateBack * projectionMatrix;
+    
+        // Calculate the inverse of the combined matrix
+        Matrix4 inverseMatrix = Matrix4.Invert(combinedMatrix);
+    
+        // Transform the screen coordinate to view space
+        Vector4 viewSpace = new Vector4(normalizedX, normalizedY, 0, 1) * inverseMatrix;
+    
+        // Return the transformed coordinates
+        return new Vector2(viewSpace.X, viewSpace.Y);
     }
     public View()
     {

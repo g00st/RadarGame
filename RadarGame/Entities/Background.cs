@@ -13,9 +13,11 @@ public class Background : IEntitie , IDrawObject
     public Background()
     {
         Name = "Background";
-        _background = new TexturedRectangle(new Texture("resources/background.jpg"));
+        _background = new TexturedRectangle(new Texture("resources/background2.jpg"));
+        _background.drawInfo.Size = new OpenTK.Mathematics.Vector2(1920, 1280);
+        _background.drawInfo.Position = new OpenTK.Mathematics.Vector2(0,-100);
     }
-    public void Update(FrameEventArgs args, KeyboardState keyboardState)
+    public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
        
     }

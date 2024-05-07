@@ -65,16 +65,19 @@ public class EngineWindow : GameWindow
      
         base.OnRenderFrame(args);  
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);  
-        Draw();
+        Draw();  
+        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0) ;
+        GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
         if (_debug)
         {
+           
             _controller.Update(this, (float)args.Time);
             Debugdraw();
             ImGuiController.CheckGLError("End of frame");
             DrawInfo.DebugDraw();
             _controller.Render();
         }
-
+      
         this.SwapBuffers();
 
     }
@@ -87,7 +90,8 @@ public class EngineWindow : GameWindow
     {
        
     }
-    
+ 
+
     
 
 }

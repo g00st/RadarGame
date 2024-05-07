@@ -18,6 +18,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+    <ItemGroup>
+      <None Remove="resources\Laser3.wav" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="ImGui.NET" Version="1.90.1.1" />

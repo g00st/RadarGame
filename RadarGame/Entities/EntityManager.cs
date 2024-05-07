@@ -1,6 +1,7 @@
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
+using RadarGame.Radarsystem;
 
 namespace RadarGame.Entities;
 
@@ -14,11 +15,11 @@ public static class EntityManager
 
 
 
-    public static void Update(FrameEventArgs args, KeyboardState keyboardState)
+    public static void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         foreach (var gameObject in GameObjects)
         {
-            gameObject.Update(args, keyboardState);
+            gameObject.Update(args, keyboardState, mouseState);
         }
         foreach (var gameObject in _toAdd)
         {
@@ -36,6 +37,10 @@ public static class EntityManager
             {
                 Physics.ColisionSystem.AddObject(colisionObject);
             }
+            if (gameObject is IRadarObject radarObject)
+            {
+                RadarSystem.RadarObjects.Add(radarObject);
+            }
         }
         
         foreach (var gameObject in _toRemove)
@@ -52,6 +57,10 @@ public static class EntityManager
             if (gameObject is IColisionObject colisionObject)
             {
                 Physics.ColisionSystem.RemoveObject(colisionObject);
+            }
+            if (gameObject is IRadarObject radarObject)
+            {
+                RadarSystem.RadarObjects.Remove(radarObject);
             }
             gameObject.onDeleted();
             GameObjects.Remove(gameObject);
@@ -76,6 +85,8 @@ public static class EntityManager
         if (!_toRemove.Contains(gameObject))
             _toRemove.Add(gameObject);
     }
+    
+
     public static IEntitie GetObject(string name)
     {
         return GameObjects.Find(x => x.Name == name);
@@ -96,5 +107,6 @@ public static class EntityManager
         GameObjects.Clear();
         Physics.PhysicsSystem.ClearObjects();
         DrawSystem.DrawSystem.ClearObjects();
+        RadarSystem.RadarObjects.Clear();
     }
 }

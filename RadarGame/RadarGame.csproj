@@ -1,11 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="SoundSystem\Laser3.wav" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="SoundSystem\Laser3.wav">
+        <CustomToolNamespace></CustomToolNamespace>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="SoundSystem\Laser3.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
+    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Engine\Engine.csproj" />
@@ -13,6 +31,11 @@
 
     <ItemGroup>
       <Folder Include="ColissionSystem\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NAudio" Version="2.2.1" />
+      <PackageReference Include="NAudio.Core" Version="2.2.1" />
     </ItemGroup>
 
 </Project>
