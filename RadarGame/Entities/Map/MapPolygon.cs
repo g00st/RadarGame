@@ -45,7 +45,8 @@ public class MapPolygon : IEntitie , IDrawObject
     {
        
 
-        return new MapPolygon(points, center, new Vector2(0,0), name);
+       // return new MapPolygon(points, center, new Vector2(0,0), name);
+        return null;
     }
 
     public void Draw(View surface)
@@ -54,7 +55,7 @@ public class MapPolygon : IEntitie , IDrawObject
         surface.Draw(_polygon);
         surface.Draw(_debugColoredRectangle);
     }
-    
+    /*
      public static List<Vector2> GenerateRandomConvexPolygon(Vector2 bounds, int n, Random RAND)
     {
         // Generate two lists of random X and Y coordinates
@@ -181,4 +182,5 @@ public class MapPolygon : IEntitie , IDrawObject
             list[n] = value;
         }
     }
+    */
 }

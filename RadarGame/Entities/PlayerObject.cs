@@ -165,7 +165,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public void Draw(View surface)
     {
       //  surface.rotation = - lastRotation;
-      surface.vpossition = new Vector2(Position.X, Position.Y);
+     // surface.vpossition = new Vector2(Position.X, Position.Y);
        // Console.WriteLine(surface.rotation);
       //// surface.vsize = new Vector2(1920/1.5f  + Math.Abs(PhysicsData.Velocity.Length*5) , 1080/1.5f + Math.Abs(PhysicsData.Velocity.Length*5));
         surface.Draw(DebugColoredRectangle);
