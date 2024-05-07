@@ -10,6 +10,9 @@ namespace RadarGame.Entities;
 
 public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject, IRadarObject
 {
+    //--------------------------------------------------------------------------------
+    // THis is a simple game object that can be used to test the Project and Systems
+    //--------------------------------------------------------------------------------
     public TexturedRectangle DebugColoredRectangle { get; set; }
     
     public PhysicsDataS PhysicsData { get; set; }
@@ -108,7 +111,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     
 
 
-    public void Update(FrameEventArgs args, KeyboardState keyboardState)
+    public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         DebugColoredRectangle.drawInfo.Position = Position;
         DebugColoredRectangle.drawInfo.Rotation = Rotation;

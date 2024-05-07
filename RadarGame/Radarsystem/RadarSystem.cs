@@ -14,7 +14,7 @@ public  static class RadarSystem
     private static float _antanaRotation = 0; //rotation of antenna 
     private static float _rotation = 0; //roation of "ship"
     private static bool _sweep = false; //sweeping radar
-    private static float _maxAngle = 0; //max angle of radar swepp
+    private static float _maxAngle = 0 ; //max angle of radar swepp
     private static float _minAngle = 360; //min angle of radar swepp
     private  static Vector2 _position = new Vector2(0, 0); //position of radar in world
     private static float  _lastDistance = 0; //distance of last hit
@@ -27,7 +27,7 @@ public  static class RadarSystem
         Right
     }
     private static RotationDir _rotationDir = RotationDir.Right;
-    private static float _antanaRotationSpeed = 0.0f;
+    private static float _antanaRotationSpeed = 0.02f;
     
     //-----------------RadarView-----------------
     private static double _lastTime = 0; 
@@ -51,7 +51,7 @@ public  static class RadarSystem
         UpdateRotation();
         float direction = _rotation + _antanaRotation + (float) (Math.PI /2.0f);
         _rotated = new Vector2((float)Math.Cos(direction), (float)Math.Sin(direction));
-        Vector2 newpoint = Raymarch(_position,_rotated , _radarScreenrange);
+        Vector2 newpoint = Raymarch(_position,_rotated , _radarScreenrange , _radarrange/100.0f);
         _lastDistance = (newpoint - _position).Length;
         
     }
@@ -82,7 +82,7 @@ public  static class RadarSystem
         }
         _antanaRotation = (_antanaRotation + 2.0f * (float)Math.PI) % (2.0f *(float) Math.PI);
     }
-    private static Vector2 Raymarch(Vector2 start, Vector2 direction, float maxDistance)
+    private static Vector2 Raymarch(Vector2 start, Vector2 direction, float maxDistance, float sdfDistance = 0.1f)
     {
         Debugpoints.Clear();
         float distance = 0;
@@ -94,7 +94,7 @@ public  static class RadarSystem
             {
                 sdf = Math.Min(sdf, radarObject.RadarSdf(position));
             }
-            if (sdf < 0.1f)
+            if (sdf <sdfDistance)
             {
                 return position;
             }
@@ -108,6 +108,41 @@ public  static class RadarSystem
         return start + direction * maxDistance;
     }
     
+    public static void setMaxAngle(float angle)
+    {
+        _maxAngle = angle;
+
+    }
+    
+    public static void setRadarrange(float range)
+    {
+        _radarrange = range;
+    }
+    public static void  setScreenRange(float distance)
+    {
+      _radarScreenrange = distance;
+    }
+
+    public static float getMinAngle()
+    {
+        return  _minAngle;
+    }
+    public static float getMaxAngle()
+    {
+        return _maxAngle;
+    }
+    
+    public static void setMinAngle(float angle)
+    {
+        _minAngle = angle;
+    }
+    
+    public static void setSweep(bool s)
+    {
+        _sweep = s;
+    }
+    
+    
     public static void AddObject(IRadarObject radarObject)
     {
         RadarObjects.Add(radarObject);
@@ -120,21 +155,24 @@ public  static class RadarSystem
     {
         RadarObjects.Clear();
     }
+
+    public static Texture GetTexture()
+    {
+        return _Screentexture;
+    }
     
     public static void Render( ){
        
         
         _radarShader.setRadarRange( _radarrange);
-        _radarShader.setAntennaRotation(_antanaRotation + MathHelper.DegreesToRadians(180));
+        _radarShader.setAntennaRotation(MathHelper.TwoPi- _antanaRotation );
         _radarShader.setDistance( _lastDistance);
         _radarShader.setTextureSize(new Vector2(1000, 1000));
-        _radarShader.setRadarScreenrange(_radarScreenrange);
+        _radarShader.setRadarScreenrange(_radarScreenrange *2);
         _radarView._rendertarget.Bind();
-        GL.Clear(ClearBufferMask.ColorBufferBit);
         _radarView.Draw(_radarRectangle);
         _radarView._rendertarget.Unbind();
         _lastRadarView._rendertarget.Bind();
-        GL.Clear(ClearBufferMask.ColorBufferBit);
         _lastRadarView.Draw(_lastRadarRectangle);
         _lastRadarView._rendertarget.Unbind();
     }

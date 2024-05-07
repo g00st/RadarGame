@@ -76,6 +76,8 @@ public class SubView
     public void Draw()
     {
         _rendertarget.Bind();
+        GL.ClearColor(Color4.Black);
+        GL.Clear(ClearBufferMask.ColorBufferBit);
         Matrix4 camera =  calcCameraProjection();
 
         //statt liste an drawobjects dann eine liste an renderables
@@ -128,7 +130,7 @@ public class SubView
     }
     public SubView( VBO rendertarget)
     {
-        ClearColor = Color4.Black;
+        ClearColor = Color4.Transparent;
         _rendertarget = rendertarget;
         vsize = new Vector2(rendertarget.Widht(), rendertarget.Height());
         Width = rendertarget.Widht();

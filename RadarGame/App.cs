@@ -45,21 +45,33 @@ public class App : EngineWindow
 
 
 
-    public App() : base(1000, 1000, "Radargame"){
+    public App() : base(1440, 900, "Radargame"){
 
         // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
         SoundSystem.SoundSystem.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
-
+        WindowState = WindowState.Maximized;
         
         EntityManager.AddObject(new Background());
+        EntityManager.AddObject(new cursor());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
+        EntityManager.AddObject( new cursor( "cursor4"));
+       // EntityManager.AddObject(new Mapp( new Vector2(1000), new Vector2(0,0)));
+      
         
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 50; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
             EntityManager.AddObject(gameObject);
         }
+        
+
+        var size = MainView.vsize.Y;
+       
+        EntityManager.AddObject(new RadarPanel( new Vector2(MainView.vsize.X/2 -size/2,0), new Vector2(size))); 
+        EntityManager.AddObject(new CompasPanel(new Vector2(100,MainView.vsize.Y - 400), new Vector2(300,300) ,"CompasPanel"));
+       // EntityManager.AddObject( new cursor( "cursore"));
+       
         
 
 
@@ -69,7 +81,7 @@ public class App : EngineWindow
     protected override void OnUpdateFrame(FrameEventArgs args)
     {
 
-        
+       
 
         fpsList[fpsListindex] = 1/ (float)args.Time;
         fpsListindex = (fpsListindex + 1) % fpsList.Length;
@@ -77,7 +89,7 @@ public class App : EngineWindow
         double time = args.Time;
         base.OnUpdateFrame(args);
         _stopwatch.Restart();
-        EntityManager.Update(args, KeyboardState);
+        EntityManager.Update(args, KeyboardState, MouseState);
         _EntityTime = _stopwatch.Elapsed.TotalMilliseconds;
         _EntityTimeList[_EntityTimeListIndex] = (float)_EntityTime;
         _EntityTimeListIndex = (_EntityTimeListIndex + 1) % _EntityTimeList.Length;

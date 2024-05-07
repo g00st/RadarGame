@@ -67,7 +67,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         DebugPolygon2 = Polygon.Rectangle( this.Position, new Vector2(200,200),0, new SimpleColorShader(Color4.Azure),"DebugPolygon2",true);
        // DebugPolygon = Polygon.Rectangle(this.Position, new  Vector2(200,200),0, new SimpleColorShader(Color4.Azure),"DebugPolygon",true);
     }
-    public void Update(FrameEventArgs args, KeyboardState keyboardState)
+    public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         timer += (float)args.Time;
         Radarsystem.RadarSystem.SetPosition( Position);
@@ -164,10 +164,10 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
 
     public void Draw(View surface)
     {
-     //   surface.rotation = - lastRotation;
+      //  surface.rotation = - lastRotation;
+     // surface.vpossition = new Vector2(Position.X, Position.Y);
        // Console.WriteLine(surface.rotation);
-        surface.vpossition = lastPosition;
-        surface.vsize = new Vector2(1920/1.5f  + Math.Abs(PhysicsData.Velocity.Length*5) , 1080/1.5f + Math.Abs(PhysicsData.Velocity.Length*5));
+      //// surface.vsize = new Vector2(1920/1.5f  + Math.Abs(PhysicsData.Velocity.Length*5) , 1080/1.5f + Math.Abs(PhysicsData.Velocity.Length*5));
         surface.Draw(DebugColoredRectangle);
         surface.Draw(DebugPolygon2);
         Vector2 last = this.Position;
