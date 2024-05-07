@@ -21,7 +21,8 @@ namespace RadarGame.SoundSystem
         static int freq = 440;
         static int dataCount = sampleFreq / freq;
         static short[] sinData = new short[dataCount];
-        private static int sinDataIndex = 0;
+        // private static int sinDataIndex = 0;
+        static bool ToggleSinus = false;
         static int source = 0;
         public static void SetUpSound()
         {
@@ -30,9 +31,51 @@ namespace RadarGame.SoundSystem
             context = ALC.CreateContext(device, flags);
         }
 
+        public static void Update(FrameEventArgs args, KeyboardState keyboardState)
+        {
+            // TO DO: change if to switch case
+            if(ToggleSinus)
+            {
+                if (keyboardState.IsKeyReleased(Keys.K))
+                {
+                    // kill frequenz all
+                    StopPlayingSource();
+                }
+                if (keyboardState.IsKeyReleased(Keys.L))
+                {
+                    // play changeable frequenz in Loop
+                    PlaySinusWaveLoop(sampleFreq, freq);
+                }
+                if (keyboardState.IsKeyReleased(Keys.I))
+                {
+                    // play changeable frequenz in no Loop
+                    PlaySinusWaveNoLoop(sampleFreq, freq);
+                }
+                if (keyboardState.IsKeyReleased(Keys.B))
+                {
+                    sampleFreq = 13655;
+                    freq = 494;
+                    PlaySinusWaveNoLoop(sampleFreq, freq); // play specific frequenz
+                }
+                if(keyboardState.IsKeyReleased(Keys.D0))
+                {
+                    ToggleSinus = false;
+                    Console.WriteLine(ToggleSinus);
+                }
+            } else
+            {                
+                if(keyboardState.IsKeyReleased(Keys.D0))
+                {
+                    ToggleSinus = true;
+                    Console.WriteLine(ToggleSinus);
+                }
+            }
+            
+        }
+
         public static void DebugDraw()
         {
-            ImGuiNET.ImGui.Begin("Sound");
+            ImGuiNET.ImGui.Begin("SinusWave");
             ImGuiNET.ImGui.SliderInt("SampleFrequenz", ref sampleFreq, 4000, 60000);
             ImGuiNET.ImGui.SliderInt("Frequenz", ref freq, 40, 1000);
             ImGuiNET.ImGui.End();
