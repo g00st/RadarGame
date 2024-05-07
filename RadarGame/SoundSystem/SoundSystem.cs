@@ -17,65 +17,60 @@ namespace RadarGame.SoundSystem;
 public static class SoundSystem
 {
     // List<SoundObject> soundObjects = new List<SoundObject>();
-    private static List<int>Buffers = new List<int>();
-    private static List<int>Sources = new List<int>();
-    private static ALDevice device;
-    private static ALContext context;
-    static int sampleFreq = 44100;
-    static int freq = 440;
-    static int dataCount = sampleFreq / freq;
-    static short[] sinData = new short[dataCount];
-    private static int sinDataIndex = 0;
-    static int source = 0;
+    private static Dictionary<WaveOutEvent, int> Sounds = new Dictionary<WaveOutEvent, int>();
 
-    // C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav
-    // "resources/background2.jpg"
-    static string filePath = "resources/Sounds/Laser3.wav";
+    static float globalVolume = 0.5f;
+    static bool ToggleSinus = true; // To Toggle between Sinus and Soundsystem Key bindings
+    static string samplePath = "resources/Sounds/Laser3.wav";
 
     public static void DebugDraw()
     {
         ImGuiNET.ImGui.Begin("SoundSystem");
         // ImGuiNET.ImGui.SliderInt("SampleFrequenz", ref sampleFreq, 4000, 60000);
-        // ImGuiNET.ImGui.SliderInt("Frequenz", ref freq, 40, 1000);
+        ImGuiNET.ImGui.SliderFloat("globalVolume", ref globalVolume, 0.00f, 1.00f);
         ImGuiNET.ImGui.End();
         // ImGuiNET.ImGui.PlotLines("sinData", ref sinData[0], sinData.Length, sinDataIndex, "sinData", 0, 100, new System.Numerics.Vector2(0, 100));
 
     }
     public static void Update(FrameEventArgs args, KeyboardState keyboardState)
     {
-        if (keyboardState.IsKeyDown(Keys.K))
+        if(ToggleSinus)
         {
-            // kill frequenz
-            // StopPlayingSource();
-        }
-        if (keyboardState.IsKeyDown(Keys.L))
+            if (keyboardState.IsKeyReleased(Keys.K))
+            {
+                // kill all
+                StopAllTracks();
+            }
+            if (keyboardState.IsKeyReleased(Keys.KeyPadAdd))
+            {
+                // make louder
+                globalVolume += 0.1f;
+                if (globalVolume > 1.00f) globalVolume = 1.00f;
+                ChangeVolumeAll(globalVolume);
+            }
+            if (keyboardState.IsKeyReleased(Keys.KeyPadSubtract))
+            {
+                // make quiter
+                globalVolume -= 0.1f;
+                if(globalVolume < 0.00f) globalVolume = 0;
+                ChangeVolumeAll(globalVolume);
+            }
+            if (keyboardState.IsKeyReleased(Keys.I))
+            {
+                // try out new library
+                NewPlayer();
+            }
+            if(keyboardState.IsKeyReleased(Keys.D0)) ToggleSinus = false;
+        } else
         {
-            // play frequenz
-            // PlaySinusWaveLoop(sampleFreq, freq);
+            if(keyboardState.IsKeyReleased(Keys.D0)) ToggleSinus = true;
         }
-        /*
-        if (keyboardState.IsKeyDown(Keys.I))
-        {
-            PlaySinusWaveNoLoop(sampleFreq, freq);
-        }
-        */
-        if (keyboardState.IsKeyDown(Keys.B))
-        {
-            sampleFreq = 13655;
-            freq = 494;
-            // PlaySinusWaveNoLoop(sampleFreq, freq);
-        }
-        if(keyboardState.IsKeyDown(Keys.I))
-        {
-            // try out new library
-            NewPlayer();
-        }
+        
     }
-    
-
+   
     public static void NewPlayer()
     {
-        var audioFile = new AudioFileReader(filePath);
+        var audioFile = new AudioFileReader(samplePath);
         Console.WriteLine(audioFile);
         Console.WriteLine("In New Player after audioFile");
         var volumeProvider = new VolumeSampleProvider(audioFile);
@@ -86,9 +81,87 @@ public static class SoundSystem
         var waveOut = new WaveOutEvent();
         waveOut.Init(volumeProvider);
         Console.WriteLine("After Wave Out");
-
+        Sounds.Add(waveOut, 0);
         waveOut.Play();
         Console.WriteLine("After Play");
+    }
+
+    // provide relative filepath like "resources/Sounds/Laser3.wav"
+    // volume between 0.00f and 1.00f, int id to specify tracks
+    public static void PlayThisTrack(String filepath, float volume, int id)
+    {
+        var audioFileTrack = new AudioFileReader(filepath);
+        Console.WriteLine(audioFileTrack);
+        var volumeProvider = new VolumeSampleProvider(audioFileTrack);
+        // volume between 0.00 and 1.00
+        volumeProvider.Volume = volume;
+        var newTrack = new WaveOutEvent();
+        newTrack.Init(volumeProvider);
+        Sounds.Add(newTrack, id);
+        newTrack.Play();
+    }
+
+    public static void StopAllTracks()
+    {
+        foreach (var track in Sounds)
+        {
+            track.Key.Stop();
+            
+        }
+        Sounds.Clear();
+    }
+
+    public static void StopSpecificTracks(int id)
+    {
+        foreach(var track in Sounds)
+        {
+            if(track.Value == id)
+            {
+                track.Key.Stop();
+                Sounds.Remove(track.Key);
+            }
+        }
+    }
+
+    public static void PauseSpecificTrack(int id)
+    {
+        foreach(var track in Sounds)
+        {
+            if(track.Value == id) track.Key.Pause();
+        }
+    }
+
+    public static void UnpauseSpecificTrack(int id)
+    {
+        foreach (var track in Sounds)
+        {
+            if (track.Value == id) track.Key.Play();
+        }
+    }
+
+    public static void ChangeVolumeAll(float newVolume)
+    {
+        if (newVolume < 0.00f || newVolume > 1.00f) return;
+        foreach(var track in Sounds)
+        {
+            track.Key.Pause();
+            track.Key.Volume = newVolume;
+            track.Key.Play();
+        }
+    }
+
+    public static void ChangeVolumeSpecific(float newVolume, int id)
+    {
+        if(newVolume < 0.00f || newVolume > 1.00f) return;
+        foreach(var track in Sounds)
+        {
+            if(track.Value == id)
+            {
+                track.Key.Pause();
+                track.Key.Volume = newVolume;
+                track.Key.Play();
+            }
+        }
     }
 
 
