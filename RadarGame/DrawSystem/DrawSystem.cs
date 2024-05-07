@@ -6,8 +6,8 @@ namespace RadarGame.DrawSystem;
 public static class DrawSystem
 {
    static  private View main ;
-   
-    static List<IDrawObject> _drawObjects = new List<IDrawObject>();
+
+   static List<IDrawObject> _drawObjects = new List<IDrawObject>();
     public static void Draw(View surface)
     {
         main = surface;
@@ -16,6 +16,8 @@ public static class DrawSystem
             drawObject.Draw(surface);
         }
     }
+    
+    
     public static View GetMainView()
     {
         return main;

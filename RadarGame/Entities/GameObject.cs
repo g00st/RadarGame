@@ -10,6 +10,9 @@ namespace RadarGame.Entities;
 
 public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject, IRadarObject
 {
+    //--------------------------------------------------------------------------------
+    // THis is a simple game object that can be used to test the Project and Systems
+    //--------------------------------------------------------------------------------
     public TexturedRectangle DebugColoredRectangle { get; set; }
     
     public PhysicsDataS PhysicsData { get; set; }

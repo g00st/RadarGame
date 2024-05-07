@@ -56,6 +56,7 @@ public class App : EngineWindow
         EntityManager.AddObject(new cursor());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
         EntityManager.AddObject( new cursor( "cursor4"));
+        EntityManager.AddObject(new Mapp( new Vector2(1000), new Vector2(0,0)));
       
         
         for (int i = 0; i < 50; i++)

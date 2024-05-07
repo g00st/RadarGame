@@ -85,6 +85,8 @@ public static class EntityManager
         if (!_toRemove.Contains(gameObject))
             _toRemove.Add(gameObject);
     }
+    
+
     public static IEntitie GetObject(string name)
     {
         return GameObjects.Find(x => x.Name == name);
