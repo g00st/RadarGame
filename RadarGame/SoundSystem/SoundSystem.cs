@@ -9,6 +9,8 @@ using OpenTK;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 
 namespace RadarGame.SoundSystem;
 
@@ -26,7 +28,59 @@ public static class SoundSystem
     private static int sinDataIndex = 0;
     static int source = 0;
 
+    static string filePath = @"C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav";
 
+    public static void DebugDraw()
+    {
+        ImGuiNET.ImGui.Begin("Sound");
+        ImGuiNET.ImGui.SliderInt("SampleFrequenz", ref sampleFreq, 4000, 60000);
+        ImGuiNET.ImGui.SliderInt("Frequenz", ref freq, 40, 1000);
+        ImGuiNET.ImGui.End();
+        // ImGuiNET.ImGui.PlotLines("sinData", ref sinData[0], sinData.Length, sinDataIndex, "sinData", 0, 100, new System.Numerics.Vector2(0, 100));
+
+    }
+    public static void StopPlayingSource()
+    {
+        foreach (var source in Sources)
+        {
+            AL.SourceStop(source);
+            AL.DeleteSource(source);
+        }
+        foreach (var buffer in Buffers)
+        {
+            AL.DeleteBuffer(buffer);
+        }
+    }
+    public static void Update(FrameEventArgs args, KeyboardState keyboardState)
+    {
+        if (keyboardState.IsKeyDown(Keys.K))
+        {
+            // kill frequenz
+            StopPlayingSource();
+        }
+        if (keyboardState.IsKeyDown(Keys.L))
+        {
+            // play frequenz
+            PlaySinusWaveLoop(sampleFreq, freq);
+        }
+        /*
+        if (keyboardState.IsKeyDown(Keys.I))
+        {
+            PlaySinusWaveNoLoop(sampleFreq, freq);
+        }
+        */
+        if (keyboardState.IsKeyDown(Keys.B))
+        {
+            sampleFreq = 13655;
+            freq = 494;
+            PlaySinusWaveNoLoop(sampleFreq, freq);
+        }
+        if(keyboardState.IsKeyDown(Keys.I))
+        {
+            // try out new library
+            NewPlayer();
+        }
+    }
     public static void CleanUp()
     {
           foreach (var source in Sources)
@@ -43,19 +97,16 @@ public static class SoundSystem
            ALC.CloseDevice(device);
             
     }
-
     public static void SetUpSound()
     {
         device = ALC.OpenDevice(null);
         int[] flags = new int[0];
         context = ALC.CreateContext(device, flags);
     }
-
     public static  void PlaySinusWaveLoop(int orderedSamplefreq, int orderedFreq)
     {
 
         OpenALLoader.LoadLibrary();
-        
         // Initialize
         ALC.MakeContextCurrent(context);
         var version = AL.Get(ALGetString.Version);
@@ -90,55 +141,6 @@ public static class SoundSystem
         AL.Source(source, ALSourcei.Buffer, buffers);
         AL.Source(source, ALSourceb.Looping, true);
         AL.SourcePlay(source);
-    }
-
-    public static void StopPlayingSource()
-    {
-        foreach (var source in Sources)
-        {
-            AL.SourceStop(source);
-            AL.DeleteSource(source);
-
-        }
-        foreach (var buffer in Buffers)
-        {
-            AL.DeleteBuffer(buffer);
-        }
-    }
-
-    public static void Update(FrameEventArgs args, KeyboardState keyboardState)
-    {
-        if(keyboardState.IsKeyDown(Keys.K))
-        {
-            // kill frequenz
-            // CleanUp();
-            StopPlayingSource();
-        }
-        if(keyboardState.IsKeyDown(Keys.L))
-        {
-            // play frequenz
-            PlaySinusWaveLoop(sampleFreq, freq);
-        }
-        if(keyboardState.IsKeyDown(Keys.I))
-        {
-            PlaySinusWaveNoLoop(sampleFreq, freq);
-        }
-        if(keyboardState.IsKeyDown(Keys.B))
-        {
-            sampleFreq = 13655;
-            freq = 494;
-            PlaySinusWaveNoLoop(sampleFreq, freq);
-        }
-    }
-
-    public static void DebugDraw()
-    {
-        ImGuiNET.ImGui.Begin("Sound");
-        ImGuiNET.ImGui.SliderInt("SampleFrequenz", ref sampleFreq, 4000, 60000);
-        ImGuiNET.ImGui.SliderInt("Frequenz", ref freq, 40, 1000);
-        ImGuiNET.ImGui.End();
-        // ImGuiNET.ImGui.PlotLines("sinData", ref sinData[0], sinData.Length, sinDataIndex, "sinData", 0, 100, new System.Numerics.Vector2(0, 100));
-
     }
 
     // sample 13655 freq 494
@@ -180,6 +182,23 @@ public static class SoundSystem
         AL.Source(source, ALSourcei.Buffer, buffers);
         AL.Source(source, ALSourceb.Looping, false);
         AL.SourcePlay(source);
+    }
+
+    public static void NewPlayer()
+    {
+        using (var audioFile = new AudioFileReader(filePath))
+        {
+            var volumeProvider = new VolumeSampleProvider(audioFile);
+
+            // volume between 0.00 and 1.00
+            volumeProvider.Volume = 0.5f;
+
+            var waveOut = new WaveOutEvent();
+            waveOut.Init(volumeProvider);
+
+            waveOut.Play();
+
+        }
     }
 
     public static void PlayFileDotWave(string filename)
@@ -266,20 +285,4 @@ public static class SoundSystem
         }
     }
 
-    /*
-    public void Update()
-    {
-        // DO STUFF WITH LIST
-        foreach(SoundObject sound in soundObjects)
-        {
-            if(sound.isDirectional)
-            {
-                // calculate direction
-            } else
-            {
-                // is static sound like menu stuff
-            }
-        }
-    }
-    */
 }
