@@ -41,14 +41,12 @@ public class App : EngineWindow
     private int _AudioVolumeListIndex = 0;
     private float[] AudioVolumeList = new float[100];
 
-    private string path = @"C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav";
-
 
 
     public App() : base(1440, 900, "Radargame"){
 
         // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
-        SoundSystem.SoundSystem.SetUpSound(); // once per start
+        SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
         
@@ -148,13 +146,14 @@ public class App : EngineWindow
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();
+        SoundSystem.SinusWave.DebugDraw();
         RadarSystem.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
         base.OnClosing(e);
-        SoundSystem.SoundSystem.CleanUp();
+        SoundSystem.SinusWave.CleanUp();
     }
     
     

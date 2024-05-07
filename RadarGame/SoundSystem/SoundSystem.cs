@@ -28,40 +28,30 @@ public static class SoundSystem
     private static int sinDataIndex = 0;
     static int source = 0;
 
-    static string filePath = @"C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav";
+    // C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav
+    // "resources/background2.jpg"
+    static string filePath = "resources/Sounds/Laser3.wav";
 
     public static void DebugDraw()
     {
-        ImGuiNET.ImGui.Begin("Sound");
-        ImGuiNET.ImGui.SliderInt("SampleFrequenz", ref sampleFreq, 4000, 60000);
-        ImGuiNET.ImGui.SliderInt("Frequenz", ref freq, 40, 1000);
+        ImGuiNET.ImGui.Begin("SoundSystem");
+        // ImGuiNET.ImGui.SliderInt("SampleFrequenz", ref sampleFreq, 4000, 60000);
+        // ImGuiNET.ImGui.SliderInt("Frequenz", ref freq, 40, 1000);
         ImGuiNET.ImGui.End();
         // ImGuiNET.ImGui.PlotLines("sinData", ref sinData[0], sinData.Length, sinDataIndex, "sinData", 0, 100, new System.Numerics.Vector2(0, 100));
 
-    }
-    public static void StopPlayingSource()
-    {
-        foreach (var source in Sources)
-        {
-            AL.SourceStop(source);
-            AL.DeleteSource(source);
-        }
-        foreach (var buffer in Buffers)
-        {
-            AL.DeleteBuffer(buffer);
-        }
     }
     public static void Update(FrameEventArgs args, KeyboardState keyboardState)
     {
         if (keyboardState.IsKeyDown(Keys.K))
         {
             // kill frequenz
-            StopPlayingSource();
+            // StopPlayingSource();
         }
         if (keyboardState.IsKeyDown(Keys.L))
         {
             // play frequenz
-            PlaySinusWaveLoop(sampleFreq, freq);
+            // PlaySinusWaveLoop(sampleFreq, freq);
         }
         /*
         if (keyboardState.IsKeyDown(Keys.I))
@@ -73,7 +63,7 @@ public static class SoundSystem
         {
             sampleFreq = 13655;
             freq = 494;
-            PlaySinusWaveNoLoop(sampleFreq, freq);
+            // PlaySinusWaveNoLoop(sampleFreq, freq);
         }
         if(keyboardState.IsKeyDown(Keys.I))
         {
@@ -81,208 +71,25 @@ public static class SoundSystem
             NewPlayer();
         }
     }
-    public static void CleanUp()
-    {
-          foreach (var source in Sources)
-                   {   AL.SourceStop(source);
-                       AL.DeleteSource(source);
-                      
-                   }
-           foreach (var buffer in Buffers)
-            {
-                AL.DeleteBuffer(buffer);
-            }      
-        
-           ALC.DestroyContext(context);
-           ALC.CloseDevice(device);
-            
-    }
-    public static void SetUpSound()
-    {
-        device = ALC.OpenDevice(null);
-        int[] flags = new int[0];
-        context = ALC.CreateContext(device, flags);
-    }
-    public static  void PlaySinusWaveLoop(int orderedSamplefreq, int orderedFreq)
-    {
-
-        OpenALLoader.LoadLibrary();
-        // Initialize
-        ALC.MakeContextCurrent(context);
-        var version = AL.Get(ALGetString.Version);
-        var vendor = AL.Get(ALGetString.Vendor);
-        var renderer = AL.Get(ALGetString.Renderer);
-        Console.WriteLine(version);
-        Console.WriteLine(vendor);
-        Console.WriteLine(renderer);
-        // Process
-        int buffers = 0;   // no need for int* disgusting buffers
-        //  int otherbuffer = AL.GenBuffer(); int othersource = AL.GenBuffer(); // this is LEGAL
-        AL.GenBuffers(1, ref buffers);       // no out ?
-        AL.GenSources(1, ref source);
-        Buffers.Add(buffers);
-        Sources.Add(source);
-        // sampleFreq = 44100;   // example freq is sinus curve speed  c
-        double dt = 2 * Math.PI / orderedSamplefreq;
-        double amp = 0.5;
-        // ------------
-        // freq = 440;  // standard freqlänge  lambda
-        dataCount = orderedSamplefreq / orderedFreq; // f = c / lambda
-        sinData = new short[dataCount];
-
-        for (int i = 0; i < sinData.Length; ++i)
-        {
-            sinData[i] = (short)(amp * short.MaxValue * Math.Sin(i * dt * orderedFreq));
-        }
-        
-        AL.BufferData(buffers, ALFormat.Mono16, sinData, orderedSamplefreq); // mag []
-        // AL.BufferData(buffers, ALFormat.Mono16,ref  sinData, sinData.Length, sampleFreq); // ??? short[] nicht zu IntPtr konvertierbar
-
-        AL.Source(source, ALSourcei.Buffer, buffers);
-        AL.Source(source, ALSourceb.Looping, true);
-        AL.SourcePlay(source);
-    }
-
-    // sample 13655 freq 494
-    public static void PlaySinusWaveNoLoop(int orderedSampleFreq, int orderedFreq)
-    {
-        OpenALLoader.LoadLibrary();
-        
-        // Initialize
-        ALC.MakeContextCurrent(context);
-        var version = AL.Get(ALGetString.Version);
-        var vendor = AL.Get(ALGetString.Vendor);
-        var renderer = AL.Get(ALGetString.Renderer);
-        Console.WriteLine(version);
-        Console.WriteLine(vendor);
-        Console.WriteLine(renderer);
-        // Process
-        int buffers = 0;   // no need for int* disgusting buffers
-        //  int otherbuffer = AL.GenBuffer(); int othersource = AL.GenBuffer(); // this is LEGAL
-        AL.GenBuffers(1, ref buffers);       // no out ?
-        AL.GenSources(1, ref source);
-        Buffers.Add(buffers);
-        Sources.Add(source);
-        // sampleFreq = 44100;   // example freq is sinus curve speed  c
-        double dt = 2 * Math.PI / orderedSampleFreq;
-        double amp = 0.5;
-        // ------------
-        // freq = 440;  // standard freqlänge  lambda
-        dataCount = orderedSampleFreq / orderedFreq; // f = c / lambda
-        sinData = new short[dataCount];
-
-        for (int i = 0; i < sinData.Length; ++i)
-        {
-            sinData[i] = (short)(amp * short.MaxValue * Math.Sin(i * dt * orderedFreq));
-        }
-
-        AL.BufferData(buffers, ALFormat.Mono16, sinData, orderedSampleFreq); // mag []
-        // AL.BufferData(buffers, ALFormat.Mono16,ref  sinData, sinData.Length, sampleFreq); // ??? short[] nicht zu IntPtr konvertierbar
-
-        AL.Source(source, ALSourcei.Buffer, buffers);
-        AL.Source(source, ALSourceb.Looping, false);
-        AL.SourcePlay(source);
-    }
+    
 
     public static void NewPlayer()
     {
-        using (var audioFile = new AudioFileReader(filePath))
-        {
-            var volumeProvider = new VolumeSampleProvider(audioFile);
+        var audioFile = new AudioFileReader(filePath);
+        Console.WriteLine(audioFile);
+        Console.WriteLine("In New Player after audioFile");
+        var volumeProvider = new VolumeSampleProvider(audioFile);
 
-            // volume between 0.00 and 1.00
-            volumeProvider.Volume = 0.5f;
+        // volume between 0.00 and 1.00
+        volumeProvider.Volume = 0.5f;
+        Console.WriteLine("Before Wave Out");
+        var waveOut = new WaveOutEvent();
+        waveOut.Init(volumeProvider);
+        Console.WriteLine("After Wave Out");
 
-            var waveOut = new WaveOutEvent();
-            waveOut.Init(volumeProvider);
-
-            waveOut.Play();
-
-        }
+        waveOut.Play();
+        Console.WriteLine("After Play");
     }
 
-    public static void PlayFileDotWave(string filename)
-    {
-        var device = ALC.OpenDevice(null);
-        var context = ALC.CreateContext(device, new ALContextAttributes());
-        ALC.MakeContextCurrent(context);
-        int channels, bits_per_sample, sample_rate;
-        byte[] soundData = LoadWave(
-            File.Open(filename, FileMode.Open),
-            out channels,
-            out bits_per_sample,
-            out sample_rate);
-        ALFormat format = GetSoundFormat(channels, bits_per_sample);
-
-        int bufferId = AL.GenBuffer();
-        AL.BufferData(bufferId, format, soundData, bits_per_sample);
-        // AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
-        // AL.Listener(ALListener3f.Velocity, 0.0f, 0.0f, 0.0f);
-
-        int sourceId = AL.GenSource();
-        // AL.Source(sourceId, ALSourcef.Gain, 1);
-        // AL.Source(sourceId, ALSourcef.Pitch, 1);
-        // AL.Source(sourceId, ALSource3f.Position, 0.0f, 0.0f, 0.0f);
-
-        AL.Source(sourceId, ALSourcei.Buffer, bufferId);
-        AL.SourcePlay(sourceId);
-    }
-
-    // Loads a wave/riff audio file.
-    public static byte[] LoadWave(Stream stream, out int channels, out int bits, out int rate)
-    {
-        if (stream == null)
-            throw new ArgumentNullException("stream");
-
-        using (BinaryReader reader = new BinaryReader(stream))
-        {
-            // RIFF header
-            string signature = new string(reader.ReadChars(4));
-            if (signature != "RIFF")
-                throw new NotSupportedException("Specified stream is not a wave file.");
-
-            int riff_chunck_size = reader.ReadInt32();
-
-            string format = new string(reader.ReadChars(4));
-            if (format != "WAVE")
-                throw new NotSupportedException("Specified stream is not a wave file.");
-
-            // WAVE header
-            string format_signature = new string(reader.ReadChars(4));
-            if (format_signature != "fmt ")
-                throw new NotSupportedException("Specified wave file is not supported.");
-
-            int format_chunk_size = reader.ReadInt32();
-            int audio_format = reader.ReadInt16();
-            int num_channels = reader.ReadInt16();
-            int sample_rate = reader.ReadInt32();
-            int byte_rate = reader.ReadInt32();
-            int block_align = reader.ReadInt16();
-            int bits_per_sample = reader.ReadInt16();
-
-            string data_signature = new string(reader.ReadChars(4));
-            if (data_signature != "data")
-                throw new NotSupportedException("Specified wave file is not supported.");
-
-            int data_chunk_size = reader.ReadInt32();
-
-            channels = num_channels;
-            bits = bits_per_sample;
-            rate = sample_rate;
-
-            return reader.ReadBytes((int)reader.BaseStream.Length);
-        }
-    }
-
-    // Checks SoundFormat
-    public static ALFormat GetSoundFormat(int channels, int bits)
-    {
-        switch (channels)
-        {
-            case 1: return bits == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
-            case 2: return bits == 8 ? ALFormat.Stereo8 : ALFormat.Stereo16;
-            default: throw new NotSupportedException("The specified sound format is not supported.");
-        }
-    }
 
 }
