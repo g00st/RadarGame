@@ -108,6 +108,7 @@ public class App : EngineWindow
         RadarTimeListIndex = (RadarTimeListIndex + 1) % RadarTimeList.Length;
 
         SoundSystem.SoundSystem.Update(args, KeyboardState);
+        SoundSystem.SinusWave.Update(args, KeyboardState);
 
 
     }
