@@ -171,13 +171,13 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         surface.Draw(DebugColoredRectangle);
         surface.Draw(DebugPolygon2);
         Vector2 last = this.Position;
-        foreach (var point in RadarSystem.Debugpoints)
+       /* foreach (var point in RadarSystem.Debugpoints)
         {
             DebugPolygon.Position = new Vector2(point.X, point.Y);
             DebugPolygon.Size = new Vector2(point.Z, point.Z);
             surface.Draw(DebugPolygon);
            
-        }
+        } */
     }
     
 }

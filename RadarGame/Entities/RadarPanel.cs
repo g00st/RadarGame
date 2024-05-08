@@ -26,7 +26,7 @@ public class RadarPanel : IEntitie, IDrawObject
     private TexturedRectangle _rim; //rim of radar
     private TexturedRectangle _ButtonLabel;
     private float maxangle = 0;
-    private float minangle = 2 * (float)Math.PI;
+    private float minangle = 1 * (float)Math.PI;
     
     public RadarPanel( Vector2 position  , Vector2 size)
     {
@@ -38,8 +38,8 @@ public class RadarPanel : IEntitie, IDrawObject
         _display = new TexturedRectangle(Center, Size- Size /5 , RadarSystem.GetTexture(),"RadarPanel_display",true);
         _background = new TexturedRectangle(Position, Size, new Texture( "resources/Radar/bg.jpg"));
         _rim = new TexturedRectangle(Center, Size - Size/10, new Texture("resources/Radar/Radarrim.png"), "RadarPanel_rim", true);
-        _cirlceslider1 = new CircularSlider(Center, _display.drawInfo.Size.X/2 , 0,texture, new Vector2(Size.X /20,Size.Y /10));
-        _cirlceslider2 = new CircularSlider(Center, _display.drawInfo.Size.X/2, 1,texture,  new Vector2(Size.X /20,Size.X /10));
+        _cirlceslider1 = new CircularSlider(Center, _display.drawInfo.Size.X/2 , minangle,texture, new Vector2(Size.X /20,Size.Y /10));
+        _cirlceslider2 = new CircularSlider(Center, _display.drawInfo.Size.X/2, maxangle,texture,  new Vector2(Size.X /20,Size.X /10));
         _cirlceslider1.sidergroup = new List<CircularSlider>(){_cirlceslider2};
         _cirlceslider2.sidergroup = new List<CircularSlider>(){_cirlceslider1};
         _ButtonLabel = new TexturedRectangle(Position + Size - new Vector2(Size.X/8, Size.Y /16), new Vector2(Size.X /10.6f, Size.Y /32), new Texture("resources/Radar/Sweep.png"), "label",true);
@@ -229,8 +229,8 @@ public class RadarPanel : IEntitie, IDrawObject
         
         public enum State
         {
-            ON,
             OFF,
+            ON,
             ONHover,
             OFFHover
         }
@@ -380,7 +380,7 @@ public class RadarPanel : IEntitie, IDrawObject
         public State state;
         
         public LinearSlider(Vector2 begin, Vector2 end, Texture texture, Vector2 size,float min, float max)
-        {   Position = begin;
+        {   Position = end;
             Begin = begin;
             End = end;
             length = Vector2.Distance(begin, end);

@@ -46,7 +46,7 @@ public class App : EngineWindow
     public App() : base(1440, 900, "Radargame"){
 
         // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
-        SoundSystem.SinusWave.SetUpSound(); // once per start
+      //  SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
         
@@ -142,8 +142,8 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("Colision Update Time", ref _ColisionTimeList[0], _ColisionTimeList.Length, _ColisionTimeListIndex, "Colision Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Radar Update Time", ref RadarTimeList[0], RadarTimeList.Length, RadarTimeListIndex, "Radar Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Draw Time", ref _DrawTimeList[0], _DrawTimeList.Length, _DrawTimeListIndex, "Draw Time", 0, 100,  new System.Numerics.Vector2(0, 100));
-        // Wenn Lautstärke auslesbar hier verzeichnen bitte
-        ImGuiNET.ImGui.PlotLines("LautStärke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStärke", 0, 100, new System.Numerics.Vector2(0, 100));
+        // Wenn Lautstï¿½rke auslesbar hier verzeichnen bitte
+        ImGuiNET.ImGui.PlotLines("LautStï¿½rke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStï¿½rke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();
