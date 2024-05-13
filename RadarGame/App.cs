@@ -59,7 +59,7 @@ public class App : EngineWindow
        // EntityManager.AddObject(new Mapp( new Vector2(1000), new Vector2(0,0)));
       
         
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 500; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i, 0);
             EntityManager.AddObject(gameObject);
@@ -137,6 +137,7 @@ public class App : EngineWindow
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();
+        DrawSystem.DrawSystem.DebugDraw();
        
     }
     
