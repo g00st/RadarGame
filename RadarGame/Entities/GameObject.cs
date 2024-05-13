@@ -4,11 +4,11 @@ using App.Engine.Template;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
-using RadarGame.Radarsystem;
+
 
 namespace RadarGame.Entities;
 
-public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject, IRadarObject
+public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject
 {
     //--------------------------------------------------------------------------------
     // THis is a simple game object that can be used to test the Project and Systems
@@ -41,20 +41,18 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
     public float Rotation { get; set; }
-    public float RadarSdf(Vector2 Position)
-    {
-       //use circular sdf
-        return (Position - this.Position).Length - 50;
-    }
+    private int i =0;
+    
 
     public string Name { get; set; }
 
-    public GameObject( Vector2 position, float rotation, string name)
+    public GameObject( Vector2 position, float rotation, string name, int i)
     {
         Position = position;
         Rotation = rotation;
         Static = false;
         Name = name;
+        this.i = i;
         Random random = new Random();
         PhysicsData = PhysicsData with { 
             Velocity = new Vector2((float)random.NextDouble()*100-50 , (float)random.NextDouble()*100-50),
@@ -126,9 +124,9 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     }
 
 
-    public void Draw(View surface)
+    public void Draw(List<SubView> surface)
     {
-        surface.Draw(DebugColoredRectangle);
-        surface.Draw(DebugPolygon);
+        surface[i].Draw(DebugColoredRectangle);
+        surface[i].Draw(DebugPolygon);
     }
 }

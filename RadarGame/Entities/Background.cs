@@ -5,7 +5,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace RadarGame.Entities;
 
-public class Background : IEntitie , IDrawObject
+public class Background : IEntitie 
 {
     public string Name { get; set; }
     private TexturedRectangle _background;

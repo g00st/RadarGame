@@ -73,46 +73,13 @@ public class SubView
 
     }
     
-    public void Draw()
+    public void clear()
     {
         _rendertarget.Bind();
-        GL.ClearColor(Color4.Black);
-        GL.Clear(ClearBufferMask.ColorBufferBit);
-        Matrix4 camera =  calcCameraProjection();
-
-        //statt liste an drawobjects dann eine liste an renderables
-        foreach (var drawObject in drawObjects)
-        {
-            DrawInfo obj = drawObject.drawInfo;
-       
-            Matrix4 ObjectScalematrix = Matrix4.CreateScale(obj.Size.X,obj.Size.Y, 1.0f);
-            Matrix4 ObjectRotaionmatrix = Matrix4.CreateRotationZ(obj.Rotation);
-            Matrix4 ObjectTranslationmatrix = Matrix4.CreateTranslation(obj.Position.X,obj.Position.Y,0);
-
-            Matrix4 objectransform = Matrix4.Identity * ObjectScalematrix;
-            objectransform *= ObjectRotaionmatrix;
-            objectransform *= ObjectTranslationmatrix;
-            
-            
-          Vector3 cameraRotationAxis = new Vector3(0, 0, 1);
-          Matrix4 cameraRotationMatrix = Matrix4.CreateFromAxisAngle(cameraRotationAxis, MathHelper.DegreesToRadians(rotation));
-          Matrix4 comb =   (objectransform* Matrix4.CreateTranslation(-vpossition.X,-vpossition.Y,0) * cameraRotationMatrix *Matrix4.CreateTranslation(vpossition.X,vpossition.Y,0) )*camera  ;
-            //prüfe was gamestate
-            
-            
-                
-            Matrix4 translateToOrigin = Matrix4.CreateTranslation(-vpossition.X, -vpossition.Y, 0);
-            Matrix4 rotate = Matrix4.CreateRotationZ(rotation);
-            Matrix4 translateBack = Matrix4.CreateTranslation(vpossition.X, vpossition.Y, 0);
-            Matrix4 view = translateToOrigin * rotate * translateBack;
-
-            Matrix4 projection = calcCameraProjection();
-
-            obj.mesh.Draw(comb, obj,view,projection);
-        }
-        
-        
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
     }
+    
+   
 
     
 

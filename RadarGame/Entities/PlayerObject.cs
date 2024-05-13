@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
-using RadarGame.Radarsystem;
+
 
 namespace RadarGame.Entities;
 
@@ -70,8 +70,6 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         timer += (float)args.Time;
-        Radarsystem.RadarSystem.SetPosition( Position);
-        Radarsystem.RadarSystem.SetRotation(Rotation);
         lastPosition = Position;
         lastRotation = Rotation;
         DebugColoredRectangle.drawInfo.Position = Position;
@@ -162,22 +160,16 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         DebugColoredRectangle.Dispose();
     }
 
-    public void Draw(View surface)
+    public void Draw(List <SubView> surface)
     {
       //  surface.rotation = - lastRotation;
-     // surface.vpossition = new Vector2(Position.X, Position.Y);
+       surface[0].vpossition = new Vector2(Position.X, Position.Y);
        // Console.WriteLine(surface.rotation);
-      //// surface.vsize = new Vector2(1920/1.5f  + Math.Abs(PhysicsData.Velocity.Length*5) , 1080/1.5f + Math.Abs(PhysicsData.Velocity.Length*5));
-        surface.Draw(DebugColoredRectangle);
-        surface.Draw(DebugPolygon2);
+       surface[0].vsize = new Vector2(1920 , 1080);
+      surface[0].Draw(DebugColoredRectangle);
+      surface[0].Draw(DebugPolygon2);
         Vector2 last = this.Position;
-        foreach (var point in RadarSystem.Debugpoints)
-        {
-            DebugPolygon.Position = new Vector2(point.X, point.Y);
-            DebugPolygon.Size = new Vector2(point.Z, point.Z);
-            surface.Draw(DebugPolygon);
-           
-        }
+        
     }
     
 }

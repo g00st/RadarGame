@@ -8,7 +8,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
  namespace RadarGame.Entities;
 
-public class CompasPanel :IEntitie, IDrawObject
+public class CompasPanel :IEntitie , IDrawObject
 {
     private Vector2 Position;
     private Vector2 Size;
@@ -74,7 +74,7 @@ public class CompasPanel :IEntitie, IDrawObject
         
     }
 
-    public void Draw(View surface)
+    public void Draw(List<SubView> surface)
     {
          _compaShader.Bind();
         _compaShader.setUniform1v( "u_Rotation", (float)Math.Tau- compasRotation);
@@ -82,8 +82,8 @@ public class CompasPanel :IEntitie, IDrawObject
        _compasVbo.Bind();
        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
        _compasView.Draw( _compasScreenRender);
-       surface.Draw(_compasPanel);
-       surface.Draw(_overlay);
+       surface[1].Draw(_compasPanel);
+       surface[1].Draw(_overlay);
        
        
     }

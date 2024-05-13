@@ -4,5 +4,5 @@ namespace RadarGame;
 
 public interface IDrawObject
 {
-    public void Draw(View surface );
+    public void Draw( List<SubView> surface );
 }
