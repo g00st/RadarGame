@@ -7,7 +7,7 @@ namespace RadarGame.DrawSystem;
 
 public static class DrawSystem
 {
-   private static List<SubView> Layers = new List<SubView>();
+   private static List<View> Layers = new List<View>();
    static  private View main ;
 
    static List<IDrawObject> _drawObjects = new List<IDrawObject>();
@@ -23,7 +23,7 @@ public static class DrawSystem
                 
                 
                 TexturedRectangle texturedRectangle = new TexturedRectangle(new Vector2(0, 0), mainview.vsize, texture, "Layer" + i);
-                Layers.Add(new SubView(new VBO(texture)));
+                Layers.Add(new View(new VBO(texture)));
                 _LayerTexturedRectangles.Add(texturedRectangle);
             }
     }
@@ -49,7 +49,7 @@ public static class DrawSystem
     }
     
     
-    public static SubView GetView( int layer =0 )
+    public static View GetView( int layer =0 )
     {
         return Layers[layer];
     }

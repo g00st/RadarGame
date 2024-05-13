@@ -178,7 +178,7 @@ public class MapPolygon : IEntitie , IDrawObject
         }
     }
     */
-    public void Draw(List<SubView> surface)
+    public void Draw(List<View> surface)
     {
         throw new NotImplementedException();
     }

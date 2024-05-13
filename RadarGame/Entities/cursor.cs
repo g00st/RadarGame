@@ -30,7 +30,7 @@ public class cursor: IEntitie , IDrawObject
 
   
 
-    public void Draw(List<SubView> surface)
+    public void Draw(List<View> surface)
     {
         surface[0].Draw(_cursor);
     }

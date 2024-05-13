@@ -51,7 +51,7 @@ public class App : EngineWindow
         SoundSystem.SoundSystem.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
-        DrawSystem.DrawSystem.Init( MainView,3);
+        DrawSystem.DrawSystem.Init( MainView,2);
         EntityManager.AddObject(new cursor());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
         EntityManager.AddObject( new cursor( "cursor4"));
@@ -59,7 +59,7 @@ public class App : EngineWindow
        // EntityManager.AddObject(new Mapp( new Vector2(1000), new Vector2(0,0)));
       
         
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 5; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i, 0);
             EntityManager.AddObject(gameObject);

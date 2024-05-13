@@ -124,7 +124,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     }
 
 
-    public void Draw(List<SubView> surface)
+    public void Draw(List<View> surface)
     {
         surface[i].Draw(DebugColoredRectangle);
         surface[i].Draw(DebugPolygon);

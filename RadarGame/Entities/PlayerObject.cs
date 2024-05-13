@@ -160,7 +160,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         DebugColoredRectangle.Dispose();
     }
 
-    public void Draw(List <SubView> surface)
+    public void Draw(List <View> surface)
     {
       //  surface.rotation = - lastRotation;
        surface[0].vpossition = new Vector2(Position.X, Position.Y);

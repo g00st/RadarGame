@@ -86,11 +86,7 @@ public class Mesh : IDisposable
             VARIABLE.Bind(count);
             count++;
         }
-        Matrix4 Model = Matrix4.CreateScale(drawInfo.Size.X,drawInfo.Size.Y, 1.0f);
-        Model *= Matrix4.CreateRotationZ(drawInfo.Rotation);
-        Model *= Matrix4.CreateTranslation(drawInfo.Position.X,drawInfo.Position.Y,0);
-        
-        
+        Matrix4 Model = drawInfo.Transform;
 
         _shader.Bind();
         _shader.setUniformM4("u_MVP", mvp); 

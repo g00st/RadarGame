@@ -15,7 +15,7 @@ public class CompasPanel :IEntitie , IDrawObject
     private TexturedRectangle _compasPanel;
     private TexturedRectangle _compasScreenRender;
     private Texture _comasScreen;
-    private SubView _compasView;
+    private View _compasView;
     private VBO _compasVbo;
     private Shader _compaShader = new Shader("resources/Compas/compas.vert",
         "resources/Compas/compas.frag");
@@ -39,7 +39,7 @@ public class CompasPanel :IEntitie , IDrawObject
         //other surface render stuff
         _comasScreen = new Texture(500, 500);
         _compasVbo = new VBO(_comasScreen);
-        _compasView = new SubView(_compasVbo);
+        _compasView = new View(_compasVbo);
         _compasScreenRender = new TexturedRectangle( new Vector2(0, 0), new Vector2(500, 500),null, _compaShader);
         compasPosition = new Vector2(0, 0);
         
@@ -74,7 +74,7 @@ public class CompasPanel :IEntitie , IDrawObject
         
     }
 
-    public void Draw(List<SubView> surface)
+    public void Draw(List<View> surface)
     {
          _compaShader.Bind();
         _compaShader.setUniform1v( "u_Rotation", (float)Math.Tau- compasRotation);
