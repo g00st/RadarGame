@@ -9,7 +9,8 @@ public static class EntityManager
 {
     public static List<IEntitie> GameObjects { get; set; } = new List<IEntitie>();
     
-    private static List<IEntitie> _toRemove = new List<IEntitie>();
+    private static List<IEntitie> _toDelete = new List<IEntitie>();
+    private static List<IEntitie>_toRemove = new List<IEntitie>();
     private static List<IEntitie> _toAdd = new List<IEntitie>();
     public static List<String> Names { get; set; } = new List<string>();
 
@@ -40,7 +41,7 @@ public static class EntityManager
           
         }
         
-        foreach (var gameObject in _toRemove)
+        foreach (var gameObject in _toDelete)
         {
             if (gameObject is IPhysicsObject physicsObject)
             {
@@ -59,8 +60,27 @@ public static class EntityManager
             gameObject.onDeleted();
             GameObjects.Remove(gameObject);
         }
+        foreach (var gameObject in _toRemove)
+        {
+            if (gameObject is IPhysicsObject physicsObject)
+            {
+                Physics.PhysicsSystem.RemoveObject(physicsObject);
+            }
+
+            if (gameObject is IDrawObject drawObject)
+            {
+                DrawSystem.DrawSystem.RemoveObject(drawObject);
+            }
+            if (gameObject is IColisionObject colisionObject)
+            {
+                Physics.ColisionSystem.RemoveObject(colisionObject);
+            }
+            GameObjects.Remove(gameObject);
+        }
+        
+        _toDelete.Clear();
         _toAdd.Clear();
-        _toRemove.Clear();
+        _toDelete.Clear();
         
     }
     
@@ -73,12 +93,20 @@ public static class EntityManager
         Names.Add(gameObject.Name);
         _toAdd.Add(gameObject);
     }
+    public static void DeleteObject(IEntitie gameObject)
+    {
+        Names.Remove(gameObject.Name);
+        if (!_toDelete.Contains(gameObject))
+            _toDelete.Add(gameObject);
+    }
     public static void RemoveObject(IEntitie gameObject)
     {
         Names.Remove(gameObject.Name);
         if (!_toRemove.Contains(gameObject))
             _toRemove.Add(gameObject);
     }
+    
+   
     
 
     public static IEntitie GetObject(string name)
