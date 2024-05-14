@@ -135,14 +135,23 @@ public class View
         return translateToOrigin * rotate * translateBack;
     }
     
-    public Vector2 ScreenToViewSpace(Vector2 screenCoordinate)
+    public Vector2 ScreenToViewSpace(Vector2 screenCoordinate, bool invertY = false)
     {
         float centerX = Width / 2.0f;
         float centerY = Height / 2.0f;
     
         // Center the screen coordinates around the center of the viewport
         float centeredX = screenCoordinate.X - centerX;
-        float centeredY =  screenCoordinate.Y -centerY  ; // Y-axis is inverted in screen coordinates
+        float centeredY;
+        if  (invertY)
+        { 
+            centeredY =  centerY -screenCoordinate.Y ;
+        }
+        else
+        { 
+            centeredY = screenCoordinate.Y - centerY;
+        }
+        ; // Y-axis is inverted in screen coordinates
     
         // Normalize centered screen coordinates
         float normalizedX = (2.0f * centeredX / Width);
