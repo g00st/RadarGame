@@ -142,7 +142,7 @@ public class View
     
         // Center the screen coordinates around the center of the viewport
         float centeredX = screenCoordinate.X - centerX;
-        float centeredY =  screenCoordinate.Y -centerY ; // Y-axis is inverted in screen coordinates
+        float centeredY =  screenCoordinate.Y -centerY  ; // Y-axis is inverted in screen coordinates
     
         // Normalize centered screen coordinates
         float normalizedX = (2.0f * centeredX / Width);

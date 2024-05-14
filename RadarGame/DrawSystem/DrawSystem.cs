@@ -78,7 +78,10 @@ public static class DrawSystem
     public static Vector2 ScreenToWorldcord(Vector2 screenpos , int layer =0)
     {
         var surface = Layers[layer];
-        return new Vector2(screenpos.X / surface.Width * surface.vsize.X , screenpos.Y / surface.Height * surface.vsize.Y);
+        var temp = main.ScreenToViewSpace(screenpos);
+        var worldCord = surface.ScreenToViewSpace(   temp );
+       // worldCord.Y = surface.Height - worldCord.Y;
+        return worldCord;
     }
    
     
