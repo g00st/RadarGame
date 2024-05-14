@@ -107,6 +107,22 @@ public static class DrawSystem
         ImGuiNET.ImGui.Text("Draw Layer Time: " + _drawLayertime);
         ImGuiNET.ImGui.Text("Slow Draw Count: " + count);
         
+        var s = 10000;
+        ImGuiNET.ImGui.Text("Draw Times:");
+        ImGuiNET.ImGui.Text("Drawcalls Count: " + Mesh._drawcalls/s);
+        ImGuiNET.ImGui.Text("VAO Time: " + Mesh._VAOtime/s);
+        ImGuiNET.ImGui.Text("Texture Time: " + Mesh._TEXTUREtime/s);
+        ImGuiNET.ImGui.Text("Shader Time: " + Mesh._SHADERtime/s);
+        ImGuiNET.ImGui.Text("Drawcall Time: " + Mesh._drawcalltime/s);
+        ImGuiNET.ImGui.Text("com draw Time: " +(Mesh._drawcalls/s + Mesh._VAOtime/s + Mesh._TEXTUREtime/s + Mesh._SHADERtime/s + Mesh._drawcalltime/s));
+        
+        Mesh._drawcalls = 0;
+        Mesh._VAOtime = 0;
+        Mesh._SHADERtime = 0;
+        Mesh._TEXTUREtime = 0;
+        Mesh._drawcalltime = 0;
+
+
         //rest scrollable  drawtimes
         ImGuiNET.ImGui.Text("Draw Times:");
         ImGuiNET.ImGui.BeginChild("scrolling", new System.Numerics.Vector2(0, 0), ImGuiChildFlags.Border,

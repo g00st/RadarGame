@@ -5,6 +5,19 @@ namespace App.Engine;
 
 public class View
 {
+    //--------------------------------------------------------------------------------------------------------
+    public static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
+    float _drawtime = 0;
+
+
+    //--------------------------------------------------------------------------------------------------------
+    
+    private static VBO currentrendertarget;
+    private static int currentwidth;
+    private static int currentheight;
+   
+    
+    
     private List<DrawObject> drawObjects;
     private int _width, _height;
     private Vector2 _vpossition;
@@ -13,6 +26,8 @@ public class View
     private VBO _rendertarget;
     private Matrix4 _camera;
     private Matrix4 _view;
+    
+    
 
     public Vector2 vpossition
     {
@@ -79,18 +94,23 @@ public class View
 
         public void Draw(DrawObject todraw)
         {
-           
-            _rendertarget.Bind();
-            GL.Viewport(0, 0, Width, Height);
-           GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            if (currentrendertarget != _rendertarget)
+            {
+                _rendertarget.Bind();
+                currentrendertarget = _rendertarget;
+            }
+
+            if (currentwidth != Width || currentheight != Height)
+            {
+                GL.Viewport(0, 0, Width, Height);
+                currentwidth = Width;
+                currentheight = Height;
+            }
             DrawInfo obj = todraw.drawInfo;
             //Console.Write(objectransform.ToString() + "\n" +" \n");
-            Matrix4 objectransform= obj.Transform;
-          
-           
-            Matrix4 comb =   objectransform*_view  * _camera;
-            obj.mesh.Draw(comb, obj, _view, _camera);
-            _rendertarget.Unbind();
+            obj.mesh.Draw( obj, _view, _camera);
+           // _rendertarget.Unbind();
+            
         }
     
 
@@ -180,9 +200,7 @@ public class View
         _vpossition = new Vector2(rendertarget.Widht()/2, rendertarget.Height()/2);
         _rotation = 0;
         _view = CalcView();
-        _camera = calcCameraProjection();
+        _camera = calcCameraProjection(); 
+        rendertarget.Bind();
     }
-    
-
-    
 }

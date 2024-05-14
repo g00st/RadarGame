@@ -34,7 +34,7 @@ public class InstancedMesh : Mesh
         }
         
      
-        public override void Draw(Matrix4 mvp , DrawInfo drawInfo, Matrix4 view,Matrix4 Projection)
+        public override void Draw( DrawInfo drawInfo, Matrix4 view,Matrix4 Projection)
         {
          
          _vao.Bind();
@@ -52,7 +52,6 @@ public class InstancedMesh : Mesh
         
 
          _shader.Bind();
-         _shader.setUniformM4("u_MVP", mvp); 
          _shader.setUniformM4 ("u_Model",Model);
          _shader.setUniformM4 ("u_View",view);
          _shader.setUniformM4 ("u_Projection" ,Projection);

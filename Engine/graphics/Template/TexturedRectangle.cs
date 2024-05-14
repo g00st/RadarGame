@@ -5,7 +5,12 @@ namespace App.Engine.Template;
 
 public class TexturedRectangle : DrawObject , IDisposable
 {
-public DrawInfo drawInfo { get; }
+    private static VAO _sharedVAOcenter =null;
+    private static VAO _sharedVAO = null;
+    private static Shader _sharedShader = new Shader("resources/Template/simple_texture.vert",
+        "resources/Template/simple_texture.frag");
+    
+    public DrawInfo drawInfo { get; }
 
     public TexturedRectangle(Vector2 positon, Vector2 size, Texture? texture, string name = "TexturedRectangle", bool originCenter = false)
     {
@@ -13,33 +18,47 @@ public DrawInfo drawInfo { get; }
         this.drawInfo.Position = positon;
         this.drawInfo.Size = size;
         this.drawInfo.Rotation = 0;
-        
-
-        Bufferlayout bufferlayout = new Bufferlayout();
-        bufferlayout.count = 2;
-        bufferlayout.normalized = false;
-        bufferlayout.offset = 0;
-        bufferlayout.type = VertexAttribType.Float;
-        bufferlayout.typesize = sizeof(float);
-
-        this.drawInfo.mesh = new Mesh();
-        if (texture != null)
-        { 
-            this.drawInfo.mesh.Texture = texture;
-        }
        
-        if (originCenter)
+        if(originCenter)
         {
-            this.drawInfo.mesh.AddAtribute(bufferlayout, new float[] { -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f });
+            if (_sharedVAOcenter == null)
+            {
+                Bufferlayout bufferlayout = new Bufferlayout();
+                bufferlayout.count = 2;
+                bufferlayout.normalized = false;
+                bufferlayout.offset = 0;
+                bufferlayout.type = VertexAttribType.Float;
+                bufferlayout.typesize = sizeof(float);
+                _sharedVAOcenter = new VAO();
+                _sharedVAOcenter.LinkAtribute( new float[] { -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f }, bufferlayout);
+                _sharedVAOcenter.LinkAtribute( new float[] { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f }, bufferlayout);
+                _sharedVAOcenter.LinkElements(new uint[] { 0, 1, 2, 2, 3, 0 });
+            }
+            this.drawInfo.mesh = new Mesh(_sharedVAOcenter, 4, new uint[] { 0, 1, 2, 2, 3, 0 },  noCleanUp: true);
+            
         }
         else
         {
-            this.drawInfo.mesh.AddAtribute(bufferlayout, new float[] { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f });
+            if (_sharedVAO == null)
+            {
+                Bufferlayout bufferlayout = new Bufferlayout();
+                bufferlayout.count = 2;
+                bufferlayout.normalized = false;
+                bufferlayout.offset = 0;
+                bufferlayout.type = VertexAttribType.Float;
+                bufferlayout.typesize = sizeof(float);
+                _sharedVAO = new VAO();
+                _sharedVAO.LinkAtribute(new float[] { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f },
+                    bufferlayout);
+                _sharedVAO.LinkAtribute(new float[] { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f },
+                    bufferlayout);
+                _sharedVAO.LinkElements(new uint[] { 0, 1, 2, 2, 3, 0 });
+            }
+
+            this.drawInfo.mesh = new Mesh(_sharedVAO , 4, new uint[] { 0, 1, 2, 2, 3, 0 }, noCleanUp: true);
         }
-        this.drawInfo.mesh.AddAtribute(bufferlayout, new float[]  { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f });
-        this.drawInfo.mesh.AddIndecies(new uint[] { 0, 1, 2, 2, 3, 0 });
-        this.drawInfo.mesh.Shader = new Shader("resources/Template/simple_texture.vert",
-            "resources/Template/simple_texture.frag");
+         this.drawInfo.mesh.Shader = _sharedShader;
+        if (texture != null) this.drawInfo.mesh.Texture = texture;
     }
 
     public TexturedRectangle(Texture texture) : this(new Vector2(0, 0), new Vector2(texture.Width, texture.Height), texture)

@@ -123,7 +123,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
                 0 * (float)Math.Cos(Rotation) - 1000 * (float)Math.Sin(Rotation),
                 0 * (float)Math.Sin(Rotation) + 1000 * (float)Math.Cos(Rotation)
             );
-            
+            //TODO: add sound effect
             EntityManager.AddObject(new GameObject(Position,Rotation,name, bulletvell,0) );
             bulletCount++;
             if (bulletCount > 1000)

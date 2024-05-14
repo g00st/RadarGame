@@ -21,6 +21,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     {
         if (((IEntitie)colidedObject).Name.Contains("Bullet"))
         {
+            //Todo: Add sound effect Kaboom 
             Console.WriteLine("Colision with " + colidedObject);
             EntityManager.RemoveObject((IEntitie)colidedObject);
             EntityManager.RemoveObject(this);
@@ -127,6 +128,5 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     public void Draw(List<View> surface)
     {
         surface[i].Draw(DebugColoredRectangle);
-        surface[i].Draw(DebugPolygon);
     }
 }
