@@ -97,7 +97,7 @@ public class App : EngineWindow
         _PhysicsTimeList[_PhysicsTimeListIndex] = (float)_PhysicsTime;
         _PhysicsTimeListIndex = (_PhysicsTimeListIndex + 1) % _PhysicsTimeList.Length;
         _stopwatch.Restart();
-        ColisionSystem.Update();
+       // ColisionSystem.Update();
         _ColisionTime = _stopwatch.Elapsed.TotalMilliseconds;
         _ColisionTimeList[_ColisionTimeListIndex] = (float)_ColisionTime ;
         _ColisionTimeListIndex = (_ColisionTimeListIndex + 1) % _ColisionTimeList.Length;
@@ -132,8 +132,8 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("Physics Update Time", ref _PhysicsTimeList[0], _PhysicsTimeList.Length, _PhysicsTimeListIndex, "Physics Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Colision Update Time", ref _ColisionTimeList[0], _ColisionTimeList.Length, _ColisionTimeListIndex, "Colision Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Draw Time", ref _DrawTimeList[0], _DrawTimeList.Length, _DrawTimeListIndex, "Draw Time", 0, 100,  new System.Numerics.Vector2(0, 100));
-        // Wenn Lautstärke auslesbar hier verzeichnen bitte
-        ImGuiNET.ImGui.PlotLines("LautStärke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStärke", 0, 100, new System.Numerics.Vector2(0, 100));
+        // Wenn Lautstï¿½rke auslesbar hier verzeichnen bitte
+        ImGuiNET.ImGui.PlotLines("LautStï¿½rke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStï¿½rke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();

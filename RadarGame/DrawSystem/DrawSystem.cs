@@ -30,7 +30,7 @@ public static class DrawSystem
         main = mainview;
            for (int i = 0; i < layercount; i++)
             {
-                Texture texture = new Texture((int)mainview.vsize.X , (int)mainview.vsize.Y);
+                Texture texture = new Texture((int)mainview.vsize.X/10 , (int)mainview.vsize.Y/10);
                 
                 
                 TexturedRectangle texturedRectangle = new TexturedRectangle(new Vector2(0, 0), mainview.vsize, texture, "Layer" + i);

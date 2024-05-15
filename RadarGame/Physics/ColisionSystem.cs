@@ -26,6 +26,9 @@ public static class ColisionSystem
     
     public static void Update()
     {
+       
+            
+            
         for (int i = 0; i < _colisionData.Count; i++)
         {
             for (int j = i+1; j < _colisionData.Count; j++)
