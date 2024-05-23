@@ -17,12 +17,15 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     
     public PhysicsDataS PhysicsData { get; set; }
     public List<Vector2> CollisonShape { get; set; }
+
+    static string filepath = "resources/Sounds/kaboommeme.wav";
     public void OnColision(IColisionObject colidedObject)
     {
         if (((IEntitie)colidedObject).Name.Contains("Bullet"))
         {
             //Todo: Add sound effect Kaboom 
             Console.WriteLine("Colision with " + colidedObject);
+            SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
             EntityManager.RemoveObject((IEntitie)colidedObject);
             EntityManager.RemoveObject(this);
         }
