@@ -7,18 +7,12 @@ using OpenTK.Mathematics;
 
 namespace RadarGame.SoundSystem
 {
-    public interface SoundObject
+    public static class SoundObject
     {
-        bool isDirectional { get; }
-        Vector2 Position { get; }
-        /*
-         * DebugColoredRectangle = new TexturedRectangle(
-            position,
-            new OpenTK.Mathematics.Vector2(50f, 50f), 
-            new Texture("resources/cirno.png"),
-            Name,
-            true
-            );
-         */
+        // TO DO: change Soundsystem parameters to SoundObject
+        static string filepath;
+        static float volume;
+        static int id;
+
     }
 }
