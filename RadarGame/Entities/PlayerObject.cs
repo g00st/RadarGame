@@ -166,10 +166,10 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
 
     public void Draw(List <View> surface)
     {
-      //  surface.rotation = - lastRotation;
+        surface[0].rotation = - lastRotation;
        surface[0].vpossition = new Vector2(Position.X, Position.Y);
        // Console.WriteLine(surface.rotation);
-       surface[0].vsize = new Vector2(1920 , 1080);
+       surface[0].vsize = new Vector2(1920 , 1080) + new Vector2(20,20)* PhysicsData.Velocity.Length;
       surface[0].Draw(DebugColoredRectangle);
       surface[0].Draw(DebugPolygon2);
         Vector2 last = this.Position;
