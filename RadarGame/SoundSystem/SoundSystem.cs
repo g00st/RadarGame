@@ -23,6 +23,9 @@ public static class SoundSystem
     static bool ToggleSinus = true; // To Toggle between Sinus and Soundsystem Key bindings
     static string samplePath = "resources/Sounds/Laser3.wav";
 
+    // ID history:
+    // ID 2: Systemsounds, example bullet shot
+
     public static void DebugDraw()
     {
         ImGuiNET.ImGui.Begin("SoundSystem");
@@ -76,7 +79,7 @@ public static class SoundSystem
         var volumeProvider = new VolumeSampleProvider(audioFile);
 
         // volume between 0.00 and 1.00
-        volumeProvider.Volume = 0.5f;
+        volumeProvider.Volume = globalVolume;
         Console.WriteLine("Before Wave Out");
         var waveOut = new WaveOutEvent();
         waveOut.Init(volumeProvider);
@@ -88,13 +91,13 @@ public static class SoundSystem
 
     // provide relative filepath like "resources/Sounds/Laser3.wav"
     // volume between 0.00f and 1.00f, int id to specify tracks
-    public static void PlayThisTrack(String filepath, float volume, int id)
+    public static void PlayThisTrack(String filepath, int id)
     {
-        var audioFileTrack = new AudioFileReader(filepath);
-        Console.WriteLine(audioFileTrack);
-        var volumeProvider = new VolumeSampleProvider(audioFileTrack);
+        var audioFile = new AudioFileReader(filepath);
+        Console.WriteLine(audioFile);
+        var volumeProvider = new VolumeSampleProvider(audioFile);
         // volume between 0.00 and 1.00
-        volumeProvider.Volume = volume;
+        volumeProvider.Volume = globalVolume;
         var newTrack = new WaveOutEvent();
         newTrack.Init(volumeProvider);
         Sounds.Add(newTrack, id);

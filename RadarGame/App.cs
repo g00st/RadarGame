@@ -65,11 +65,18 @@ public class App : EngineWindow
         
 
         var size = MainView.vsize.Y;
-       
+        Button testButton;
+        testButton = new Button(Size - new Vector2(Size.X / 6.4f), new Vector2(Size.X / 16),
+            new Texture("resources/Buttons/pausebutton_On.png"), new Texture("resources/Buttons/pausebutton_Off.png"),
+            new Texture("resources/Buttons/pausebutton_onHover.png"), new Texture("resources/Buttons/pausebutton_onHover.png"));
+        testButton.Name = "testButton";
+        EntityManager.AddObject(testButton);
+
         EntityManager.AddObject(new RadarPanel( new Vector2(MainView.vsize.X/2 -size/2,0), new Vector2(size))); 
         EntityManager.AddObject(new CompasPanel(new Vector2(100,MainView.vsize.Y - 400), new Vector2(300,300) ,"CompasPanel"));
        // EntityManager.AddObject( new cursor( "cursore"));
        
+        
         
 
 
@@ -78,6 +85,10 @@ public class App : EngineWindow
 
     protected override void OnUpdateFrame(FrameEventArgs args)
     {
+        if (KeyboardState.IsKeyReleased(Keys.Escape))
+        {
+            Close();
+        }
 
        
 
@@ -109,6 +120,7 @@ public class App : EngineWindow
 
         SoundSystem.SoundSystem.Update(args, KeyboardState);
         SoundSystem.SinusWave.Update(args, KeyboardState);
+        // _SweepButton.Update(mouseState , args);
 
 
     }
