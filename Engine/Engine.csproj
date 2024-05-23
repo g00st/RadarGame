@@ -20,6 +20,7 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="resources\Laser3.wav" />
+      <None Remove="resources\Template\texture_atlastexture.frag" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,6 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="bin\Debug\net6.0\resources\" />
       <Folder Include="resources\Buttons\" />
     </ItemGroup>
 
