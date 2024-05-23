@@ -150,7 +150,6 @@ public class App : EngineWindow
 
         DrawSystem.DrawSystem.DebugDraw();
         SoundSystem.SinusWave.DebugDraw();
-        RadarSystem.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
