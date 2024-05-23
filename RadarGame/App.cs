@@ -41,14 +41,12 @@ public class App : EngineWindow
     private int _AudioVolumeListIndex = 0;
     private float[] AudioVolumeList = new float[100];
 
-    private string path = @"C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav";
-
 
 
     public App() : base(1440, 900, "Radargame"){
 
         // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
-        SoundSystem.SoundSystem.SetUpSound(); // once per start
+        SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
         DrawSystem.DrawSystem.Init( MainView,2);
@@ -67,9 +65,15 @@ public class App : EngineWindow
         
 
         var size = MainView.vsize.Y;
-        
+        Button testButton;
+        testButton = new Button(Size - new Vector2(Size.X / 6.4f), new Vector2(Size.X / 16),
+            new Texture("resources/Buttons/pausebutton_On.png"), new Texture("resources/Buttons/pausebutton_Off.png"),
+            new Texture("resources/Buttons/pausebutton_onHover.png"), new Texture("resources/Buttons/pausebutton_onHover.png"));
+        testButton.Name = "testButton";
+        EntityManager.AddObject(testButton);
        // EntityManager.AddObject( new cursor( "cursore"));
        
+        
         
 
 
@@ -78,6 +82,10 @@ public class App : EngineWindow
 
     protected override void OnUpdateFrame(FrameEventArgs args)
     {
+        if (KeyboardState.IsKeyReleased(Keys.Escape))
+        {
+            Close();
+        }
 
        
 
@@ -103,6 +111,8 @@ public class App : EngineWindow
         _ColisionTimeListIndex = (_ColisionTimeListIndex + 1) % _ColisionTimeList.Length;
         _stopwatch.Restart();
         SoundSystem.SoundSystem.Update(args, KeyboardState);
+        SoundSystem.SinusWave.Update(args, KeyboardState);
+        // _SweepButton.Update(mouseState , args);
 
 
     }
@@ -132,19 +142,21 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("Physics Update Time", ref _PhysicsTimeList[0], _PhysicsTimeList.Length, _PhysicsTimeListIndex, "Physics Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Colision Update Time", ref _ColisionTimeList[0], _ColisionTimeList.Length, _ColisionTimeListIndex, "Colision Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Draw Time", ref _DrawTimeList[0], _DrawTimeList.Length, _DrawTimeListIndex, "Draw Time", 0, 100,  new System.Numerics.Vector2(0, 100));
-        // Wenn Lautst‰rke auslesbar hier verzeichnen bitte
-        ImGuiNET.ImGui.PlotLines("LautSt‰rke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautSt‰rke", 0, 100, new System.Numerics.Vector2(0, 100));
+        // Wenn Lautst√§rke auslesbar hier verzeichnen bitte
+        ImGuiNET.ImGui.PlotLines("LautSt√§rke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautSt√§rke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();
+
         DrawSystem.DrawSystem.DebugDraw();
-       
+        SoundSystem.SinusWave.DebugDraw();
+        RadarSystem.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
         base.OnClosing(e);
-        SoundSystem.SoundSystem.CleanUp();
+        SoundSystem.SinusWave.CleanUp();
     }
     
     
