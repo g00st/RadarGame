@@ -1,11 +1,10 @@
-﻿#version 400 core
+#version 400 core
 
 out vec4 fragColor;
 uniform sampler2D tex;
 uniform vec2 index;       // Index of the subimage (tile) within the atlas
 uniform vec2 subimages;   // Number of subimages in the atlas (columns, rows)
-uniform bool aplha;       // If the texture has an alpha channel
-uniform vec3 color;       // Color to apply to the texture
+uniform vec4 color;       // Color to apply to the texture
 in vec2 textCords;        // Input texture coordinates within the tile [0, 1]
 
 
@@ -21,5 +20,6 @@ void main()
     vec2 actualTexCoords = offset + textCords * tileSize;
 
     // Sample the texture using the calculated coordinates
-    fragColor = texture(tex, actualTexCoords);
+   
+    fragColor = vec4 (color.rgb,  texture(tex, actualTexCoords).r );
 }

@@ -10,6 +10,7 @@ public class StartScreen : IDrawObject ,IEntitie
 {
     private Button StartButton;
     private TexturedRectangle Background;
+    private int counter = 0;
 
 
     public StartScreen( )
@@ -36,11 +37,14 @@ public class StartScreen : IDrawObject ,IEntitie
     {
         surface[1].Draw(Background);
         StartButton.Draw(surface);
+        
+        TextRenderer.Write("00000 abcdefg Hello 123" + counter, new Vector2(100, 100), new Vector2(30, 30), surface[1], Color4.Black);
     } 
 
     public string Name { get; set; }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
+        counter++;
         StartButton.Update(args, keyboardState, mouseState);
         if (!StartButton.isOn())
         {
