@@ -8,7 +8,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Entities;
 using RadarGame.DrawSystem;
 using RadarGame.Physics;
-using RadarGame.Radarsystem;
+
 using RadarGame.SoundSystem;
 
 namespace RadarGame;
@@ -49,17 +49,17 @@ public class App : EngineWindow
         SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
-        
-        EntityManager.AddObject(new Background());
+        DrawSystem.DrawSystem.Init( MainView,2);
         EntityManager.AddObject(new cursor());
         EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
         EntityManager.AddObject( new cursor( "cursor4"));
+        EntityManager.AddObject(new CompasPanel( MainView.vsize - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
        // EntityManager.AddObject(new Mapp( new Vector2(1000), new Vector2(0,0)));
       
         
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 500; i++)
         {
-            GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
+            GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i, 0);
             EntityManager.AddObject(gameObject);
         }
         
@@ -71,9 +71,6 @@ public class App : EngineWindow
             new Texture("resources/Buttons/pausebutton_onHover.png"), new Texture("resources/Buttons/pausebutton_onHover.png"));
         testButton.Name = "testButton";
         EntityManager.AddObject(testButton);
-
-        EntityManager.AddObject(new RadarPanel( new Vector2(MainView.vsize.X/2 -size/2,0), new Vector2(size))); 
-        EntityManager.AddObject(new CompasPanel(new Vector2(100,MainView.vsize.Y - 400), new Vector2(300,300) ,"CompasPanel"));
        // EntityManager.AddObject( new cursor( "cursore"));
        
         
@@ -113,11 +110,6 @@ public class App : EngineWindow
         _ColisionTimeList[_ColisionTimeListIndex] = (float)_ColisionTime ;
         _ColisionTimeListIndex = (_ColisionTimeListIndex + 1) % _ColisionTimeList.Length;
         _stopwatch.Restart();
-        RadarSystem.Update( args);
-        RadarTime = _stopwatch.Elapsed.TotalMilliseconds;
-        RadarTimeList[RadarTimeListIndex] = (float)RadarTime;
-        RadarTimeListIndex = (RadarTimeListIndex + 1) % RadarTimeList.Length;
-
         SoundSystem.SoundSystem.Update(args, KeyboardState);
         SoundSystem.SinusWave.Update(args, KeyboardState);
         // _SweepButton.Update(mouseState , args);
@@ -128,10 +120,7 @@ public class App : EngineWindow
     protected override void Draw()
     {
         _stopwatch.Restart();
-      
-        DrawSystem.DrawSystem.Draw(MainView); 
-        RadarSystem.Render();
-        
+        DrawSystem.DrawSystem.Draw(MainView);
         _DrawTime = _stopwatch.Elapsed.TotalMilliseconds;
         _DrawTimeList[_DrawTimeListIndex] = (float) _DrawTime;
         _DrawTimeListIndex = (_DrawTimeListIndex + 1) % _DrawTimeList.Length;
@@ -152,13 +141,14 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("Entity Update Time", ref _EntityTimeList[0], _EntityTimeList.Length, _EntityTimeListIndex, "Entity Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Physics Update Time", ref _PhysicsTimeList[0], _PhysicsTimeList.Length, _PhysicsTimeListIndex, "Physics Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Colision Update Time", ref _ColisionTimeList[0], _ColisionTimeList.Length, _ColisionTimeListIndex, "Colision Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
-        ImGuiNET.ImGui.PlotLines("Radar Update Time", ref RadarTimeList[0], RadarTimeList.Length, RadarTimeListIndex, "Radar Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Draw Time", ref _DrawTimeList[0], _DrawTimeList.Length, _DrawTimeListIndex, "Draw Time", 0, 100,  new System.Numerics.Vector2(0, 100));
-        // Wenn Lautstärke auslesbar hier verzeichnen bitte
-        ImGuiNET.ImGui.PlotLines("LautStärke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStärke", 0, 100, new System.Numerics.Vector2(0, 100));
+        // Wenn LautstÃ¤rke auslesbar hier verzeichnen bitte
+        ImGuiNET.ImGui.PlotLines("LautStÃ¤rke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStÃ¤rke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();
+
+        DrawSystem.DrawSystem.DebugDraw();
         SoundSystem.SinusWave.DebugDraw();
         RadarSystem.DebugDraw();
     }

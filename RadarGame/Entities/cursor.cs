@@ -19,7 +19,7 @@ public class cursor: IEntitie , IDrawObject
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         var x = new OpenTK.Mathematics.Vector2(mouseState.X, mouseState.Y);
-        x = DrawSystem.DrawSystem.GetMainView().ScreenToViewSpace(x) ;
+        x = DrawSystem.DrawSystem.ScreenToWorldcord(x);
        _cursor.drawInfo.Position = x;
     }
 
@@ -28,8 +28,10 @@ public class cursor: IEntitie , IDrawObject
         _cursor.Dispose();
     }
 
-    public void Draw(View surface)
+  
+
+    public void Draw(List<View> surface)
     {
-      surface.Draw(_cursor);
+        surface[0].Draw(_cursor);
     }
 }

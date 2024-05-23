@@ -30,7 +30,7 @@ public class EngineWindow : GameWindow
                 Profile = ContextProfile.Core 
             })
     {
-      //  ErrorChecker.InitializeGLDebugCallback();
+       ErrorChecker.InitializeGLDebugCallback();
         _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
         this.Resize += e => this.resize();
         GL.Enable(EnableCap.Blend);
@@ -65,6 +65,7 @@ public class EngineWindow : GameWindow
      
         base.OnRenderFrame(args);  
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);  
+        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         Draw();  
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0) ;
         GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);

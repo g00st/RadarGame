@@ -49,12 +49,7 @@ public class MapPolygon : IEntitie , IDrawObject
         return null;
     }
 
-    public void Draw(View surface)
-    {
-        
-        surface.Draw(_polygon);
-        surface.Draw(_debugColoredRectangle);
-    }
+   
     /*
      public static List<Vector2> GenerateRandomConvexPolygon(Vector2 bounds, int n, Random RAND)
     {
@@ -183,4 +178,8 @@ public class MapPolygon : IEntitie , IDrawObject
         }
     }
     */
+    public void Draw(List<View> surface)
+    {
+        throw new NotImplementedException();
+    }
 }

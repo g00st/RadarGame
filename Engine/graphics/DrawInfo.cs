@@ -8,11 +8,47 @@ namespace App.Engine;
 public class DrawInfo :IDisposable
 {
     static List<DrawInfo> _drawInfos = new List<DrawInfo>();
-    public Vector2 Position;
-    public Vector2 Size;
-    public float Rotation;
-    public Mesh mesh;
+    private Vector2 _position;
+    private Vector2 _size;
+    private float _rotation;
+    public Vector2 Position
+    {
+        get => _position;
+        set{
+            _position = value;
+            Transform = GetTransform();}
+    } 
+
+    public Vector2 Size 
+    {
+        get => _size;
+        set{
+            _size = value;
+            Transform = GetTransform();}
+    }
+    public float Rotation  
+    {
+        get => _rotation;
+        set{
+            _rotation = value;
+            Transform = GetTransform();}
+    }
+    public Mesh mesh ;
     public string Name;
+    public Matrix4 Transform {get; private set;}
+    
+    
+    private Matrix4 GetTransform()
+    {
+        Matrix4 ObjectScalematrix = Matrix4.CreateScale(_size.X,_size.Y, 1.0f);
+        Matrix4 ObjectRotaionmatrix = Matrix4.CreateRotationZ(_rotation);
+        Matrix4 ObjectTranslationmatrix = Matrix4.CreateTranslation(_position.X,_position.Y,0);
+
+        Matrix4 objectransform = Matrix4.Identity * ObjectScalematrix;
+        objectransform *= ObjectRotaionmatrix;
+        objectransform *= ObjectTranslationmatrix;
+        return  objectransform;
+    }
     
     public DrawInfo(Vector2 position, Vector2 size, float rotation, Mesh mesh, string name )
     {
@@ -22,6 +58,7 @@ public class DrawInfo :IDisposable
         this.mesh = mesh;
         _drawInfos.Add(this);
         this.Name = name;
+        this.Transform = GetTransform();
     }
     
     
