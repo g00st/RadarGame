@@ -38,6 +38,11 @@ public static class DrawSystem
                 _LayerTexturedRectangles.Add(texturedRectangle);
             }
     }
+    public static Vector2 getViewSize( int layer =0)
+    {
+        return Layers[layer].vsize;
+    }
+    
    
     public static void Draw(View surface)
     {
@@ -53,7 +58,7 @@ public static class DrawSystem
         {
            _stopwatch2.Restart();
             drawObject.Draw(Layers);
-            drawtimes[((IEntitie) drawObject).Name ] = _stopwatch2.ElapsedTicks;
+           // drawtimes[((IEntitie) drawObject).Name ] = _stopwatch2.ElapsedTicks;
             
         }
         _drawTime = _stopwatch.ElapsedMilliseconds;

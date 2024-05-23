@@ -1,8 +1,13 @@
+using App.Engine;
+using OpenTK.Mathematics;
+using RadarGame.Entities;
+
 namespace RadarGame;
 
 public class Gamestate
 {
     private static State _currState;
+    private static List<IEntitie> currentEntities = new List<IEntitie>();
     public  static State CurrState
     {
         get => _currState;
@@ -18,33 +23,66 @@ public class Gamestate
     
     public static void onStateChange( State neState)
     {
+       
+        if (neState == _currState)
+        {
+            return;
+        } 
+        Console.WriteLine("State Changed to: " + neState);
         switch (neState)
         {
             case State.MainMenu:
-                Entities.EntityManager.ClearObjects();
+               EntityManager.ClearObjects();
+               EntityManager.AddObject(new StartScreen());
                 //TODO: Entities.EntityManager.AddObject( Startscreen elementens);
                 break;
             case State.Game:
                 if (CurrState == State.MainMenu )
                 {
-                    //TODO: Entities.EntityManager.Remove( Startscreen elementents);
-                    // TODO: create new game elements
-                    // TODO: Entities.EntityManager.AddObject( Game elementents);
+                    EntityManager.DeleteObject( EntityManager.GetObject("Startscreen"));
+                    EntityManager.AddObject(new cursor());
+                    EntityManager.AddObject(new PlayerObject( Vector2.Zero, 0f, "Player"));
+                    EntityManager.AddObject( new cursor( "cursor4"));
+                    EntityManager.AddObject(new CompasPanel( DrawSystem.DrawSystem.getViewSize(1) - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
+                    EntityManager.AddObject(new Pauser());
+                    for (int i = 0; i < 100; i++)
+                    {
+                        GameObject gameObject = new GameObject( Vector2.One, 0f, "test"+i, 0);
+                        EntityManager.AddObject(gameObject);
+                    }
+                    Button testButton;
+                    var Size = DrawSystem.DrawSystem.getViewSize(1);
+                    testButton = new Button(Size - new Vector2(Size.X / 6.4f), new Vector2(Size.X / 16),
+                        new Texture("resources/Buttons/pausebutton_On.png"), new Texture("resources/Buttons/pausebutton_Off.png"),
+                        new Texture("resources/Buttons/pausebutton_onHover.png"), new Texture("resources/Buttons/pausebutton_onHover.png"));
+                    testButton.Name = "testButton";
+                    EntityManager.AddObject(testButton);
+                    
+                    
                 }
                 else if (CurrState == State.Pause)
                 {
-                    //Todo: Entities.EntityManager.AddObject( Game elementents);
-                    //Todo: Entities.EntityManager.Remove( Pause elementents);
+                    foreach (var g in currentEntities)
+                    {
+                        Console.WriteLine("Adding Object: " + g.Name);
+                        EntityManager.AddObject(g);
+                    }
+                    EntityManager.DeleteObject( EntityManager.GetObject("PauseScreen"));
+                   
                 }
 
                 break;
             case State.Pause:
-                        //TODO: Entities.EntityManager.AddObject( Pause elementen);
-                        //TODO: Entities.EntityManager.Remove( Game elementen);
+                        currentEntities = EntityManager.GetObjects();
+                        
+                        EntityManager.RemoveAllObjects();
+                        EntityManager.AddObject(new PauseScreen());
+                      
                 break;
             case State.GameOver:
-                     //TODO: Entities.EntityManager.AddObject( GameOver elementen);
-                     //TODO: Entities.EntityManager.Delete( Game elementen);
+                      EntityManager.ClearObjects();
+                      EntityManager.AddObject(new GameoverScreen());
+                   
                 break;
         }
         _currState = neState;

@@ -15,6 +15,10 @@ namespace RadarGame;
 
 public class App : EngineWindow
 {
+    
+    /// <summary>
+    /// Debug stufff
+    /// </summary>
    private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
    private double fps = 0;
    private float[] fpsList = new float[100];
@@ -41,38 +45,31 @@ public class App : EngineWindow
     private int _AudioVolumeListIndex = 0;
     private float[] AudioVolumeList = new float[100];
 
-    private string path = @"C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav";
-
+ 
 
 
     public App() : base(1440, 900, "Radargame"){
+        Gamestate.CurrState = Gamestate.State.MainMenu;
 
         // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
         SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
         DrawSystem.DrawSystem.Init( MainView,2);
-        EntityManager.AddObject(new cursor());
-        EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
-        EntityManager.AddObject( new cursor( "cursor4"));
-        EntityManager.AddObject(new CompasPanel( MainView.vsize - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
+        //EntityManager.AddObject(new cursor());
+        //EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
+        //EntityManager.AddObject( new cursor( "cursor4"));
+        //EntityManager.AddObject(new CompasPanel( MainView.vsize - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
        // EntityManager.AddObject(new Mapp( new Vector2(1000), new Vector2(0,0)));
       
         
-        for (int i = 0; i < 500; i++)
+       /* for (int i = 0; i < 100; i++)
         {
             GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i, 0);
             EntityManager.AddObject(gameObject);
         }
-        
-
-        var size = MainView.vsize.Y;
-        Button testButton;
-        testButton = new Button(Size - new Vector2(Size.X / 6.4f), new Vector2(Size.X / 16),
-            new Texture("resources/Buttons/pausebutton_On.png"), new Texture("resources/Buttons/pausebutton_Off.png"),
-            new Texture("resources/Buttons/pausebutton_onHover.png"), new Texture("resources/Buttons/pausebutton_onHover.png"));
-        testButton.Name = "testButton";
-        EntityManager.AddObject(testButton);
+        */
+        EntityManager.AddObject(new StartScreen());
 
         // EntityManager.AddObject( new cursor( "cursore"));
 
@@ -141,6 +138,7 @@ public class App : EngineWindow
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();
+        EntityManager.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
