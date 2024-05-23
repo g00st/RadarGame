@@ -48,7 +48,7 @@ public class App : EngineWindow
     public App() : base(1440, 900, "Radargame"){
 
         // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
-        SoundSystem.SoundSystem.SetUpSound(); // once per start
+        SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
         DrawSystem.DrawSystem.Init( MainView,2);
@@ -67,10 +67,14 @@ public class App : EngineWindow
         
 
         var size = MainView.vsize.Y;
-        
-       // EntityManager.AddObject( new cursor( "cursore"));
-       
-        
+        Button testButton;
+        testButton = new Button(Size - new Vector2(Size.X / 6.4f), new Vector2(Size.X / 16),
+            new Texture("resources/Buttons/pausebutton_On.png"), new Texture("resources/Buttons/pausebutton_Off.png"),
+            new Texture("resources/Buttons/pausebutton_onHover.png"), new Texture("resources/Buttons/pausebutton_onHover.png"));
+        testButton.Name = "testButton";
+        EntityManager.AddObject(testButton);
+
+        // EntityManager.AddObject( new cursor( "cursore"));
 
 
     }
@@ -97,7 +101,7 @@ public class App : EngineWindow
         _PhysicsTimeList[_PhysicsTimeListIndex] = (float)_PhysicsTime;
         _PhysicsTimeListIndex = (_PhysicsTimeListIndex + 1) % _PhysicsTimeList.Length;
         _stopwatch.Restart();
-       // ColisionSystem.Update();
+        ColisionSystem.Update();
         _ColisionTime = _stopwatch.Elapsed.TotalMilliseconds;
         _ColisionTimeList[_ColisionTimeListIndex] = (float)_ColisionTime ;
         _ColisionTimeListIndex = (_ColisionTimeListIndex + 1) % _ColisionTimeList.Length;
@@ -144,7 +148,7 @@ public class App : EngineWindow
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
         base.OnClosing(e);
-        SoundSystem.SoundSystem.CleanUp();
+        SoundSystem.SinusWave.CleanUp();
     }
     
     

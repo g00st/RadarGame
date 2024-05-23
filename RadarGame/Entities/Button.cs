@@ -112,7 +112,7 @@ namespace RadarGame.Entities
         }
         private bool checkHover(MouseState mouseState)
         {
-            var transformed = DrawSystem.DrawSystem.GetMainView().ScreenToViewSpace(new Vector2(mouseState.X, mouseState.Y));
+            var transformed = DrawSystem.DrawSystem.ScreenToWorldcord(new Vector2(mouseState.X, mouseState.Y), 1);
 
             if (Vector2.Distance(transformed, Position + Size / 2) < Size.X / 2)
             {
@@ -121,21 +121,21 @@ namespace RadarGame.Entities
             return false;
         }
 
-        public void Draw(View surface)
+        public void Draw(List<View> surface)
         {
             switch (state)
             {
                 case State.ON:
-                    surface.Draw(_buttonON);
+                    surface[1].Draw(_buttonON);
                     break;
                 case State.OFF:
-                    surface.Draw(_buttonOFF);
+                    surface[1].Draw(_buttonOFF);
                     break;
                 case State.ONHover:
-                    surface.Draw(_buttonOnHover);
+                    surface[1].Draw(_buttonOnHover);
                     break;
                 case State.OFFHover:
-                    surface.Draw(_buttonOffHover);
+                    surface[1].Draw(_buttonOffHover);
                     break;
             }
         }
