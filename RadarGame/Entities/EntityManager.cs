@@ -15,6 +15,17 @@ public static class EntityManager
     public static List<String> Names { get; set; } = new List<string>();
 
 
+    public static List<IEntitie> GetObjects()
+    {
+        return new List<IEntitie>(GameObjects);
+    }
+    public static void RemoveAllObjects()
+    {
+        foreach (var gameObject in GameObjects)
+        {
+            EntityManager.RemoveObject(gameObject);
+        }
+    }
 
     public static void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
@@ -81,6 +92,7 @@ public static class EntityManager
         _toDelete.Clear();
         _toAdd.Clear();
         _toDelete.Clear();
+        _toRemove.Clear();
         
     }
     
@@ -124,10 +136,20 @@ public static class EntityManager
     {
         foreach (var gameObject in GameObjects)
         {
-            gameObject.onDeleted();
+           EntityManager.DeleteObject( gameObject);
         }
-        GameObjects.Clear();
-        Physics.PhysicsSystem.ClearObjects();
-        DrawSystem.DrawSystem.ClearObjects();
+       
+    }
+    
+    public static void DebugDraw()
+    {
+        ImGuiNET.ImGui.Begin("EntityManagerDebug");
+        ImGuiNET.ImGui.Text("GameObjects: " + GameObjects.Count);
+        ImGuiNET.ImGui.Text("Names: " + Names.Count);
+        ImGuiNET.ImGui.Text("toDelete: " + _toDelete.Count);
+        ImGuiNET.ImGui.Text("toRemove: " + _toRemove.Count);
+        ImGuiNET.ImGui.Text("toAdd: " + _toAdd.Count);
+        ImGuiNET.ImGui.End();
+      
     }
 }

@@ -46,6 +46,7 @@ namespace RadarGame.Entities
             _buttonOFF = new TexturedRectangle(Position, Size, textureOFF);
             _buttonOnHover = new TexturedRectangle(Position, Size, textureOnHover);
             _buttonOffHover = new TexturedRectangle(Position, Size, textureOffHover);
+            
 
         }
         public bool isOn()
