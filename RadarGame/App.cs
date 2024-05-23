@@ -41,6 +41,8 @@ public class App : EngineWindow
     private int _AudioVolumeListIndex = 0;
     private float[] AudioVolumeList = new float[100];
 
+    private string path = @"C:\Users\herob\RealUni\Uni\Computergrafik\Projektordner\code\RadarGame\SoundSystem\Laser3.wav";
+
 
 
     public App() : base(1440, 900, "Radargame"){
@@ -71,10 +73,8 @@ public class App : EngineWindow
             new Texture("resources/Buttons/pausebutton_onHover.png"), new Texture("resources/Buttons/pausebutton_onHover.png"));
         testButton.Name = "testButton";
         EntityManager.AddObject(testButton);
-       // EntityManager.AddObject( new cursor( "cursore"));
-       
-        
-        
+
+        // EntityManager.AddObject( new cursor( "cursore"));
 
 
     }
@@ -82,10 +82,6 @@ public class App : EngineWindow
 
     protected override void OnUpdateFrame(FrameEventArgs args)
     {
-        if (KeyboardState.IsKeyReleased(Keys.Escape))
-        {
-            Close();
-        }
 
        
 
@@ -111,8 +107,6 @@ public class App : EngineWindow
         _ColisionTimeListIndex = (_ColisionTimeListIndex + 1) % _ColisionTimeList.Length;
         _stopwatch.Restart();
         SoundSystem.SoundSystem.Update(args, KeyboardState);
-        SoundSystem.SinusWave.Update(args, KeyboardState);
-        // _SweepButton.Update(mouseState , args);
 
 
     }
@@ -142,14 +136,11 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("Physics Update Time", ref _PhysicsTimeList[0], _PhysicsTimeList.Length, _PhysicsTimeListIndex, "Physics Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Colision Update Time", ref _ColisionTimeList[0], _ColisionTimeList.Length, _ColisionTimeListIndex, "Colision Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Draw Time", ref _DrawTimeList[0], _DrawTimeList.Length, _DrawTimeListIndex, "Draw Time", 0, 100,  new System.Numerics.Vector2(0, 100));
-        // Wenn Lautstärke auslesbar hier verzeichnen bitte
-        ImGuiNET.ImGui.PlotLines("LautStärke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautStärke", 0, 100, new System.Numerics.Vector2(0, 100));
+        // Wenn Lautst�rke auslesbar hier verzeichnen bitte
+        ImGuiNET.ImGui.PlotLines("LautSt�rke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautSt�rke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();
-
-        DrawSystem.DrawSystem.DebugDraw();
-        SoundSystem.SinusWave.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

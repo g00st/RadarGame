@@ -114,8 +114,8 @@ namespace RadarGame.Entities
         }
         private bool checkHover(MouseState mouseState)
         {
-            var transformed = DrawSystem.DrawSystem.GetMainView().ScreenToViewSpace(new Vector2(mouseState.X, mouseState.Y));
-            transformed = DrawSystem.DrawSystem.GetMainView(1).ScreenToViewSpace(transformed);
+            var transformed = DrawSystem.DrawSystem.ScreenToWorldcord(new Vector2(mouseState.X, mouseState.Y), 1);
+
             if (Vector2.Distance(transformed, Position + Size / 2) < Size.X / 2)
             {
                 return true;
