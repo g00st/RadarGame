@@ -1,5 +1,6 @@
 using App.Engine;
 using App.Engine.Template;
+using Engine.graphics.Template;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -23,7 +24,8 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public float Rotation { get; set; }
     public string Name { get; set; }
     
-    public TexturedRectangle DebugColoredRectangle { get; set; }
+    public TexturedRectangle Spaceship { get; set; }
+    private TextureAtlasRectangle Exhaust;
     private Polygon DebugPolygon { get; set; }
     private Polygon DebugPolygon2 { get; set; }
     private int bulletCount = 0;
@@ -33,13 +35,14 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     private Random random = new Random();
     private float timer = 0;
     static string filepath = "resources/Sounds/lasergun.wav";  // Audio Corruption
+    private Spaceship spaceship;
     
     public PlayerObject(Vector2 position, float rotation, string name = "Player")
     {
         Static = false;
         Name = name;
         Position = position;
-        Rotation = rotation;
+        Rotation = rotation; 
         PhysicsData = new PhysicsDataS
         {
             Velocity = new Vector2(0, 0),
@@ -49,13 +52,6 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
             AngularAcceleration = 0f,
             AngularVelocity = 0f
         };
-        DebugColoredRectangle = new TexturedRectangle(
-            new OpenTK.Mathematics.Vector2(0f, 0f),
-            new OpenTK.Mathematics.Vector2(200f, 200f),
-            new Texture("resources/cirno.png"),
-            Name,
-            true
-        );
         CollisonShape = new List<Vector2>
         {
             new Vector2(-100, -100),
@@ -63,22 +59,26 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
             new Vector2(100, 100),
             new Vector2(-100, 100)
         };
+        spaceship = new Spaceship();
         
-        DebugPolygon = Polygon.Circle(this.Position,10,50,new SimpleColorShader(Color4.Red),"DebugPolygon",true);
-        DebugPolygon2 = Polygon.Rectangle( this.Position, new Vector2(200,200),0, new SimpleColorShader(Color4.Azure),"DebugPolygon2",true);
-       // DebugPolygon = Polygon.Rectangle(this.Position, new  Vector2(200,200),0, new SimpleColorShader(Color4.Azure),"DebugPolygon",true);
+        EntityManager.AddObject( new Camera(this));
+        
+        
     }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
-        timer += (float)args.Time;
-        lastPosition = Position;
-        lastRotation = Rotation;
-        DebugColoredRectangle.drawInfo.Position = Position;
-        DebugColoredRectangle.drawInfo.Rotation = Rotation;
-        DebugPolygon.Position = Position;
-        DebugPolygon.Rotation = Rotation;
-        DebugPolygon2.Position = Position;
-        DebugPolygon2.Rotation = Rotation;
+       
+        spaceship.Update(Position, Rotation, args);
+        var t=  DrawSystem.DrawSystem.ScreenToWorldcord(mouseState.Position);
+        spaceship.setCanonRotation( (float)Math.Atan2(t.Y - Position.Y, t.X - Position.X));
+        
+        if (timer > 0.1f)
+        {
+            Exhaust.setAtlasIndex(0, random.Next(0, 4));
+            timer = 0;
+        } 
+        
+        
         Vector2 force = new Vector2(0, 0);
         float   torque = 0;
         
@@ -111,46 +111,18 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         {
             force += new Vector2(0, 1000);
         }
-
-        if (keyboardState.IsKeyDown(Keys.Space) && timer > 0.1f)
+        if (keyboardState.IsKeyDown(Keys.Space))
         {
-            
-            timer = 0;
-        
-        
-            string name = "Bullet"+bulletCount;
-                
-            Vector2 bulletvell = new Vector2(
-                0 * (float)Math.Cos(Rotation) - 1000 * (float)Math.Sin(Rotation),
-                0 * (float)Math.Sin(Rotation) + 1000 * (float)Math.Cos(Rotation)
-            );
-            //TODO: add sound effect
-            EntityManager.AddObject(new GameObject(Position,Rotation,name, bulletvell,0) );
-            bulletCount++;
-            if (bulletCount > 1000)
-            {
-                over1000 = true;
-                bulletCount = 0;
-            } else
-            {
-                SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);  // Audio Corruption
-            }
-            if (over1000)
-            {
-                Console.WriteLine("Bullet"+bulletCount + " removed in Player" );
-                EntityManager.RemoveObject(EntityManager.GetObject("Bullet"+bulletCount));
-            }
+            spaceship.shoot();
         }
         
-        
+        spaceship.Accelerate(force);
+        spaceship.Rotate(torque);
         PhysicsSystem.ApplyAngularForce( this, torque);
-        
-        //rotate by Rotation
         Vector2 rotatedForce = new Vector2(
             force.X * (float)Math.Cos(Rotation) - force.Y * (float)Math.Sin(Rotation),
             force.X * (float)Math.Sin(Rotation) + force.Y * (float)Math.Cos(Rotation)
         );
-        
         PhysicsSystem.ApplyForce(this, rotatedForce);
 
 
@@ -161,19 +133,12 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
 
     public void onDeleted()
     {
-        DebugColoredRectangle.Dispose();
+        Spaceship.Dispose();
     }
 
     public void Draw(List <View> surface)
     {
-        surface[0].rotation = - lastRotation;
-       surface[0].vpossition = new Vector2(Position.X, Position.Y);
-       // Console.WriteLine(surface.rotation);
-       surface[0].vsize = new Vector2(1920 , 1080) + new Vector2(20,20)* PhysicsData.Velocity.Length;
-      surface[0].Draw(DebugColoredRectangle);
-      surface[0].Draw(DebugPolygon2);
-        Vector2 last = this.Position;
-        
+     spaceship.Draw(surface[1]);
     }
     
 }

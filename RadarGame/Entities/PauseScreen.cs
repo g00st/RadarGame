@@ -16,7 +16,7 @@ public class PauseScreen : IEntitie , IDrawObject
     public PauseScreen( )
     {
         StartButton = new Button( 
-            DrawSystem.DrawSystem.getViewSize(1)/2 ,
+            DrawSystem.DrawSystem.getViewSize(2)/2 ,
             new Vector2( 200,200),
             new Texture( "resources/Buttons/startbutton_On.png"), 
             new Texture( "resources/Buttons/startbutton_On.png"),
@@ -25,7 +25,7 @@ public class PauseScreen : IEntitie , IDrawObject
         );
         
         ResumeButton = new Button( 
-            DrawSystem.DrawSystem.getViewSize(1)/2  + new Vector2(0, 300),
+            DrawSystem.DrawSystem.getViewSize(2)/2  + new Vector2(0, 300),
             new Vector2( 200,200),
             new Texture( "resources/Buttons/startbutton_On.png"), 
             new Texture( "resources/Buttons/startbutton_On.png"),
@@ -33,9 +33,9 @@ public class PauseScreen : IEntitie , IDrawObject
             new Texture( "resources/Buttons/startbutton_On.png")
         );
         Name = "PauseScreen"; 
-        Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(1), new Texture("resources/background2.jpg"));
+        Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(2), new Texture("resources/background2.jpg"));
         Name = "PauseScreen"; 
-        Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(1), new Texture("resources/background2.jpg"));
+        Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(2), new Texture("resources/background2.jpg"));
         
         
     }
@@ -43,7 +43,7 @@ public class PauseScreen : IEntitie , IDrawObject
     
     public void Draw(List<View> surface)
     {
-        surface[1].Draw(Background);
+        surface[2].Draw(Background);
         StartButton.Draw(surface);
         ResumeButton.Draw(surface);
     } 

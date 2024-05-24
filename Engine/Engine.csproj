@@ -30,8 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="bin\Debug\net6.0\resources\" />
+      <Folder Include="bin\Debug\net6.0\" />
       <Folder Include="resources\Buttons\" />
+      <Folder Include="resources\Player\" />
     </ItemGroup>
 
 </Project>

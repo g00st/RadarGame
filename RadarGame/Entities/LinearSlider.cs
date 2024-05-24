@@ -108,7 +108,7 @@ namespace RadarGame.Entities
 
         private bool checkHover(MouseState mouseState)
         {
-            var transformed = DrawSystem.DrawSystem.ScreenToWorldcord(new Vector2(mouseState.X, mouseState.Y), 1);
+            var transformed = DrawSystem.DrawSystem.ScreenToWorldcord(new Vector2(mouseState.X, mouseState.Y), 2);
             // do colision with cirlce defined by slider.drawinfo.position and slider.drawinfo .size.max /2
             if (Vector2.Distance(transformed, slider.drawInfo.Position) < slider.drawInfo.Size.Y * 0.9 * 0.5)
             {
@@ -126,8 +126,8 @@ namespace RadarGame.Entities
             {
                 slider.drawInfo.Size = new Vector2(slider.drawInfo.Size.X * 1.1f, slider.drawInfo.Size.Y * 1.1f);
             }
-            surface[1].Draw(slider);
-            surface[1].Draw(_line);
+            surface[2].Draw(slider);
+            surface[2].Draw(_line);
             slider.drawInfo.Size = old;
         }
 
