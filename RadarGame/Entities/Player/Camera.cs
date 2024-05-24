@@ -26,7 +26,7 @@ public class Camera : IEntitie, IDrawObject
     {
         Name = "Camera";
         this.target = target;
-        EntityManager.AddObject( new SarBackground());
+      //  EntityManager.AddObject( new SarBackground());
     }
 
     public string Name { get; set; }
@@ -81,7 +81,7 @@ public class Camera : IEntitie, IDrawObject
 
     public void Draw(List<View> surface)
     {
-        surface[1].rotation = -_rotation;
+       // surface[1].rotation = -_rotation;
         surface[1].vpossition = _position;
         surface[1].vsize = _size;
     }

@@ -22,11 +22,12 @@ public class SarBackground :IEntitie, IDrawObject
     {
         Name = "SarBackground";
         target = DrawSystem.DrawSystem.GetView(1);
+        var target2  = DrawSystem.DrawSystem.GetView(0);
         
-        var size = (int )Math.Sqrt( target.vsize.X* target.vsize.X + target.vsize.Y * target.vsize.Y);
+        var size = (int )(Math.Sqrt( target.vsize.X* target.vsize.X + target.vsize.Y * target.vsize.Y)*0.5f);
         Texture texture = new Texture( size,size);
         shader = new Shader("resources/Template/simple_texture.vert", "resources/starshader.frag");
-        background = new TexturedRectangle(target.vpossition  , new Vector2(size),texture, shader, true);
+        background = new TexturedRectangle(target2.vpossition  , new Vector2(size),texture, shader, true);
     }
   
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
@@ -53,8 +54,8 @@ public class SarBackground :IEntitie, IDrawObject
        shader.Bind();
        
        shader.setUniformV2f( "iResolution", new Vector2(target.Width, target.Height));
-         shader.setUniformV2f( "u_position", target.vpossition * 0.1f);
-            shader.setUniform1v( "u_zoom", 1 + target.vsize.X* 0.000005f);
+        shader.setUniformV2f( "u_position", target.vpossition * 0.1f);
+         shader.setUniform1v( "u_zoom", 1 + target.vsize.X* 0.000005f);
             shader.setUniform1v( "u_rotation", 0);
             shader.setUniform1v( "u_time", time); 
         //rotate 180
