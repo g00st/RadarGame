@@ -63,6 +63,11 @@ namespace Engine.graphics.Template
 
         }
         
+        public TextureAtlasRectangle(Texture texture, Vector2 position, Vector2 subTextures  ,Shader? shader =null ) : this(position, new Vector2(texture.Height,texture.Width), subTextures ,  texture, "atlasrec",shader )
+        {
+        
+        }
+        
         public void setAtlasIndex(int indexX, int indexY)
         {
             this.drawInfo.mesh.Shader.Bind();

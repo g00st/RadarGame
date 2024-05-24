@@ -21,5 +21,5 @@ void main()
     vec2 actualTexCoords = offset + textCords * tileSize;
 
     // Sample the texture using the calculated coordinates
-    fragColor = texture(tex, actualTexCoords);
+    fragColor = texture(tex, actualTexCoords) ;
 }

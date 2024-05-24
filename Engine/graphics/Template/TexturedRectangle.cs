@@ -61,7 +61,7 @@ public class TexturedRectangle : DrawObject , IDisposable
         if (texture != null) this.drawInfo.mesh.Texture = texture;
     }
 
-    public TexturedRectangle(Texture texture) : this(new Vector2(0, 0), new Vector2(texture.Width, texture.Height), texture)
+    public TexturedRectangle(Texture texture, bool centerd =false) : this(new Vector2(0, 0), new Vector2(texture.Width, texture.Height), texture ,"TexturedRectangele", centerd )
     {
         
     }

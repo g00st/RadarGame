@@ -33,8 +33,6 @@ public class TextRenderer
             _texturedRectangle.drawInfo.Position = position + new OpenTK.Mathematics.Vector2(i * size.X, 0);
             _texturedRectangle.drawInfo.Size = size;
             _texturedRectangle.drawInfo.Rotation = 0;
-            
-         
             surface.Draw(_texturedRectangle);
         }
     }
