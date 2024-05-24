@@ -82,8 +82,8 @@ public class CompasPanel :IEntitie , IDrawObject
        _compasVbo.Bind();
        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
        _compasView.Draw( _compasScreenRender);
-       surface[1].Draw(_compasPanel);
-       surface[1].Draw(_overlay);
+       surface[2].Draw(_compasPanel);
+       surface[2].Draw(_overlay);
        
        
     }

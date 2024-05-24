@@ -14,7 +14,7 @@ public class GameoverScreen : IEntitie , IDrawObject{
     public GameoverScreen()
     {
         StartButton = new Button( 
-            DrawSystem.DrawSystem.getViewSize(1)/2 ,
+            DrawSystem.DrawSystem.getViewSize(2)/2 ,
             new Vector2( 200,200),
             new Texture( "resources/Buttons/startbutton_On.png"), 
             new Texture( "resources/Buttons/startbutton_On.png"),
@@ -22,7 +22,7 @@ public class GameoverScreen : IEntitie , IDrawObject{
             new Texture( "resources/Buttons/startbutton_On.png")
         );
         Name = "GameoverScreen"; 
-        Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(1), new Texture("resources/background2.jpg"));
+        Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(2), new Texture("resources/background2.jpg"));
     }
     private Button StartButton;
     private TexturedRectangle Background;
@@ -48,7 +48,7 @@ public class GameoverScreen : IEntitie , IDrawObject{
 
     public void Draw(List<View> surface)
     {
-        surface[1].Draw(Background);
+        surface[2].Draw(Background);
         StartButton.Draw(surface);
     }
 }

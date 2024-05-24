@@ -10,6 +10,7 @@ public class Spaceship
 {
     public TexturedRectangle Body { get; set; }
     private TextureAtlasRectangle Exhaust;
+    private TextureAtlasRectangle Canon;
     private Random random = new Random();
     private float timer = 0;
     
@@ -58,19 +59,32 @@ public class Spaceship
     private bool AccelerationB = false;
     private float Rotationacceleration = 0;
     private bool Fast = false;
+    private int atlsindext = 0;
+    private int atlsindexc = 3;
+    private float canonRotation = 0;
+    
+    
+    private bool shootbool = false;
+    private float animationtimer = 0;
+    
     
     
     private Vector2 Ehxaustsize = new Vector2(1, 1);
     
     
 
-    public Spaceship(Texture bodyTexture, Texture exhaustTexture)
+    public Spaceship()
     {
+        var bodyTexture = new Texture("resources/Player/player_spaceship.png") ;
+        var exhaustTexture = new Texture("resources/Player/spaceship_exaust2.png");
+        var canonTexture = new Texture("resources/Player/spaceship_canon.png");
         Body = new TexturedRectangle(bodyTexture, true);
         Exhaust = new TextureAtlasRectangle(exhaustTexture, Vector2.Zero, new Vector2(1, 4));
+        Canon = new TextureAtlasRectangle(canonTexture, Vector2.Zero, new Vector2(1, 4));
+        Canon.drawInfo.Size *= 1.5f;
         Body.drawInfo.Size *= 1.5f;
         
-        Ehxaustsize = new Vector2(Exhaust.drawInfo.Size.X*2, Exhaust.drawInfo.Size.Y);
+        Ehxaustsize = new Vector2(Exhaust.drawInfo.Size.X*2, Exhaust.drawInfo.Size.Y*1.5f);
         //set the offset of the exhaust
         exhaustOffsetBack1 =  new Vector2(-Body.drawInfo.Size.X / 9, -Body.drawInfo.Size.X / 2f  ); 
         exhaustOffsetBack2 =  new Vector2(Body.drawInfo.Size.X / 9, -Body.drawInfo.Size.X / 2f  );
@@ -92,6 +106,7 @@ public class Spaceship
         Body.drawInfo.Position = position;
         Body.drawInfo.Rotation = rotation + (float)Math.PI / 2;
         Exhaust.drawInfo.Rotation = rotation + (float)Math.PI / 2;
+        Canon.drawInfo.Position = position;
         //vector of the direction the ship is facing
         Vector2 direction = new Vector2((float)Math.Cos(rotation + (float)Math.PI / 2), (float)Math.Sin(rotation + (float)Math.PI / 2));
         direction.Normalize();
@@ -143,13 +158,29 @@ public class Spaceship
         
         
      
-       
+       //booster animation
         if (timer > 0.1f)
         {
             counter++;
             counter = counter % 4;
-            Exhaust.setAtlasIndex(0, counter);
+            atlsindext = counter;
             timer = 0;
+        }
+        
+        //canon animation
+        if (shootbool)
+        {
+            animationtimer += (float)args.Time;
+            if (animationtimer > 0.1f)
+            {
+                atlsindexc--;
+                if (atlsindexc == 0)
+                {
+                    atlsindexc = 3;
+                    shootbool = false;
+                }
+                animationtimer = 0;
+            }
         }
     }
     
@@ -165,7 +196,7 @@ public class Spaceship
     }
     public void Rotate(float torque)
     {
-        Rotationacceleration = torque;
+        Rotationacceleration = -torque;
         if (torque != 0) 
         {
              AccelerationR = true;
@@ -174,10 +205,22 @@ public class Spaceship
        
        
     }
+    
+    public void setCanonRotation(float rotation)
+    {
+        Canon.drawInfo.Rotation = rotation;
+    }
+    public void shoot()
+    {
+        if (shootbool) return;
+        shootbool = true;
+        atlsindexc = 4;
+    }
 
     public void Draw(View surface)
     {
-
+      
+        Exhaust.setAtlasIndex(0, atlsindext);  
         if (AccelerationF)
         {
             Exhaust.drawInfo.Size = Ehxaustsize;
@@ -224,6 +267,8 @@ public class Spaceship
 
        
         surface.Draw(Body);
+        Canon.setAtlasIndex(0, atlsindexc);
+        surface.Draw(Canon);
         
     }
 }

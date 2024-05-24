@@ -59,7 +59,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
             new Vector2(100, 100),
             new Vector2(-100, 100)
         };
-        spaceship = new Spaceship(new Texture("resources/Player/player_spaceship.png"), new Texture("resources/Player/spaceship_exaust2.png"));
+        spaceship = new Spaceship();
         
         EntityManager.AddObject( new Camera(this));
         
@@ -69,6 +69,8 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     {
        
         spaceship.Update(Position, Rotation, args);
+        var t=  DrawSystem.DrawSystem.ScreenToWorldcord(mouseState.Position);
+        spaceship.setCanonRotation( (float)Math.Atan2(t.Y - Position.Y, t.X - Position.X));
         
         if (timer > 0.1f)
         {
@@ -109,6 +111,10 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         {
             force += new Vector2(0, 1000);
         }
+        if (keyboardState.IsKeyDown(Keys.Space))
+        {
+            spaceship.shoot();
+        }
         
         spaceship.Accelerate(force);
         spaceship.Rotate(torque);
@@ -132,7 +138,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
 
     public void Draw(List <View> surface)
     {
-     spaceship.Draw(surface[0]);
+     spaceship.Draw(surface[1]);
     }
     
 }

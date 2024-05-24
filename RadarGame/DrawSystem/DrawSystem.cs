@@ -80,7 +80,7 @@ public static class DrawSystem
         return Layers[layer];
     }
 
-    public static Vector2 ScreenToWorldcord(Vector2 screenpos , int layer =0)
+    public static Vector2 ScreenToWorldcord(Vector2 screenpos , int layer =1)
     {
         var surface = Layers[layer];
         var temp = main.ScreenToViewSpace(screenpos, true);

@@ -12,11 +12,12 @@ public class Camera : IEntitie, IDrawObject
     private float zoom = 1;
     private float _rotation = 0;
     private Vector2 _position = new Vector2(0, 0);
-    private Vector2 _baseSize = new Vector2(1920, 1080);
-    private Vector2 _size = new Vector2(1920, 1080);
+    private Vector2 _baseSize = new Vector2(1920, 1080)* 0.5f;
+    private Vector2 _size = new Vector2(1920, 1080) ;
     private float _maxZoom = 100;
     private float _minZoom = 10f;
-
+    
+  
     // Smoothing factors for position and rotation
     private float positionSmoothing = 0.05f;
     private float rotationSmoothing = 0.01f;
@@ -25,14 +26,17 @@ public class Camera : IEntitie, IDrawObject
     {
         Name = "Camera";
         this.target = target;
+        EntityManager.AddObject( new SarBackground());
     }
 
     public string Name { get; set; }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
-      
-        
-      
+        // Calculate the difference between the camera's rotation and the target's rotation
+        float rotationDifference = Math.Abs(WrapAngle(_rotation - ((IPhysicsObject)target).Rotation));
+
+        // Adjust rotationSmoothing based on rotation difference
+        rotationSmoothing = Math.Clamp(rotationDifference /  (float)Math.PI, 0.01f, 0.1f);
 
         _rotation = LerpAngle(_rotation, ((IPhysicsObject)target).Rotation, rotationSmoothing);
         _position = Vector2.Lerp(_position, ((IPhysicsObject)target).Position, positionSmoothing);
@@ -77,8 +81,8 @@ public class Camera : IEntitie, IDrawObject
 
     public void Draw(List<View> surface)
     {
-        surface[0].rotation = -_rotation;
-        surface[0].vpossition = _position;
-        surface[0].vsize = _size;
+        surface[1].rotation = -_rotation;
+        surface[1].vpossition = _position;
+        surface[1].vsize = _size;
     }
 }

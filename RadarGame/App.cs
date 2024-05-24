@@ -55,7 +55,7 @@ public class App : EngineWindow
         SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
-        DrawSystem.DrawSystem.Init( MainView,2);
+        DrawSystem.DrawSystem.Init( MainView,3);
         //EntityManager.AddObject(new cursor());
         //EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
         //EntityManager.AddObject( new cursor( "cursor4"));
