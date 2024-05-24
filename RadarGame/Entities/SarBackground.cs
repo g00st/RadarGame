@@ -53,7 +53,7 @@ public class SarBackground :IEntitie, IDrawObject
        shader.Bind();
        
        shader.setUniformV2f( "iResolution", new Vector2(target.Width, target.Height));
-         shader.setUniformV2f( "u_position", target.vpossition * 0.01f);
+         shader.setUniformV2f( "u_position", target.vpossition * 0.1f);
             shader.setUniform1v( "u_zoom", 1 + target.vsize.X* 0.000005f);
             shader.setUniform1v( "u_rotation", 0);
             shader.setUniform1v( "u_time", time); 
