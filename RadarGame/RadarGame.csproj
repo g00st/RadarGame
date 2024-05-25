@@ -31,6 +31,7 @@
 
     <ItemGroup>
       <Folder Include="ColissionSystem\" />
+      <Folder Include="Entities\Enemys\" />
       <Folder Include="Entities\Player\Weapons\" />
     </ItemGroup>
 

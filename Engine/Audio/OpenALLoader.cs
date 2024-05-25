@@ -4,8 +4,8 @@ namespace Engine.Audio;
 
 public class OpenALLoader
 {
-    private static string openALWindows = "OpenAL32.dll"; // Change this to your Windows library name
-    private static string openALMacOS = "libopenal.dylib"; // Change this to your macOS library name
+    private static string openALWindows = "OpenAL32.dll"; 
+    private static string openALMacOS = "libopenal.dylib"; 
     private static string openALLinux = "libopenal.so";
    
     

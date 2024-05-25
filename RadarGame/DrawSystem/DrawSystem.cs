@@ -74,6 +74,11 @@ public static class DrawSystem
         
     }
     
+    public static Vector2 getResulution (int layer =0)
+    {
+       return new Vector2 (main.Width, main.Height) ;
+    }
+    
     
     public static View GetView( int layer =0 )
     {
