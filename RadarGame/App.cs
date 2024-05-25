@@ -139,6 +139,7 @@ public class App : EngineWindow
         Physics.PhysicsSystem.DebugDraw();
         SoundSystem.SoundSystem.DebugDraw();
         EntityManager.DebugDraw();
+        DrawSystem.DrawSystem.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
