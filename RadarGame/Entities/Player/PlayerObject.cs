@@ -132,7 +132,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
 
     public void onDeleted()
     {
-        Spaceship.Dispose();
+        spaceship.Dispose();
     }
 
     public void Draw(List <View> surface)

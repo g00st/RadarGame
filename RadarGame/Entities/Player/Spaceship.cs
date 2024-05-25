@@ -6,7 +6,7 @@ using OpenTK.Windowing.Common;
 
 namespace RadarGame.Entities;
 
-public class Spaceship
+public class Spaceship : IDisposable
 {
     public TexturedRectangle Body { get; set; }
     private TextureAtlasRectangle Exhaust;
@@ -271,5 +271,12 @@ public class Spaceship
         Canon.setAtlasIndex(0, atlsindexc);
         surface.Draw(Canon);
         
+    }
+
+    public void Dispose()
+    {
+        Body.Dispose();
+        Exhaust.Dispose();
+        Canon.Dispose();
     }
 }
