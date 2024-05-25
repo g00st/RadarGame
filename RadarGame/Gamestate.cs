@@ -11,7 +11,8 @@ public class Gamestate
     public  static State CurrState
     {
         get => _currState;
-         set => onStateChange(value);}
+         set => onStateChange(value);
+    }
     public enum State
     {
         MainMenu,
@@ -44,6 +45,8 @@ public class Gamestate
                     EntityManager.AddObject(new PlayerObject( Vector2.Zero, 0f, "Player"));
                     EntityManager.AddObject(new CompasPanel( DrawSystem.DrawSystem.getViewSize(2) - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
                     EntityManager.AddObject(new Pauser());
+                    EntityManager.AddObject(new Score(0, new Vector2(100,100), new Vector2(30,30)));
+                    
                     for (int i = 0; i < 100; i++)
                     {
                         GameObject gameObject = new GameObject( Vector2.One, 0f, "test"+i, 1);

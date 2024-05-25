@@ -10,7 +10,8 @@ namespace RadarGame.Entities;
 
 
 public class GameoverScreen : IEntitie , IDrawObject{
-    
+
+    int[] highscore = new int[5];
     public GameoverScreen()
     {
         StartButton = new Button( 
@@ -23,6 +24,7 @@ public class GameoverScreen : IEntitie , IDrawObject{
         );
         Name = "GameoverScreen"; 
         Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(2), new Texture("resources/background2.jpg"));
+        highscore = UiSystem.ScoreSystem.getHighscore();
     }
     private Button StartButton;
     private TexturedRectangle Background;
@@ -50,5 +52,11 @@ public class GameoverScreen : IEntitie , IDrawObject{
     {
         surface[2].Draw(Background);
         StartButton.Draw(surface);
+        Vector2 padding = new Vector2(0, 10);
+        for (int i = 0; i < highscore.Length; i++)
+        {        
+            TextRenderer.Write("Highscore" + i + " :" + highscore[i], new Vector2(150,150) + padding, new Vector2(30,30), surface[2], Color4.White);
+            padding += new Vector2(0,10);
+        }
     }
 }
