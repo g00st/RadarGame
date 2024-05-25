@@ -120,6 +120,19 @@ public static class ColisionSystem
     }
 
 
+    public static IColisionObject getNearest(Vector2 point)
+    {
+        return null;
+    }
+    
+    public static IColisionObject castRay(Vector2 start, Vector2 end)
+    {
+        return null;
+    }
+    
+    
+
+
 
 
 

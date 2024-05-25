@@ -26,7 +26,7 @@ public class Camera : IEntitie, IDrawObject
     {
         Name = "Camera";
         this.target = target;
-      //  EntityManager.AddObject( new SarBackground());
+        EntityManager.AddObject( new SarBackground());
     }
 
     public string Name { get; set; }

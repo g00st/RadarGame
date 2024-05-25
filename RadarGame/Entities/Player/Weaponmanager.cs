@@ -16,6 +16,11 @@ public class Weaponmanager: IEntitie
     {
         Name = "Weaponmanager";
     }
+
+    public void addEnergy()
+    {
+        //todo add energy
+    }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         foreach (var weapon in weapons)
