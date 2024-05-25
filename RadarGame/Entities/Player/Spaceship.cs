@@ -43,14 +43,14 @@ public class Spaceship
     //rotationR
     private Vector2 exhaustOffsetRotationR;
     private Vector2 wordlexhaustOffsetRotationR;
-    
-    
-    
-    
-   
-    
-  
-    
+
+
+    static string filepath = "resources/Sounds/lasergun.wav";
+
+
+
+
+
     private int counter = 0;
     
     private bool AccelerationL = false;
@@ -215,6 +215,7 @@ public class Spaceship
         if (shootbool) return;
         shootbool = true;
         atlsindexc = 4;
+        SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
     }
 
     public void Draw(View surface)

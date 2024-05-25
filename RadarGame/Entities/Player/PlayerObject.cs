@@ -34,7 +34,6 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     private float lastRotation;
     private Random random = new Random();
     private float timer = 0;
-    static string filepath = "resources/Sounds/lasergun.wav";  // Audio Corruption
     private Spaceship spaceship;
     
     public PlayerObject(Vector2 position, float rotation, string name = "Player")
