@@ -13,7 +13,7 @@ public static class ColisionSystem
     private struct ColisionData
     {
         public IColisionObject O { get; set; }
-        public Polygon Shape { get; set; }
+        //public Polygon Shape { get; set; }
         public float Distance { get; set; }
          
     }
@@ -23,7 +23,7 @@ public static class ColisionSystem
         ColisionData newColisionData = new ColisionData();
         newColisionData.O = colisionObject;
         newColisionData.Distance = colisionObject.CollisonShape.Max(x => x.Length);
-        newColisionData.Shape = new Polygon(colisionObject.CollisonShape, new SimpleColorShader(Color4.Red), colisionObject.Position,Vector2.One, 0, "DebugPolygon", true);
+        //newColisionData.Shape = new Polygon(colisionObject.CollisonShape, new SimpleColorShader(Color4.Red), colisionObject.Position,Vector2.One, 0, "DebugPolygon", true);
         _colisionData.Add(newColisionData);
     }
     public static void RemoveObject(IColisionObject colisionObject)
@@ -190,18 +190,48 @@ public static class ColisionSystem
     
     public static IColisionObject? castRay(Vector2 start, Vector2 end)
     {
-       return  Raymarch( start, end - start, Vector2.Distance( start, end));
+        IColisionObject? nearest = null;
+        float min = float.MaxValue;
+        Vector2 direction = (end - start).Normalized();
+        float rayLength = (end - start).Length;
+
+        foreach (var ob in _colisionData)
+        {
+            // Early check: if the ray doesn't intersect with the bounding circle of the object, skip this object
+            float distanceToObj = (ob.O.Position - start).Length;
+            if (distanceToObj > ob.Distance + rayLength)
+            {
+                continue;
+            }
+
+            if (LineSAT(start, end, ob.O))
+            {
+                var distance = fastSDF(start, ob);
+                if (distance < min)
+                {
+                    distance = exacktSDF(start, ob);
+                    if (distance < min)
+                    {
+                        min = distance;
+                        nearest = ob.O;
+                    }
+                }
+            }
+        }
+        return nearest;
     }
+   
 
     public static void draw(View v)
     {
-        foreach (var c in _colisionData)
+      /*  foreach (var c in _colisionData)
         {
             c.Shape.drawInfo.Position = c.O.Position;
             c.Shape.drawInfo.Rotation = c.O.Rotation;
             v.Draw(c.Shape);
+            return  Raymarch( start, end - start, Vector2.Distance( start, end));
             
-        }
+        }*/
 
         foreach (var debug in Debugpoints)
         {
@@ -213,39 +243,71 @@ public static class ColisionSystem
         
     }
     
-    private static IColisionObject Raymarch(Vector2 start, Vector2 direction, float maxDistance, float sdfDistance = 0.1f)
+    private static bool LineSAT(Vector2 start, Vector2 end, IColisionObject B)
+{
+    // Define the vertices of the line segment
+    var VerticesA = new List<Vector2> { start, end };
+    
+    // Get the vertices of the collision object B
+    var VerticesB = B.CollisonShape.Select(x => RotatePoint(x, B.Rotation) + B.Position).ToList();
+
+    // Check for separation on the axes of the line segment
+    for (int i = 0; i < VerticesA.Count; i++)
     {
-        direction = direction.Normalized();
-       IColisionObject nerest = null;
-        float distance = 0;
-        for (int i = 0; i < 100; i++)
+        var edge = VerticesA[(i + 1) % VerticesA.Count] - VerticesA[i];
+        var normal = new Vector2(-edge.Y, edge.X).Normalized();
+        var minA = float.MaxValue;
+        var maxA = float.MinValue;
+        var minB = float.MaxValue;
+        var maxB = float.MinValue;
+        foreach (var vertex in VerticesA)
         {
-            Vector2 position = start + direction * distance;
-            float sdf = float.MaxValue;
-            foreach (var c  in _colisionData)
-            {
-                float cur;
-                IColisionObject curObj = getNearest( position, out cur);
-                if (cur < sdf)
-                {
-                    sdf = cur;
-                    nerest = curObj;
-                }
-            }
-            distance += sdf;
-            Debugpoints.Add(new System.Numerics.Vector3(position.X, position.Y, sdf));
-            if (sdf <sdfDistance)
-            {
-                return nerest;
-            }
-            
-            if (distance > maxDistance)
-            {
-                return null;
-            }
+            var projection = Vector2.Dot(vertex, normal);
+            minA = Math.Min(minA, projection);
+            maxA = Math.Max(maxA, projection);
         }
-        return null;
+        foreach (var vertex in VerticesB)
+        {
+            var projection = Vector2.Dot(vertex, normal);
+            minB = Math.Min(minB, projection);
+            maxB = Math.Max(maxB, projection);
+        }
+        if (maxA < minB || maxB < minA)
+        {
+            return false;
+        }
     }
+
+    // Check for separation on the axes of the collision object B
+    for (int i = 0; i < VerticesB.Count; i++)
+    {
+        var edge = VerticesB[(i + 1) % VerticesB.Count] - VerticesB[i];
+        var normal = new Vector2(-edge.Y, edge.X).Normalized();
+        var minA = float.MaxValue;
+        var maxA = float.MinValue;
+        var minB = float.MaxValue;
+        var maxB = float.MinValue;
+        foreach (var vertex in VerticesA)
+        {
+            var projection = Vector2.Dot(vertex, normal);
+            minA = Math.Min(minA, projection);
+            maxA = Math.Max(maxA, projection);
+        }
+        foreach (var vertex in VerticesB)
+        {
+            var projection = Vector2.Dot(vertex, normal);
+            minB = Math.Min(minB, projection);
+            maxB = Math.Max(maxB, projection);
+        }
+        if (maxA < minB || maxB < minA)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
     
     
 

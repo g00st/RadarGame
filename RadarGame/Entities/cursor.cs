@@ -31,19 +31,20 @@ public class cursor: IEntitie , IDrawObject
        _cursor.drawInfo.Position = x;
        distance.drawInfo.Position = x;
        float xx = 0;
-       ColisionSystem.getNearest(x,out xx); 
-       distance.drawInfo.Size = new OpenTK.Mathematics.Vector2(xx);
-       start = x;
-       end = x + new Vector2(1000,0);
        
-       if(ColisionSystem.castRay( start, end) != null)
-       {
-          _shader.setColor(Color4.Blue);
-       }
-       else
-       {
-           _shader.setColor(Color4.Green);
-       }
+           ColisionSystem.getNearest(x, out xx);
+           distance.drawInfo.Size = new OpenTK.Mathematics.Vector2(xx);
+           start = x;
+           end = x + new Vector2(1000, 0);
+
+           if (ColisionSystem.castRay(start, end) == null)
+           {
+               _shader.setColor(Color4.Blue);
+           }
+           else
+           {
+               _shader.setColor(Color4.Green);
+           }
        
     }
 
@@ -56,7 +57,7 @@ public class cursor: IEntitie , IDrawObject
 
     public void Draw(List<View> surface)
     { 
-        ColisionSystem.draw(surface[1]);
+       // ColisionSystem.draw(surface[1]);
         surface[1].Draw(distance);
         surface[1].Draw(_cursor);
         _cursor.drawInfo.Position = start;
