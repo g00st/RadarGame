@@ -9,12 +9,37 @@ namespace App.Engine;
 
 public class Mesh : IDisposable
 {
-    public Mesh()
-    {
+    private static VAO currentVAO;
+    private static Shader currentShader;
+    
+    //--------------------------------------------------------------------------------------------------------
+    public static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
+    
+    public static int _drawcalls = 0;
+    public static float _drawcalltimeavg = 0;
+    public static float _drawcalltime = 0;
+    public static float _VAOtime = 0;
+    public static float _VAOtimeavg = 0;
+    public static float _SHADERtime = 0;
+    public static float _SHADERtimeavg = 0;
+    public static float _TEXTUREtime = 0;
+    public static float _TEXTUREtimeavg = 0;
+    public static float  _fULLtime = 0;
+
+
+    //--------------------------------------------------------------------------------------------------------
+    public Mesh( VAO vao = null, int verteciesLenght = 0, uint[] Indecies = null, bool noCleanUp = false)
+    {   
         _texture = new List<Texture>();
         _Vertecies = new List<float[]>();
-        _vao = new VAO();
+        _vao = vao ?? new VAO(); 
+        _verteciesLenght = verteciesLenght;
+        _Indecies = Indecies;
+        this.noCleanUp = noCleanUp;
     }
+    
+   
+    
     protected PrimitiveType _primitiveType = PrimitiveType.Triangles; 
     protected int _verteciesLenght;
     protected Shader _shader;
@@ -23,6 +48,7 @@ public class Mesh : IDisposable
     protected Matrix4 _MVP;
     protected List<float[]> _Vertecies;
     protected uint[] _Indecies;
+    protected bool noCleanUp = false;
     
     
     public Shader Shader
@@ -74,11 +100,17 @@ public class Mesh : IDisposable
     
 
 
-    public virtual void Draw(Matrix4 mvp , DrawInfo drawInfo, Matrix4 view,Matrix4 Projection)
+    public virtual void Draw( DrawInfo drawInfo, Matrix4 view,Matrix4 Projection)
     {
-        //uniform callback haben
-        //aus zb shader.frag alle uniforms holen
-        _vao.Bind();
+    
+        _stopwatch.Restart();
+        if (currentVAO != _vao)
+        {
+            _vao.Bind();
+            currentVAO = _vao;
+        }
+        _VAOtime += _stopwatch.ElapsedTicks;
+        _stopwatch.Restart();
         uint count = 0;
         foreach (var VARIABLE in _texture)
         {
@@ -86,31 +118,37 @@ public class Mesh : IDisposable
             VARIABLE.Bind(count);
             count++;
         }
-        Matrix4 Model = Matrix4.CreateScale(drawInfo.Size.X,drawInfo.Size.Y, 1.0f);
-        Model *= Matrix4.CreateRotationZ(drawInfo.Rotation);
-        Model *= Matrix4.CreateTranslation(drawInfo.Position.X,drawInfo.Position.Y,0);
+        _TEXTUREtime += _stopwatch.ElapsedTicks;
+        _stopwatch.Restart();
+        Matrix4 Model = drawInfo.Transform;
         
+        if (currentShader != _shader)
+        {
+            _shader.Bind();
+            currentShader = _shader;
+        }
         
-
-        _shader.Bind();
-        _shader.setUniformM4("u_MVP", mvp); 
-        _shader.setUniformM4 ("u_Model",Model);
-        _shader.setUniformM4 ("u_View",view);
-        _shader.setUniformM4 ("u_Projection" ,Projection); 
-        
+        _shader.setUniformM4("u_MVP",  Model * view * Projection);
+        _SHADERtime += _stopwatch.ElapsedTicks;
+        _stopwatch.Restart();
         GL.DrawElements(_primitiveType, _Indecies.Length, DrawElementsType.UnsignedInt, 0);
-        //unbind
-        _vao.Unbind();
-        _shader.Unbind();
+        _drawcalltime += _stopwatch.ElapsedTicks;
         
+        _drawcalls++;
 
     }
 
 
     public void Dispose()
     {
-        _shader.Dispose();
-        _vao.Dispose();
+        if (!noCleanUp)
+        {
+            _vao.Dispose();
+            foreach (var VARIABLE in _texture)
+            {
+                VARIABLE.Dispose();
+            }
+        }
         GC.SuppressFinalize(this);
     }
 }

@@ -65,7 +65,7 @@ public class Shader : IDisposable
         for (int i = 0; i < uniformCount; i++)
         {
             string uniformName = GL.GetActiveUniform(_Handle, i, out _, out ActiveUniformType uniformType);
-            Console.WriteLine(uniformName +"  "+ uniformType);
+           // Console.WriteLine(uniformName +"  "+ uniformType);
             
             int location = GL.GetUniformLocation(_Handle, uniformName);
             UniformData t;

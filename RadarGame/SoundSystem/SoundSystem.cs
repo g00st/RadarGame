@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Engine.Audio;
@@ -93,6 +94,7 @@ public static class SoundSystem
     // volume between 0.00f and 1.00f, int id to specify tracks
     public static void PlayThisTrack(String filepath, int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         var audioFile = new AudioFileReader(filepath);
         Console.WriteLine(audioFile);
         var volumeProvider = new VolumeSampleProvider(audioFile);
@@ -106,6 +108,8 @@ public static class SoundSystem
 
     public static void StopAllTracks()
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
+
         foreach (var track in Sounds)
         {
             track.Key.Stop();
@@ -116,6 +120,7 @@ public static class SoundSystem
 
     public static void StopSpecificTracks(int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         foreach(var track in Sounds)
         {
             if(track.Value == id)
@@ -128,6 +133,8 @@ public static class SoundSystem
 
     public static void PauseSpecificTrack(int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
+        
         foreach(var track in Sounds)
         {
             if(track.Value == id) track.Key.Pause();
@@ -136,6 +143,7 @@ public static class SoundSystem
 
     public static void UnpauseSpecificTrack(int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         foreach (var track in Sounds)
         {
             if (track.Value == id) track.Key.Play();
@@ -144,6 +152,7 @@ public static class SoundSystem
 
     public static void ChangeVolumeAll(float newVolume)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         if (newVolume < 0.00f || newVolume > 1.00f) return;
         foreach(var track in Sounds)
         {
@@ -155,6 +164,7 @@ public static class SoundSystem
 
     public static void ChangeVolumeSpecific(float newVolume, int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         if(newVolume < 0.00f || newVolume > 1.00f) return;
         foreach(var track in Sounds)
         {

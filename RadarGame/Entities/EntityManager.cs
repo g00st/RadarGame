@@ -1,7 +1,7 @@
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
-using RadarGame.Radarsystem;
+
 
 namespace RadarGame.Entities;
 
@@ -9,11 +9,23 @@ public static class EntityManager
 {
     public static List<IEntitie> GameObjects { get; set; } = new List<IEntitie>();
     
-    private static List<IEntitie> _toRemove = new List<IEntitie>();
+    private static List<IEntitie> _toDelete = new List<IEntitie>();
+    private static List<IEntitie>_toRemove = new List<IEntitie>();
     private static List<IEntitie> _toAdd = new List<IEntitie>();
     public static List<String> Names { get; set; } = new List<string>();
 
 
+    public static List<IEntitie> GetObjects()
+    {
+        return new List<IEntitie>(GameObjects);
+    }
+    public static void RemoveAllObjects()
+    {
+        foreach (var gameObject in GameObjects)
+        {
+            EntityManager.RemoveObject(gameObject);
+        }
+    }
 
     public static void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
@@ -37,12 +49,28 @@ public static class EntityManager
             {
                 Physics.ColisionSystem.AddObject(colisionObject);
             }
-            if (gameObject is IRadarObject radarObject)
-            {
-                RadarSystem.RadarObjects.Add(radarObject);
-            }
+          
         }
         
+        foreach (var gameObject in _toDelete)
+        {
+            if (gameObject is IPhysicsObject physicsObject)
+            {
+                Physics.PhysicsSystem.RemoveObject(physicsObject);
+            }
+
+            if (gameObject is IDrawObject drawObject)
+            {
+                DrawSystem.DrawSystem.RemoveObject(drawObject);
+            }
+            if (gameObject is IColisionObject colisionObject)
+            {
+                Physics.ColisionSystem.RemoveObject(colisionObject);
+            }
+          
+            gameObject.onDeleted();
+            GameObjects.Remove(gameObject);
+        }
         foreach (var gameObject in _toRemove)
         {
             if (gameObject is IPhysicsObject physicsObject)
@@ -58,14 +86,12 @@ public static class EntityManager
             {
                 Physics.ColisionSystem.RemoveObject(colisionObject);
             }
-            if (gameObject is IRadarObject radarObject)
-            {
-                RadarSystem.RadarObjects.Remove(radarObject);
-            }
-            gameObject.onDeleted();
             GameObjects.Remove(gameObject);
         }
+        
+        _toDelete.Clear();
         _toAdd.Clear();
+        _toDelete.Clear();
         _toRemove.Clear();
         
     }
@@ -79,12 +105,20 @@ public static class EntityManager
         Names.Add(gameObject.Name);
         _toAdd.Add(gameObject);
     }
+    public static void DeleteObject(IEntitie gameObject)
+    {
+        Names.Remove(gameObject.Name);
+        if (!_toDelete.Contains(gameObject))
+            _toDelete.Add(gameObject);
+    }
     public static void RemoveObject(IEntitie gameObject)
     {
         Names.Remove(gameObject.Name);
         if (!_toRemove.Contains(gameObject))
             _toRemove.Add(gameObject);
     }
+    
+   
     
 
     public static IEntitie GetObject(string name)
@@ -102,11 +136,20 @@ public static class EntityManager
     {
         foreach (var gameObject in GameObjects)
         {
-            gameObject.onDeleted();
+           EntityManager.DeleteObject( gameObject);
         }
-        GameObjects.Clear();
-        Physics.PhysicsSystem.ClearObjects();
-        DrawSystem.DrawSystem.ClearObjects();
-        RadarSystem.RadarObjects.Clear();
+       
+    }
+    
+    public static void DebugDraw()
+    {
+        ImGuiNET.ImGui.Begin("EntityManagerDebug");
+        ImGuiNET.ImGui.Text("GameObjects: " + GameObjects.Count);
+        ImGuiNET.ImGui.Text("Names: " + Names.Count);
+        ImGuiNET.ImGui.Text("toDelete: " + _toDelete.Count);
+        ImGuiNET.ImGui.Text("toRemove: " + _toRemove.Count);
+        ImGuiNET.ImGui.Text("toAdd: " + _toAdd.Count);
+        ImGuiNET.ImGui.End();
+      
     }
 }

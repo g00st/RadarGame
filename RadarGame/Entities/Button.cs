@@ -25,6 +25,8 @@ namespace RadarGame.Entities
         // _SweepButton = new Button(Position +Size - new Vector2(Size.X/6.4f), new Vector2(Size.X /16),
         // new Texture("resources/Radar/Button_on.png"), new Texture("resources/Radar/Button_of.png"),
         // new Texture("resources/Radar/Button_on_hover.png"), new Texture("resources/Radar/Button_of_hover.png"));
+        // _SweepButton.Name = "sweep";
+
         public string Name { get; set; }
 
         public enum State
@@ -44,6 +46,7 @@ namespace RadarGame.Entities
             _buttonOFF = new TexturedRectangle(Position, Size, textureOFF);
             _buttonOnHover = new TexturedRectangle(Position, Size, textureOnHover);
             _buttonOffHover = new TexturedRectangle(Position, Size, textureOffHover);
+            
 
         }
         public bool isOn()
@@ -112,7 +115,7 @@ namespace RadarGame.Entities
         }
         private bool checkHover(MouseState mouseState)
         {
-            var transformed = DrawSystem.DrawSystem.GetMainView().ScreenToViewSpace(new Vector2(mouseState.X, mouseState.Y));
+            var transformed = DrawSystem.DrawSystem.ScreenToWorldcord(new Vector2(mouseState.X, mouseState.Y), 2);
 
             if (Vector2.Distance(transformed, Position + Size / 2) < Size.X / 2)
             {
@@ -121,21 +124,21 @@ namespace RadarGame.Entities
             return false;
         }
 
-        public void Draw(View surface)
+        public void Draw(List<View> surface)
         {
             switch (state)
             {
                 case State.ON:
-                    surface.Draw(_buttonON);
+                    surface[2].Draw(_buttonON);
                     break;
                 case State.OFF:
-                    surface.Draw(_buttonOFF);
+                    surface[2].Draw(_buttonOFF);
                     break;
                 case State.ONHover:
-                    surface.Draw(_buttonOnHover);
+                    surface[2].Draw(_buttonOnHover);
                     break;
                 case State.OFFHover:
-                    surface.Draw(_buttonOffHover);
+                    surface[2].Draw(_buttonOffHover);
                     break;
             }
         }
