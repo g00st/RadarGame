@@ -66,10 +66,11 @@ public class TexturedRectangle : DrawObject , IDisposable
         
     }
     
-    public TexturedRectangle(Vector2 positon, Vector2 size, Texture? texture, Shader shader) : this(positon, size, texture)
+    public TexturedRectangle(Vector2 positon, Vector2 size, Texture? texture, Shader shader, bool centered = false) : this(positon, size, texture, "TexturedRectangle", centered)
     {
         this.drawInfo.mesh.Shader = shader;
     }
+    
 
     public void Dispose()
     {

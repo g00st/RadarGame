@@ -1,11 +1,16 @@
 #version 330 core
 
+//stolen from https://www.shadertoy.com/view/tst3WS  idk how this works but it does so i am happy
+
+
+
 in vec2 textCords;
 out vec4 FragColor;
 
+uniform float u_zoom;
 uniform vec2 u_position;  // Position of the player or the world
 uniform vec2 iResolution; // Screen resolution
-uniform float u_rotation; // Camera rotation angle in radians
+
 
 vec4 hash42(vec2 p)
 {
@@ -79,21 +84,24 @@ void main()
 {
     float du = 1.0 / iResolution.y;
 
-    // Adjust the coordinates according to the screen resolution and player's position
+ 
     vec2 uv = textCords * iResolution.xy - 0.5 * iResolution.xy;
+
+   
+    uv *= u_zoom;
+
+    // Invert  movements
+    uv.x = -uv.x;
+    uv.y = -uv.y;
+
+    // Translate to  u_position 
     uv += u_position;
 
-    // Apply camera rotation
-    float cosTheta = cos(u_rotation);
-    float sinTheta = sin(u_rotation);
-    uv = vec2(
-        cosTheta * uv.x - sinTheta * uv.y,
-        sinTheta * uv.x + cosTheta * uv.y
-    );
-
-    // Convert to resolution-independent coordinates
+    // Convert to wierd space idk why but works 
     uv *= du;
 
     vec3 starColor = StarField(uv, du);
     FragColor = vec4(starColor, 1.0);
 }
+
+
