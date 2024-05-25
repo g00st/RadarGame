@@ -25,9 +25,9 @@ public class SarBackground :IEntitie, IDrawObject
         var target2  = DrawSystem.DrawSystem.GetView(0);
         
         var size = (int )(Math.Sqrt( target.vsize.X* target.vsize.X + target.vsize.Y * target.vsize.Y)*0.5f);
-        Texture texture = new Texture( size,size);
+        Texture texture = new Texture( target.Width,target.Height);
         shader = new Shader("resources/Template/simple_texture.vert", "resources/starshader.frag");
-        background = new TexturedRectangle(target2.vpossition  , new Vector2(size),texture, shader, true);
+        background = new TexturedRectangle(target2.vpossition  , new Vector2( 1920, 1080 ),texture, shader, true);
     }
   
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
