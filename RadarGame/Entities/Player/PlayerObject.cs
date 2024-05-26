@@ -15,7 +15,9 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public List<Vector2> CollisonShape { get; set; }
     public void OnColision(IColisionObject colidedObject)
     {
-        Console.WriteLine("Colision with " + ((IEntitie)colidedObject).Name);
+        var differencevector = colidedObject.Position - Position;
+        PhysicsSystem.ApplyForce(this, -differencevector * 100);
+      //  Console.WriteLine("Colision with " + ((IEntitie)colidedObject).Name);
     }
 
     public bool Static { get; set; }

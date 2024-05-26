@@ -30,7 +30,7 @@ public class EngineWindow : GameWindow
                 Profile = ContextProfile.Core 
             })
     {
-       ErrorChecker.InitializeGLDebugCallback();
+       //ErrorChecker.InitializeGLDebugCallback();
         _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
         this.Resize += e => this.resize();
         GL.Enable(EnableCap.Blend);

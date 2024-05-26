@@ -1,18 +1,37 @@
+using System.Drawing;
 using App.Engine;
 using App.Engine.Template;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using RadarGame.Physics;
 
 
 namespace RadarGame.Entities;
 
-public class MapPolygon : IEntitie , IDrawObject
+public class MapPolygon : IEntitie , IDrawObject , IColisionObject
 {
     private Polygon _polygon;
     private ColoredRectangle _debugColoredRectangle;
+    private float _rotation;
+    private static Shader _shader = new SimpleColorShader(Color4.Gray);
+    public List<Vector2> CollisonShape { get; set; }
+    public void OnColision(IColisionObject colidedObject)
+    {
+        return;
+    }
+
+    public bool Static { get; set; }
     public Vector2 Position { get; set; }
+
+    float IColisionObject.Rotation
+    {
+        get => _rotation;
+        set => _rotation = value;
+    }
+
     public Vector2 Rotation { get; set; }
+    public Vector2 Size { get; set; }
     public List<Vector2> Points { get; set; }
     public string Name { get; set; }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
@@ -22,36 +41,40 @@ public class MapPolygon : IEntitie , IDrawObject
 
     public void onDeleted()
     {
-        return;
+        _polygon.Dispose();
+        _debugColoredRectangle.Dispose();
     }
 
-    public MapPolygon(List<Vector2> points  , Vector2 position, Vector2 rotation, string name)
+    public MapPolygon(List<Vector2> points  , Vector2 position, Vector2 rotation, Vector2 Size ,string name)
     {
         Points = points;
         Position = position;
         Rotation = rotation;
         Name = name;
-        _polygon = new Polygon(points, new SimpleColorShader(Color4.Red), Position, new Vector2(1)  , 0, lines:true);
+        _polygon = new Polygon(points, _shader, Position, Size , 0,name +"poly", lines:false);
         _debugColoredRectangle = new ColoredRectangle(
             Position,
             new Vector2(10, 10),
             Color4.Aqua,
-            Name,
+            Name +"Center",
             true
         );
+        
+        //scale to size
+        
+        
+        CollisonShape = new List<Vector2>(points);
+        for (int i = 0; i < CollisonShape.Count; i++)
+        {
+            CollisonShape[i] *= Size;
+        }
+        Static = true;
     }
     
-    public static MapPolygon CreateRandomPolygon(Vector2 center, Vector2 maxwidth, Vector2 minwidth, int pointCount, string name, Random random)
+    public static MapPolygon CreateRandomPolygon(Vector2 center, Vector2 maxwidth, float minradius, int pointCount, string name , Random random)
     {
-        List<Vector2> points = GenerateRandomConvexPolygon(maxwidth, pointCount, random);
-        //adjust to satisfy minwidth
-        for (int i = 0; i < points.Count; i++)
-        {
-            points[i] = new Vector2(
-                Math.Max(points[i].X, minwidth.X),
-                Math.Max(points[i].Y, minwidth.Y)
-            );
-        }
+        List<Vector2> points = GenerateRandomConvexPolygon(new Vector2(1,1), pointCount, random);
+        
         
         
         
@@ -68,9 +91,19 @@ public class MapPolygon : IEntitie , IDrawObject
         {
             points[i] -= center2;
         }
-        
+        //fix minwidth if any point is outside of center + /minwidth
 
-        return new MapPolygon(points, center, new Vector2(0,0), name);
+        foreach (int i in Enumerable.Range(0, points.Count))
+        {
+            var point = points[i];
+            if (point.Length < 1/minradius)
+            {
+                point.Normalize();
+                point *= 1/minradius;
+            }
+        }
+        
+        return new MapPolygon(points, center, new Vector2(0,0),maxwidth ,name);
         return null;
     }
 

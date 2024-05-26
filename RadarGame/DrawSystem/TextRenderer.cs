@@ -26,8 +26,6 @@ public class TextRenderer
             int ch = (int)text[i];
             ch -= 32;
             
-            
-            Console.WriteLine(ch);
             _texturedRectangle.setAtlasIndex(ch % 16, 15- ch/ 16 );
             _texturedRectangle.drawInfo.mesh.Shader.setUniform4v("color", color.R,color.G,color.B,color.A);
             _texturedRectangle.drawInfo.Position = position + new OpenTK.Mathematics.Vector2(i * size.X, 0);

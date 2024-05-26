@@ -24,7 +24,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
         if (((IEntitie)colidedObject).Name.Contains("Bullet"))
         {
             //Todo: Add sound effect Kaboom 
-            Console.WriteLine("Colision with " + colidedObject);
+         //   Console.WriteLine("Colision with " + colidedObject);
             SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
             EntityManager.RemoveObject((IEntitie)colidedObject);
             EntityManager.RemoveObject(this);
@@ -32,10 +32,19 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
         else
         {
 
-
-            IPhysicsObject physicsObject = (IPhysicsObject)colidedObject;
-            var differencevector = physicsObject.Position - Position;
-            PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            if (colidedObject is IPhysicsObject physicsObject)
+            {
+                var differencevector = physicsObject.Position - Position;
+                PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            }
+            else
+            {
+                var differencevector = colidedObject.Position - Position;
+                PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            }
+            
+            
+          
         }
     }
     private Polygon DebugPolygon = Polygon.Circle( new Vector2(0, 0), 50, 100,new SimpleColorShader(Color4.Ivory), "SDF", true);
