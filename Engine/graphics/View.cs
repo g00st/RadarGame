@@ -90,10 +90,29 @@ public class View
        
         GL.Viewport(0, 0, Width, Height);
     }
-    
 
-        public void Draw(DrawObject todraw)
+
+    public void Draw(DrawObject todraw)
+    {
+        //check if object is in view
+
+
+        Vector2 objectPosition = todraw.drawInfo.Position;
+        Vector2 objectSize = todraw.drawInfo.Size;
+        
+        Vector2 screenTopLeft = _vpossition - _vsize / 2;
+        Vector2 screenBottomRight = _vpossition + _vsize / 2;
+        if (objectPosition.X + objectSize.X / 2 >= screenTopLeft.X &&
+            objectPosition.X - objectSize.X / 2 <= screenBottomRight.X &&
+            objectPosition.Y + objectSize.Y / 2 >= screenTopLeft.Y &&
+            objectPosition.Y - objectSize.Y / 2 <= screenBottomRight.Y)
         {
+
+        
+          
+
+
+
             if (currentrendertarget != _rendertarget)
             {
                 _rendertarget.Bind();
@@ -106,12 +125,14 @@ public class View
                 currentwidth = Width;
                 currentheight = Height;
             }
+
             DrawInfo obj = todraw.drawInfo;
             //Console.Write(objectransform.ToString() + "\n" +" \n");
-            obj.mesh.Draw( obj, _view, _camera);
-           // _rendertarget.Unbind();
-            
+            obj.mesh.Draw(obj, _view, _camera);
+            // _rendertarget.Unbind();
         }
+
+}
     
 
     private Matrix4 calcCameraProjection()

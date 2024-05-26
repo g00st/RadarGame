@@ -10,8 +10,6 @@ namespace App.Engine;
 public class Mesh : IDisposable
 {
     private static VAO currentVAO;
-    private static Shader currentShader;
-    
     //--------------------------------------------------------------------------------------------------------
     public static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
     
@@ -122,11 +120,7 @@ public class Mesh : IDisposable
         _stopwatch.Restart();
         Matrix4 Model = drawInfo.Transform;
         
-        if (currentShader != _shader)
-        {
-            _shader.Bind();
-            currentShader = _shader;
-        }
+        _shader.Bind();
         
         _shader.setUniformM4("u_MVP",  Model * view * Projection);
         _SHADERtime += _stopwatch.ElapsedTicks;

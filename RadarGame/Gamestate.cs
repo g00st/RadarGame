@@ -1,6 +1,7 @@
 using App.Engine;
 using OpenTK.Mathematics;
 using RadarGame.Entities;
+using RadarGame.Physics;
 
 namespace RadarGame;
 
@@ -46,12 +47,7 @@ public class Gamestate
                     EntityManager.AddObject(new CompasPanel( DrawSystem.DrawSystem.getViewSize(2) - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
                     EntityManager.AddObject(new Pauser());
                     EntityManager.AddObject(new Score(0, new Vector2(100,100), new Vector2(30,30)));
-                    
-                    for (int i = 0; i < 100; i++)
-                    {
-                        GameObject gameObject = new GameObject( Vector2.One, 0f, "test"+i, 1);
-                        EntityManager.AddObject(gameObject);
-                    }
+                    EntityManager.AddObject(new Mapp( new Vector2(50000,50000), Vector2.Zero));
                     
                     
                 }

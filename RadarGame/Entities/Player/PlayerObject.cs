@@ -15,7 +15,9 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public List<Vector2> CollisonShape { get; set; }
     public void OnColision(IColisionObject colidedObject)
     {
-        Console.WriteLine("Colision with " + ((IEntitie)colidedObject).Name);
+        var differencevector = colidedObject.Position - Position;
+        PhysicsSystem.ApplyForce(this, -differencevector * 100);
+      //  Console.WriteLine("Colision with " + ((IEntitie)colidedObject).Name);
     }
 
     public bool Static { get; set; }
@@ -84,19 +86,19 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         
         if (keyboardState.IsKeyDown(Keys.W))
         {
-            force += new Vector2(0f, 100f);
+            force += new Vector2(0f, 200f);
         }
         if (keyboardState.IsKeyDown(Keys.A))
         {
-           force += new Vector2(-100f, 0f);
+           force += new Vector2(-200f, 0f);
         }
         if (keyboardState.IsKeyDown(Keys.S))
         {
-            force += new Vector2(0f, -100f);
+            force += new Vector2(0f, -200f);
         }
         if (keyboardState.IsKeyDown(Keys.D))
         {
-          force += new Vector2(100f, 0f);
+          force += new Vector2(200f, 0f);
         }
         if (keyboardState.IsKeyDown(Keys.E))
         {

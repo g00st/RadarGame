@@ -24,7 +24,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
         if (((IEntitie)colidedObject).Name.Contains("Bullet"))
         {
             //Todo: Add sound effect Kaboom 
-            Console.WriteLine("Colision with " + colidedObject);
+         //   Console.WriteLine("Colision with " + colidedObject);
             SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
             EntityManager.RemoveObject((IEntitie)colidedObject);
             EntityManager.RemoveObject(this);
@@ -32,10 +32,19 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
         else
         {
 
-
-            IPhysicsObject physicsObject = (IPhysicsObject)colidedObject;
-            var differencevector = physicsObject.Position - Position;
-            PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            if (colidedObject is IPhysicsObject physicsObject)
+            {
+                var differencevector = physicsObject.Position - Position;
+                PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            }
+            else
+            {
+                var differencevector = colidedObject.Position - Position;
+                PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            }
+            
+            
+          
         }
     }
     private Polygon DebugPolygon = Polygon.Circle( new Vector2(0, 0), 50, 100,new SimpleColorShader(Color4.Ivory), "SDF", true);
@@ -56,7 +65,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
         Rotation = rotation;
         Static = false;
         Name = name;
-        this.i = i;
+        this.i = 1;
         Random random = new Random();
         PhysicsData = PhysicsData with { 
             Velocity = new Vector2((float)random.NextDouble()*100-50 , (float)random.NextDouble()*100-50),
@@ -83,14 +92,15 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     }
     public GameObject  (Vector2 position, float rotation, string name, Vector2 vel , float angVel)
     {
+        i = 1;
         Static = false;
         Position = position;
         Rotation = rotation;
         Name = name;
         PhysicsData = PhysicsData with { 
             Velocity = vel, 
-            Mass = 1f, 
-            Drag = 0.00f,
+            Mass = 5f, 
+            Drag = 0.01f,
             Acceleration = new Vector2(0f, 0f), 
             AngularAcceleration = 0f,
             AngularVelocity = angVel };  
