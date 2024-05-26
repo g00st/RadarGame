@@ -46,6 +46,7 @@ public class Gamestate
                     EntityManager.AddObject(new CompasPanel( DrawSystem.DrawSystem.getViewSize(2) - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
                     EntityManager.AddObject(new Pauser());
                     EntityManager.AddObject(new Score(0, new Vector2(100,100), new Vector2(30,30)));
+                  //  EntityManager.AddObject(new Mapp( new Vector2(1000,1000), Vector2.Zero));
                     
                     for (int i = 0; i < 100; i++)
                     {

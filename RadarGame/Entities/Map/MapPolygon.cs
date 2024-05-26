@@ -43,14 +43,39 @@ public class MapPolygon : IEntitie , IDrawObject
     
     public static MapPolygon CreateRandomPolygon(Vector2 center, Vector2 maxwidth, Vector2 minwidth, int pointCount, string name, Random random)
     {
-       
+        List<Vector2> points = GenerateRandomConvexPolygon(maxwidth, pointCount, random);
+        //adjust to satisfy minwidth
+        for (int i = 0; i < points.Count; i++)
+        {
+            points[i] = new Vector2(
+                Math.Max(points[i].X, minwidth.X),
+                Math.Max(points[i].Y, minwidth.Y)
+            );
+        }
+        
+        
+        
+        //find center
+        Vector2 sum = new Vector2(0,0);
+        foreach (var point in points)
+        {
+            sum += point;
+        }
+        var center2 = sum / points.Count;
+        
+        //move to center
+        for (int i = 0; i < points.Count; i++)
+        {
+            points[i] -= center2;
+        }
+        
 
-       // return new MapPolygon(points, center, new Vector2(0,0), name);
+        return new MapPolygon(points, center, new Vector2(0,0), name);
         return null;
     }
 
    
-    /*
+    
      public static List<Vector2> GenerateRandomConvexPolygon(Vector2 bounds, int n, Random RAND)
     {
         // Generate two lists of random X and Y coordinates
@@ -79,9 +104,10 @@ public class MapPolygon : IEntitie , IDrawObject
 
         double lastTop = minX, lastBot = minX;
 
+        double x;
         for (int i = 1; i < n - 1; i++)
         {
-            double x = xPool[i];
+            x = xPool[i];
 
             if (RAND.NextDouble() < 0.5)
             {
@@ -100,9 +126,10 @@ public class MapPolygon : IEntitie , IDrawObject
 
         double lastLeft = minY, lastRight = minY;
 
+        double y;
         for (int i = 1; i < n - 1; i++)
         {
-            double y = yPool[i];
+            y = yPool[i];
 
             if (RAND.NextDouble() < 0.5)
             {
@@ -135,7 +162,8 @@ public class MapPolygon : IEntitie , IDrawObject
 
         // Lay them end-to-end
         
-        double x = 0, y = 0;
+        x = 0;
+        y = 0;
         double minPolygonX = 0;
         double minPolygonY = 0;
         List<Vector2> points = new List<Vector2>(n);
@@ -177,9 +205,10 @@ public class MapPolygon : IEntitie , IDrawObject
             list[n] = value;
         }
     }
-    */
+    
     public void Draw(List<View> surface)
     {
-        throw new NotImplementedException();
+        surface[1].Draw(_polygon);
+        surface[1].Draw(_debugColoredRectangle);
     }
 }

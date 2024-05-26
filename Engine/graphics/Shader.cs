@@ -11,6 +11,7 @@ struct UniformData
 
 public class Shader : IDisposable
 {
+    private static Shader currentShader = null;
     private int vertexHandle;
     private int fragmentHandle;
     private int _Handle;
@@ -77,7 +78,13 @@ public class Shader : IDisposable
             // For example: uniformTypes.Add(uniformName, uniformType);
         }
     }
-    public void Bind(){ GL.UseProgram(_Handle);}
+
+    public void Bind()
+    {
+       
+        if (currentShader != this) GL.UseProgram(_Handle);
+        currentShader = this;
+    } 
     public void Unbind (){GL.UseProgram(0);}
 
     

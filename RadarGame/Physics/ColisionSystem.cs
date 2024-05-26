@@ -8,6 +8,8 @@ namespace RadarGame.Physics;
 public static class ColisionSystem
 {
     private static List<ColisionData> _colisionData = new List<ColisionData>();
+    private static List<ColisionData> _staticObjects = new List<ColisionData>();
+   
     public static List<System.Numerics.Vector3> Debugpoints { get; set; } = new List<System.Numerics.Vector3>();
     private static Polygon deugcircle = Polygon.Circle(Vector2.Zero, 100, 100, new SimpleColorShader(Color4.Yellow), "DebugPolygon", true);
     private struct ColisionData
@@ -24,11 +26,19 @@ public static class ColisionSystem
         newColisionData.O = colisionObject;
         newColisionData.Distance = colisionObject.CollisonShape.Max(x => x.Length);
         //newColisionData.Shape = new Polygon(colisionObject.CollisonShape, new SimpleColorShader(Color4.Red), colisionObject.Position,Vector2.One, 0, "DebugPolygon", true);
-        _colisionData.Add(newColisionData);
+        if (colisionObject.Static)
+        {
+            _staticObjects.Add(newColisionData);
+        }else
+        {
+            _colisionData.Add(newColisionData);
+        }
+        
     }
     public static void RemoveObject(IColisionObject colisionObject)
     {
-        _colisionData.RemoveAll(x => x.O == colisionObject);
+         if (colisionObject.Static) _staticObjects.RemoveAll(x => x.O == colisionObject);
+         else _colisionData.RemoveAll(x => x.O == colisionObject);
     }
     
     public static void Update()
@@ -38,15 +48,25 @@ public static class ColisionSystem
             
         for (int i = 0; i < _colisionData.Count; i++)
         {
+            
+            foreach (var staticObject in _staticObjects)
+            {
+                if (_colisionData[i].Distance + staticObject.Distance < Vector2.Distance(_colisionData[i].O.Position, staticObject.O.Position))
+                {
+                    continue;
+                }
+                if (SAT(_colisionData[i].O, staticObject.O))
+                {
+                    _colisionData[i].O.OnColision(staticObject.O);
+                    staticObject.O.OnColision(_colisionData[i].O);
+                }
+            }
+            
+            
             for (int j = i+1; j < _colisionData.Count; j++)
             { 
                 //if the objects are the same, skip
                 if (_colisionData[i].O == _colisionData[j].O)
-                {
-                    continue;
-                }
-                //if both objects are static, skip
-                if (_colisionData[i].O.Static && _colisionData[j].O.Static)
                 {
                     continue;
                 }
@@ -56,7 +76,6 @@ public static class ColisionSystem
                 {
                     continue;
                 }
-                
                 
                 if (SAT(_colisionData[i].O, _colisionData[j].O))
                 {
@@ -184,6 +203,20 @@ public static class ColisionSystem
                  }
             }
         }
+        foreach (var ob in _staticObjects)
+        {
+            var distance = fastSDF(point, ob);
+            if (distance < min)
+            {
+                distance  = exacktSDF( point, ob);
+                if (distance < min)
+                {
+                    min = distance;
+                    nearest = ob.O;
+                }
+            }
+        }
+        
         dist = min;
         return nearest; 
     }
@@ -218,6 +251,32 @@ public static class ColisionSystem
                 }
             }
         }
+        foreach (var ob in _staticObjects)
+        {
+            // Early check: if the ray doesn't intersect with the bounding circle of the object, skip this object
+            float distanceToObj = (ob.O.Position - start).Length;
+            if (distanceToObj > ob.Distance + rayLength)
+            {
+                continue;
+            }
+
+            if (LineSAT(start, end, ob.O))
+            {
+                var distance = fastSDF(start, ob);
+                if (distance < min)
+                {
+                    distance = exacktSDF(start, ob);
+                    if (distance < min)
+                    {
+                        min = distance;
+                        nearest = ob.O;
+                    }
+                }
+            }
+        }
+        
+        
+        
         return nearest;
     }
    

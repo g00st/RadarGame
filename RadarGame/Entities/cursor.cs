@@ -38,13 +38,13 @@ public class cursor: IEntitie , IDrawObject
            end = x + new Vector2(1000, 0);
 
            if (ColisionSystem.castRay(start, end) == null)
-           {
-               _shader.setColor(Color4.Blue);
-           }
-           else
-           {
-               _shader.setColor(Color4.Green);
-           }
+                                             {
+                                                 _shader.setColor(Color4.Blue);
+                                             }
+                                             else
+                                             {
+                                                 _shader.setColor(Color4.Green);
+                                             }
        
     }
 
