@@ -184,7 +184,7 @@ private bool IsInStartingArea(Vector4 rect)
     
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
-       if( Count < 500)
+       if( Count < 100)
        {
            
            Random random = new Random();

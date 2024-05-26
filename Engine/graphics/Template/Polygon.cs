@@ -109,6 +109,8 @@ public class Polygon : DrawObject , IDisposable
         bufferlayout.type = VertexAttribType.Float;
         bufferlayout.typesize = sizeof(float);
         mesh.AddAtribute(bufferlayout, Points.SelectMany(v => new float[] { v.X, v.Y }).ToArray());
+        mesh.AddAtribute(bufferlayout, Points.SelectMany(v => new float[] { v.X+0.5f, v.Y+0.5f }).ToArray());
+        
         List<int> indecies = TriangulateConvexPolygon( Points);
         var indecies2 = indecies.Select(i => (uint)i).ToArray();
        

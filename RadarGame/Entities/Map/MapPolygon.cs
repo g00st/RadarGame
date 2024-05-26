@@ -14,7 +14,11 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
     private Polygon _polygon;
     private ColoredRectangle _debugColoredRectangle;
     private float _rotation;
-    private static Shader _shader = new SimpleColorShader(Color4.Gray);
+    //private static Shader _shader = new SimpleColorShader(Color4.Gray);
+    private static Texture _texture = new Texture("resources/Map/moon.png");
+    private static Shader _shader = new Shader("resources/Template/simple_texture.vert", "resources/Map/Map.frag");
+    private static Random _random = new Random();
+    private float rand;
     public List<Vector2> CollisonShape { get; set; }
     public void OnColision(IColisionObject colidedObject)
     {
@@ -52,6 +56,9 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
         Rotation = rotation;
         Name = name;
         _polygon = new Polygon(points, _shader, Position, Size , 0,name +"poly", lines:false);
+        _polygon.drawInfo.mesh.Texture = _texture;
+        rand = (float)_random.NextDouble();
+        
      /*   _debugColoredRectangle = new ColoredRectangle(
             Position,
             new Vector2(10, 10),
@@ -241,6 +248,8 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
     
     public void Draw(List<View> surface)
     {
+        _shader.Bind();
+        _shader.setUniform1v("random", rand);
         surface[1].Draw(_polygon);
      //   surface[1].Draw(_debugColoredRectangle);
     }
