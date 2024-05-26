@@ -189,7 +189,7 @@ public class Spaceship : IDisposable
         AccelerationR = force.X > 0;
         AccelerationL = force.X < 0;
         AccelerationF = force.Y > 0;
-        Fast = force.Y > 100;
+        Fast = force.Y > 300;
         
         AccelerationB = force.Y < 0;
       

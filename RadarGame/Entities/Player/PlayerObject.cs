@@ -55,19 +55,19 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         };
         CollisonShape = new List<Vector2>
         {
-            new Vector2(-100, -100),
-            new Vector2(100, -100),
-            new Vector2(100, 100),
-            new Vector2(-100, 100)
+            new Vector2(-65, -150),
+            new Vector2(65, -150),
+            new Vector2(65, 150),
+            new Vector2(-65, 150)
         };
         spaceship = new Spaceship();
         
+        EntityManager.AddObject( new Weaponmanager() );
         EntityManager.AddObject( new Camera(this));
-        
-        
     }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
+      
        
         spaceship.Update(Position, Rotation, args);
         var t=  DrawSystem.DrawSystem.ScreenToWorldcord(mouseState.Position);

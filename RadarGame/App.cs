@@ -121,7 +121,17 @@ public class App : EngineWindow
     
     protected override void Debugdraw()
     {
+        
+        
         ImGuiNET.ImGui.Begin("Debug");
+        
+        //offset slider 
+        
+        System.Numerics.Vector2 of = new System.Numerics.Vector2(MapPolygon.offset.X, MapPolygon.offset.Y);
+            ImGuiNET.ImGui.DragFloat2("Offset"  , ref of, 0.1f);
+         MapPolygon.offset = new Vector2(of.X, of.Y);   
+            
+        
         ImGuiNET.ImGui.Text("FPS: " + fps);
         ImGuiNET.ImGui.Text("Entity Update Time: " + _EntityTime);
         ImGuiNET.ImGui.Text("Physics Update Time: " + _PhysicsTime);

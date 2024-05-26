@@ -113,6 +113,17 @@ public class Shader : IDisposable
     {
         GL.Uniform4( GL.GetUniformLocation(_Handle, name),v1,v2,v3,v4);
     }
+    
+    public void setuniform2vArray(string name, Vector2[] v2)
+    {
+        float[] data = new float[v2.Length * 2];
+        for (int i = 0; i < v2.Length; i++)
+        {
+            data[i * 2] = v2[i].X;
+            data[i * 2 + 1] = v2[i].Y;
+        }
+        GL.Uniform2(GL.GetUniformLocation(_Handle, name), v2.Length, data);
+    }
 
     public void Dispose()
     {

@@ -12,6 +12,7 @@ namespace RadarGame.Entities;
 public class MapPolygon : IEntitie , IDrawObject , IColisionObject
 {
     private Polygon _polygon;
+    public static Vector2 offset = new Vector2(0,0);
     private ColoredRectangle _debugColoredRectangle;
     private float _rotation;
     //private static Shader _shader = new SimpleColorShader(Color4.Gray);
@@ -37,6 +38,7 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
     public Vector2 Rotation { get; set; }
     public Vector2 Size { get; set; }
     public List<Vector2> Points { get; set; }
+    public List<Vector2> ShaderPoints { get; set; }
     public string Name { get; set; }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
@@ -68,6 +70,10 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
         );
         */
         //scale to size
+        
+        //shaderpoints is Points + 1,1 
+        ShaderPoints =  new List<Vector2>(points.ConvertAll( x => x + new Vector2(1,1)));
+        
         
         
         CollisonShape = new List<Vector2>(points);
@@ -250,6 +256,8 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
     {
         _shader.Bind();
         _shader.setUniform1v("random", rand);
+        _shader.setUniformV2f("offset", offset);
+        _shader.setuniform2vArray("points", Points.ToArray());
         surface[1].Draw(_polygon);
      //   surface[1].Draw(_debugColoredRectangle);
     }
