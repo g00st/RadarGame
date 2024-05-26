@@ -65,7 +65,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
         Rotation = rotation;
         Static = false;
         Name = name;
-        this.i = i;
+        this.i = 1;
         Random random = new Random();
         PhysicsData = PhysicsData with { 
             Velocity = new Vector2((float)random.NextDouble()*100-50 , (float)random.NextDouble()*100-50),
@@ -92,14 +92,15 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     }
     public GameObject  (Vector2 position, float rotation, string name, Vector2 vel , float angVel)
     {
+        i = 1;
         Static = false;
         Position = position;
         Rotation = rotation;
         Name = name;
         PhysicsData = PhysicsData with { 
             Velocity = vel, 
-            Mass = 1f, 
-            Drag = 0.00f,
+            Mass = 5f, 
+            Drag = 0.01f,
             Acceleration = new Vector2(0f, 0f), 
             AngularAcceleration = 0f,
             AngularVelocity = angVel };  

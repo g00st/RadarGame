@@ -86,19 +86,19 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         
         if (keyboardState.IsKeyDown(Keys.W))
         {
-            force += new Vector2(0f, 100f);
+            force += new Vector2(0f, 200f);
         }
         if (keyboardState.IsKeyDown(Keys.A))
         {
-           force += new Vector2(-100f, 0f);
+           force += new Vector2(-200f, 0f);
         }
         if (keyboardState.IsKeyDown(Keys.S))
         {
-            force += new Vector2(0f, -100f);
+            force += new Vector2(0f, -200f);
         }
         if (keyboardState.IsKeyDown(Keys.D))
         {
-          force += new Vector2(100f, 0f);
+          force += new Vector2(200f, 0f);
         }
         if (keyboardState.IsKeyDown(Keys.E))
         {

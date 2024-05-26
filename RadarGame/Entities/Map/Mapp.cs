@@ -15,6 +15,7 @@ public class Mapp : IEntitie
     private List<Vector4> Ocuppied = new List<Vector4>(); //list of ocuppied areas
 
     public string Name { get; set; }
+    private int Count = 0;
     
     
     
@@ -30,7 +31,7 @@ public Mapp(Vector2 mapSize, Vector2 mapPosition)
         
         //add some random polygons to the map
         Random random = new Random(); 
-        RectanglePack(100, 5000, 10, 1000, 1000);
+        RectanglePack(100, 5000, 10, 200, 1000);
         
         
         
@@ -58,7 +59,7 @@ public Mapp(Vector2 mapSize, Vector2 mapPosition)
             float y = MapPosition.Y - MapSize.Y / 2 + spacing + (float)random.NextDouble() * (MapSize.Y - initialSize - 2 * spacing);
             Vector4 newRect = new Vector4(x, y, x + initialSize, y + initialSize);
 
-            if (!CheckCollision(newRect, new Vector4()) && IsWithinMapBounds(newRect))
+            if (!CheckCollision(newRect, new Vector4()) && IsWithinMapBounds(newRect) && !IsInStartingArea(newRect))
             {
                 Ocuppied.Add(newRect);
             }
@@ -81,7 +82,7 @@ public Mapp(Vector2 mapSize, Vector2 mapPosition)
                 Vector4 newRect = new Vector4(rect.X, rect.Y, rect.Z + sizeIncrement, rect.W + sizeIncrement);
 
                 // If the new size causes a collision with any other rectangle or it goes out of the map bounds, revert the size increase
-                if (CheckCollision(newRect, rect) || !IsWithinMapBounds(newRect))
+                if (CheckCollision(newRect, rect) || !IsWithinMapBounds(newRect) || IsInStartingArea(newRect))
                 {
                     continue;
                 }
@@ -106,6 +107,24 @@ private bool IsWithinMapBounds(Vector4 rect)
 {
     return rect.X >= MapPosition.X - MapSize.X / 2 && rect.Y >= MapPosition.Y - MapSize.Y / 2 && rect.Z <= MapPosition.X + MapSize.X / 2 && rect.W <= MapPosition.Y + MapSize.Y / 2;
 }
+
+private bool IsInStartingArea(Vector4 rect)
+{
+    float startingAreaSize = 2000;
+    float halfSize = startingAreaSize / 2;
+
+    // Check if any part of the rectangle is within the starting area
+    if (rect.Z > -halfSize && rect.X < halfSize && rect.W > -halfSize && rect.Y < halfSize)
+    {
+        // The rectangle is within the starting area
+        return true;
+    }
+
+    // The rectangle is not within the starting area
+    return false;
+}
+
+
 
 
     
@@ -165,6 +184,20 @@ private bool IsWithinMapBounds(Vector4 rect)
     
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
+       if( Count < 500)
+       {
+           
+           Random random = new Random();
+           Vector2 p = new Vector2( (float)random.NextDouble() * 5000 -2500, (float)random.NextDouble()  * 5000 -2500);
+           float distance = 0;
+           ColisionSystem.getNearest(p, out distance);
+              if (distance < 100)
+              {
+                return;
+              }
+           EntityManager.AddObject(new GameObject(p, 0, "RandomObject" + Count, new Vector2((float)random.NextDouble() * 100 - 50, (float)random.NextDouble() * 100 - 50), (float)random.NextDouble() * 10 - 5));
+          Count++; 
+       }
       
     }
 

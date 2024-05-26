@@ -52,14 +52,14 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
         Rotation = rotation;
         Name = name;
         _polygon = new Polygon(points, _shader, Position, Size , 0,name +"poly", lines:false);
-        _debugColoredRectangle = new ColoredRectangle(
+     /*   _debugColoredRectangle = new ColoredRectangle(
             Position,
             new Vector2(10, 10),
             Color4.Aqua,
             Name +"Center",
             true
         );
-        
+        */
         //scale to size
         
         
@@ -242,6 +242,6 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
     public void Draw(List<View> surface)
     {
         surface[1].Draw(_polygon);
-        surface[1].Draw(_debugColoredRectangle);
+     //   surface[1].Draw(_debugColoredRectangle);
     }
 }
