@@ -10,7 +10,7 @@ public static class ErrorChecker
         ErrorCode errorCode;
         while ((errorCode = GL.GetError()) != ErrorCode.NoError)
         {
-            Console.WriteLine($"OpenGL Error ({context}): {errorCode}");
+            Console.WriteLine($"OpenGL Error ({context}): {errorCode}"); 
             throw  new Exception($"OpenGL Error ({context}): {errorCode}");
         }
     }
@@ -25,5 +25,4 @@ public static class ErrorChecker
         GL.DebugMessageCallback(_debugCallback, IntPtr.Zero);
         GL.Enable(EnableCap.DebugOutput);
     }
-
 }
