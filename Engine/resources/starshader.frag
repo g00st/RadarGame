@@ -101,6 +101,7 @@ void main()
     uv *= du;
 
     vec3 starColor = StarField(uv, du);
+    starColor = max(starColor, vec3(0,0,0.1));
     FragColor = vec4(starColor, 1.0);
 }
 

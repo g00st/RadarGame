@@ -112,10 +112,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         {
             force += new Vector2(0, 1000);
         }
-        if (keyboardState.IsKeyDown(Keys.Space))
-        {
-            spaceship.shoot();
-        }
+       
         
         spaceship.Accelerate(force);
         spaceship.Rotate(torque);

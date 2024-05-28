@@ -56,7 +56,7 @@ public class GameoverScreen : IEntitie , IDrawObject{
         for (int i = 0; i < highscore.Length; i++)
         {        
             TextRenderer.Write("Highscore" + i + " :" + highscore[i], new Vector2(150,150) + padding, new Vector2(30,30), surface[2], Color4.White);
-            padding += new Vector2(0,10);
+            padding += new Vector2(0,100);
         }
     }
 }
