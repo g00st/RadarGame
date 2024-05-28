@@ -4,19 +4,29 @@ using Engine.graphics.Template;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using RadarGame.others;
 using RadarGame.Physics;
 
 
 namespace RadarGame.Entities;
 
-public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObject
+public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObject , IcanBeHurt
 {
+    private int _health = 100;
     public PhysicsDataS PhysicsData { get; set; }
     public List<Vector2> CollisonShape { get; set; }
     public void OnColision(IColisionObject colidedObject)
     {
         var differencevector = colidedObject.Position - Position;
+        
         PhysicsSystem.ApplyForce(this, -differencevector * 100);
+
+       this.applyDamage( (int) (this.PhysicsData.Velocity.Length * 0.01f));
+       if (colidedObject is IcanBeHurt)
+       {
+           ((IcanBeHurt)colidedObject).applyDamage( (int) (this.PhysicsData.Velocity.Length * 0.01f));
+       }
+       
       //  Console.WriteLine("Colision with " + ((IEntitie)colidedObject).Name);
     }
 
@@ -136,7 +146,21 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
 
     public void Draw(List <View> surface)
     {
+     PercentageBar.DrawBar( surface[2], new Vector2( surface[2].vsize.X/2,surface[2].vsize.Y- 75 )    , new Vector2( 1000,10)  ,  _health /100f, new Color4(1,0,0f,1f), true);   
      spaceship.Draw(surface[1]);
     }
-    
+
+    public bool applyDamage(int damage)
+    {
+        _health -= damage;
+        if (_health <= 0)
+        {
+            Gamestate.CurrState = Gamestate.State.GameOver;
+            _health = 0;
+            return  true;
+           
+        }
+
+        return false;
+    }
 }

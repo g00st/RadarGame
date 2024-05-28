@@ -86,6 +86,7 @@ public class Machineguns : Weapon , IDrawObject
                    if(  ((IcanBeHurt) c).applyDamage(Damage))
                    {
                        setScore();
+                       manager.addEnergy(10);
                    }
                 
                 }

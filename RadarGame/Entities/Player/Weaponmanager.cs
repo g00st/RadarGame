@@ -12,7 +12,7 @@ public class Weaponmanager: IEntitie ,IDrawObject
 {
     private List<Weapon> weapons = new List<Weapon>();
     private float energy = 0;
-    private float maxEnergy = 100;
+    private float maxEnergy = 1000;
     private float energyRegen = 1;
     private Weapon currentWeapon = null;
     private ColoredRectangle cooldownBar = new ColoredRectangle( Vector2.Zero , new Vector2(10,10),  new Color4(0,0,0.2f,0.4f), "cooldownBar" , true);
@@ -22,32 +22,53 @@ public class Weaponmanager: IEntitie ,IDrawObject
      Vector2 iconSize = new Vector2(80,80);
     Vector2 iconPosition = new Vector2(1920/2 - 80*1.5f,100);
    
+    private float energyRegenRate = 2;
+    private float energyRegenTimer = 0;
     public string Name { get; set; }
+    
     
     public Weaponmanager()
     {
+        
+        energy = maxEnergy;
         Name = "Weaponmanager";
         weapons.Add(new Machineguns());
-        weapons.Add(new Weapon());
-        weapons.Add(new Weapon());
-        weapons.Add(new Weapon());
         weapons.Add(new Weapon());
         weapons.Add(new Weapon());
         currentWeapon = weapons[0];
         weapons[2].cooldown = 1f;
 
-        
+        foreach (var w in weapons)
+        {
+            w.manager = this;
+        }
+            
              EntityManager.AddObject(weapons[0]);
              iconPosition = new Vector2(1920/2 - 80* weapons.Count/2.0f,100);
         
     }
 
-    public void addEnergy()
+    public void addEnergy( int amount)
     {
-        //todo add energy
+        energy += amount;
+        if (energy > maxEnergy)
+        {
+            energy = maxEnergy;
+        }
     }
+  
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
+        energyRegenTimer += (float)args.Time;
+        if (energyRegenTimer >= energyRegenRate)
+        {
+            energy += energyRegen;
+            if (energy > maxEnergy)
+            {
+                energy = maxEnergy;
+            }
+            energyRegenTimer = 0;
+        }
         
         for (int i = 0; i < weapons.Count; i++)
         {
@@ -58,9 +79,10 @@ public class Weaponmanager: IEntitie ,IDrawObject
         }
         if (keyboardState.IsKeyDown(Keys.Space))
         {
-            if (currentWeapon.state == Weapon.Weponstate.ready)
+            if (currentWeapon.state == Weapon.Weponstate.ready && energy >= currentWeapon.energyCost)
             {
                 currentWeapon.fire();
+                energy -= currentWeapon.energyCost;
             }
            
         }
@@ -125,7 +147,7 @@ public class Weaponmanager: IEntitie ,IDrawObject
 
     public void Draw(List<View> surface)
     {
-       PercentageBar.DrawBar( surface[1], new Vector2(100, 100), 1, 1, new Color4(0,0,1f,1f)); 
+       PercentageBar.DrawBar( surface[2], new Vector2( surface[2].vsize.X/2,surface[2].vsize.Y- 60 )    , new Vector2( 1000,10)  ,  energy /maxEnergy, new Color4(0,0,1f,1f), true); 
        drawIcons( surface[2]);
     }
 }

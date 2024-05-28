@@ -13,6 +13,8 @@ public class Weapon : IEntitie
     protected float  currentCooldown { get; set; }
     public int energyCost { get; set; }
     public string Name { get; set; }
+
+    public Weaponmanager manager;
         public void setScore()
         {
             if (score == null)
@@ -24,14 +26,11 @@ public class Weapon : IEntitie
             }
            
         }
+
+        
+        
     public virtual void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
-        
-       
-        
-       
-        
-        
         if (state == Weponstate.coolingdown)
         {
           //  Console.WriteLine("coolingdown");
