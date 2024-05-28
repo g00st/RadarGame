@@ -47,7 +47,7 @@ public class MapPolygon : IEntitie , IDrawObject , IColisionObject
 
     public void onDeleted()
     {
-        _polygon.Dispose();
+        //_polygon.Dispose();
     }
 
     public MapPolygon(List<Vector2> points  , Vector2 position, Vector2 rotation, Vector2 Size ,string name)

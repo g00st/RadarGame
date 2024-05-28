@@ -21,8 +21,8 @@ public class PercentageBar
         bar.drawInfo.Size = new Vector2(size.X * percentage, barFrame.drawInfo.Size.Y);
        // bar.drawInfo.Size = new Vector2(bar.drawInfo.Size.X *0.8f, barFrame.drawInfo.Size.Y * 0.8f);
         
-        bar.drawInfo.mesh.Shader.Bind();
-        bar.drawInfo.mesh.Shader.setUniform4v( "u_Color", color.R, color.G, color.B, color.A);
+         bar.drawInfo.mesh.Shader.Bind();
+         bar.drawInfo.mesh.Shader.setUniform4v( "u_Color", color.R, color.G, color.B, color.A);
          surface.Draw(bar);
          surface.Draw(barFrame);
          
