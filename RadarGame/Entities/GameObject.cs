@@ -138,7 +138,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
 
     public void onDeleted()
     {
-        Console.WriteLine("Deleted");
+       //  Console.WriteLine("Deleted");
         DebugColoredRectangle.Dispose();
     }
 

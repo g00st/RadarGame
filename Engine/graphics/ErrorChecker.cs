@@ -7,6 +7,7 @@ public static class ErrorChecker
     private static DebugProc _debugCallback;
     public static void CheckForGLErrors(string context)
     {
+        return;
         ErrorCode errorCode;
         while ((errorCode = GL.GetError()) != ErrorCode.NoError)
         {

@@ -17,6 +17,10 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     public List<Vector2> CollisonShape { get; set; }
     public void OnColision(IColisionObject colidedObject)
     {
+        if (colidedObject is Ifriendly)
+        {
+            return;
+        }
         var differencevector = colidedObject.Position - Position;
         
         PhysicsSystem.ApplyForce(this, -differencevector * 100);
@@ -46,7 +50,8 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     private float lastRotation;
     private Random random = new Random();
     private float timer = 0;
-    private Spaceship spaceship;
+    public Spaceship spaceship;
+    private Camera camera;
     
     public PlayerObject(Vector2 position, float rotation, string name = "Player")
     {
@@ -71,9 +76,9 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
             new Vector2(-65, 150)
         };
         spaceship = new Spaceship();
-        
+         camera = new Camera(this);
         EntityManager.AddObject( new Weaponmanager() );
-        EntityManager.AddObject( new Camera(this));
+        EntityManager.AddObject( camera);
     }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
@@ -152,6 +157,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
 
     public bool applyDamage(int damage)
     {
+        camera.shake(damage );
         _health -= damage;
         if (_health <= 0)
         {

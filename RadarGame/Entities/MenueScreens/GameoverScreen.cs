@@ -13,7 +13,8 @@ public class GameoverScreen : IEntitie , IDrawObject{
 
     int[] highscore = new int[5];
     public GameoverScreen()
-    {
+    { 
+        Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(2), new Texture("resources/background2.jpg"));
         StartButton = new Button( 
             DrawSystem.DrawSystem.getViewSize(2)/2 ,
             new Vector2( 200,200),
@@ -23,7 +24,7 @@ public class GameoverScreen : IEntitie , IDrawObject{
             new Texture( "resources/Buttons/startbutton_On.png")
         );
         Name = "GameoverScreen"; 
-        Background = new TexturedRectangle( new Vector2(0,0), DrawSystem.DrawSystem.getViewSize(2), new Texture("resources/background2.jpg"));
+       
         highscore = UiSystem.ScoreSystem.getHighscore();
     }
     private Button StartButton;

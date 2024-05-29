@@ -61,7 +61,7 @@ public class Spaceship : IDisposable
     private bool Fast = false;
     private int atlsindext = 0;
     private int atlsindexc = 3;
-    private float canonRotation = 0;
+    public float canonRotation = 0;
     
     
     private bool shootbool = false;
@@ -208,6 +208,7 @@ public class Spaceship : IDisposable
     
     public void setCanonRotation(float rotation)
     {
+        canonRotation = rotation;
         Canon.drawInfo.Rotation = rotation;
     }
     public void shoot()

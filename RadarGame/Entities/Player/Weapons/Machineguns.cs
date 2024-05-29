@@ -74,13 +74,14 @@ public class Machineguns : Weapon , IDrawObject
         for (int i = 0; i < bullets.Count; i++)
         {
             Vector4 bullet = bullets[i];
-            bullet = bullet with { Xy = bullet.Xy +  bullet.Zw  *  1000*(float)args.Time };
+            bullet = bullet with { Xy = bullet.Xy +  bullet.Zw  *  2000*(float)args.Time };
             bullets[i] = bullet;
             float distance =20;
             
             IColisionObject c =  ColisionSystem.getNearest(   bullet.Xy,  out distance);
             if (distance < 10 && c != trackingObject)
             {
+                AnimatedExposion.newExplosion(bullet.Xy, 50);
                 if (c is IcanBeHurt)
                 {
                    if(  ((IcanBeHurt) c).applyDamage(Damage))

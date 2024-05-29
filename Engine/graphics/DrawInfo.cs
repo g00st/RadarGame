@@ -103,7 +103,7 @@ public class DrawInfo :IDisposable
    {
        mesh.Dispose();
        _drawInfos.Remove(this);
-       Console.WriteLine( "DrawInfo disposed");
+   //    Console.WriteLine( "DrawInfo disposed");
        GC.SuppressFinalize(this);
    }
 }

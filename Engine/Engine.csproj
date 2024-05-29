@@ -32,6 +32,8 @@
     <ItemGroup>
       <Folder Include="bin\Debug\net6.0\" />
       <Folder Include="resources\Buttons\" />
+      <Folder Include="resources\Canon\" />
+      <Folder Include="resources\Explosion\" />
       <Folder Include="resources\Machinegun\" />
       <Folder Include="resources\PercentageBar\" />
       <Folder Include="resources\Player\" />

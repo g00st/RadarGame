@@ -33,7 +33,7 @@ public class Weaponmanager: IEntitie ,IDrawObject
         energy = maxEnergy;
         Name = "Weaponmanager";
         weapons.Add(new Machineguns());
-        weapons.Add(new Weapon());
+        weapons.Add(new Canon());
         weapons.Add(new Weapon());
         currentWeapon = weapons[0];
         weapons[2].cooldown = 1f;
@@ -44,6 +44,7 @@ public class Weaponmanager: IEntitie ,IDrawObject
         }
             
              EntityManager.AddObject(weapons[0]);
+                EntityManager.AddObject(weapons[1]);
              iconPosition = new Vector2(1920/2 - 80* weapons.Count/2.0f,100);
         
     }
@@ -112,13 +113,7 @@ public class Weaponmanager: IEntitie ,IDrawObject
             IconframeBackground.drawInfo.Size = iconSize;
             
             surface.Draw(IconframeBackground);
-           if (wepon.state == Weapon.Weponstate.coolingdown)
-           {
-                           
-               cooldownBar.drawInfo.Size = iconSize * new Vector2(wepon.getColdownPercent());
-               surface.Draw(cooldownBar);
-                           
-           }
+           
 
            if (wepon.icon != null)
            {
@@ -126,7 +121,13 @@ public class Weaponmanager: IEntitie ,IDrawObject
                 wepon.icon.drawInfo.Size = iconSize;
                 surface.Draw(wepon.icon);
            }
-           
+           if (wepon.state == Weapon.Weponstate.coolingdown)
+           {
+                                      
+               cooldownBar.drawInfo.Size = iconSize * new Vector2(wepon.getColdownPercent());
+               surface.Draw(cooldownBar);
+                                      
+           }
             if (wepon == currentWeapon)
             {
                 surface.Draw(IconframeSelected);
