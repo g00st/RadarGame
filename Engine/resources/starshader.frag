@@ -1,7 +1,6 @@
 #version 330 core
 
-//stolen from https://www.shadertoy.com/view/tst3WS  idk how this works but it does so i am happy
-
+//stolen from https://www.shadertoy.com/view/tst3WS  
 
 
 in vec2 textCords;
@@ -97,7 +96,7 @@ void main()
     // Translate to  u_position 
     uv += u_position;
 
-    // Convert to wierd space idk why but works 
+    // Convert to wierd space 
     uv *= du;
 
     vec3 starColor = StarField(uv, du);

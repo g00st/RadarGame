@@ -30,7 +30,7 @@ void main()
   float distance = length(textCords - vec2(0.5, 0.5));
   vec3 color = texture(tex, textCords*0.2 + random*0.5).rgb;
 
-  distance =sdPolygon(points,( textCords + vec2(-0.5) )*1.1);
+  distance =sdPolygon(points,( textCords + vec2(-0.5) )*0.900);
   if (distance > 0.0)
   {
     distance = 0.001;
