@@ -14,5 +14,5 @@ void main()
     vec2 tileSize = vec2(1.0 / subimages.x, 1.0 / subimages.y);
     vec2 offset = index * tileSize;
     vec2 actualTexCoords = offset + textCords * tileSize;
-    fragColor = vec4 (color.rgb,  texture(tex, actualTexCoords).r );
+    fragColor = vec4 (color.rgb,  texture(tex, actualTexCoords).a );
 }

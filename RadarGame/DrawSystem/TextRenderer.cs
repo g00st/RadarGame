@@ -11,8 +11,8 @@ public class TextRenderer
     static TextureAtlasRectangle _texturedRectangle = new TextureAtlasRectangle(
         new OpenTK.Mathematics.Vector2(0f, 0f),
         new OpenTK.Mathematics.Vector2(500f, 500f),
-        new OpenTK.Mathematics.Vector2(16, 16),
-        new Texture("resources/Textrenderer/chartextures.jpg"),
+        new OpenTK.Mathematics.Vector2(8, 12),
+        new Texture("resources/Textrenderer/nullptr_hq4x.png"),
         "TextChars",
          new Shader("resources/Template/simple_texture.vert",
             "resources/Textrenderer/Text.frag")
@@ -26,7 +26,7 @@ public class TextRenderer
             int ch = (int)text[i];
             ch -= 32;
             
-            _texturedRectangle.setAtlasIndex(ch % 16, 15- ch/ 16 );
+            _texturedRectangle.setAtlasIndex(ch % 8, 11-ch / 8);
             _texturedRectangle.drawInfo.mesh.Shader.setUniform4v("color", color.R,color.G,color.B,color.A);
             _texturedRectangle.drawInfo.Position = position + new OpenTK.Mathematics.Vector2(i * size.X, 0);
             _texturedRectangle.drawInfo.Size = size;
