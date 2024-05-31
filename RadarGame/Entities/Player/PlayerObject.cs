@@ -33,7 +33,9 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
        
       //  Console.WriteLine("Colision with " + ((IEntitie)colidedObject).Name);
     }
-
+    private float deathTimer = 2f;
+    private bool alive = true;
+    
     public bool Static { get; set; }
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
@@ -42,10 +44,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     
     public TexturedRectangle Spaceship { get; set; }
     private TextureAtlasRectangle Exhaust;
-    private Polygon DebugPolygon { get; set; }
-    private Polygon DebugPolygon2 { get; set; }
-    private int bulletCount = 0;
-    bool over1000 = false;
+   
     private Vector2 lastPosition;
     private float lastRotation;
     private Random random = new Random();
@@ -138,7 +137,20 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         );
         PhysicsSystem.ApplyForce(this, rotatedForce);
 
-
+        if (alive && _health <= 0)
+        {
+            AnimatedExposion.newExplosion(Position, 500);
+            alive = false;
+        }
+        if (!alive)
+        {
+            AnimatedExposion.newExplosion(Position + new Vector2( (float)random.NextDouble()*500-250,(float)random.NextDouble()*500-200)  ,200);
+            deathTimer -= (float)args.Time;
+            if (deathTimer < 0)
+            {
+                Gamestate.CurrState = Gamestate.State.GameOver;
+            }
+        }
 
 
 
@@ -161,11 +173,10 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         _health -= damage;
         if (_health <= 0)
         {
-            Gamestate.CurrState = Gamestate.State.GameOver;
             _health = 0;
             return  true;
-           
         }
+        _health = Math.Clamp(_health, 0, 100);
 
         return false;
     }

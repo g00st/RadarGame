@@ -34,7 +34,7 @@ public class Weaponmanager: IEntitie ,IDrawObject
         Name = "Weaponmanager";
         weapons.Add(new Machineguns());
         weapons.Add(new Canon());
-        weapons.Add(new Weapon());
+        weapons.Add(new GuidedMissile());
         currentWeapon = weapons[0];
         weapons[2].cooldown = 1f;
 
@@ -45,6 +45,7 @@ public class Weaponmanager: IEntitie ,IDrawObject
             
              EntityManager.AddObject(weapons[0]);
                 EntityManager.AddObject(weapons[1]);
+                EntityManager.AddObject(weapons[2]);
              iconPosition = new Vector2(1920/2 - 80* weapons.Count/2.0f,100);
         
     }
@@ -64,10 +65,8 @@ public class Weaponmanager: IEntitie ,IDrawObject
         if (energyRegenTimer >= energyRegenRate)
         {
             energy += energyRegen;
-            if (energy > maxEnergy)
-            {
-                energy = maxEnergy;
-            }
+            energy = Math.Clamp(energy, 0, maxEnergy);
+            
             energyRegenTimer = 0;
         }
         
@@ -78,7 +77,16 @@ public class Weaponmanager: IEntitie ,IDrawObject
                 currentWeapon = weapons[i];
             }
         }
-        if (keyboardState.IsKeyDown(Keys.Space))
+        if (keyboardState.IsKeyDown( Keys.Space))
+        {
+            if (weapons[0].state == Weapon.Weponstate.ready && energy >= weapons[0].energyCost)
+            {
+                weapons[0].fire();
+                energy -= weapons[0].energyCost;
+            }
+        }
+       
+        if (mouseState.IsButtonDown( MouseButton.Left))
         {
             if (currentWeapon.state == Weapon.Weponstate.ready && energy >= currentWeapon.energyCost)
             {

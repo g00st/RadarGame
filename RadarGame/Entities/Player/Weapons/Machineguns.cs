@@ -23,7 +23,7 @@ public class Machineguns : Weapon , IDrawObject
     {
         Damage = 10;
         cooldown = 0.1f;
-        energyCost = 1;
+        energyCost = 0;
         Name = "Machineguns";
         Description = "Machineguns";
         state = Weponstate.ready;

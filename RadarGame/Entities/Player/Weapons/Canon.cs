@@ -21,7 +21,7 @@ public class Canon : Weapon
     {
         Damage = 100;
         cooldown = 0.8f;
-        energyCost = 10;
+        energyCost = 20;
         Name = "Canon";
         Description = "Canon";
         state = Weponstate.ready;

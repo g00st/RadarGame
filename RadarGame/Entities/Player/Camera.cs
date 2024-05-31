@@ -63,6 +63,7 @@ public class Camera : IEntitie, IDrawObject
     public void shake( float intensity)
     {
         _shakeActive =1;
+        intensity = Math.Clamp(intensity, 0, 100);
         _shakeIntensity = intensity;
     }
     
