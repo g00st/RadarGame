@@ -122,7 +122,7 @@ public class Missile : IEntitie, IDrawObject, IPhysicsObject, IColisionObject , 
         float rotationRate = Vector2.Dot(targetDirection, missileDirection);
 
         // Apply a force in the direction the missile is currently facing
-        Vector2 force = new Vector2(0, 1000);
+        Vector2 force = new Vector2(0, 2000);
         // Apply an angular force based on the rotation rate
         float angularForce = rotationRate * 10;
 
@@ -175,7 +175,7 @@ public class Missile : IEntitie, IDrawObject, IPhysicsObject, IColisionObject , 
             {
                 Vector2 offset = new Vector2((float)Math.Cos(i * Math.PI / 5), (float)Math.Sin(i * Math.PI / 5));
                 offset *= 500;
-                AnimatedExposion.newExplosion(Position + offset, 500);
+                AnimatedExposion.newExplosion(Position + offset, 1000);
             }
         }
         

@@ -1,6 +1,7 @@
 using App.Engine;
 using OpenTK.Mathematics;
 using RadarGame.Entities;
+using RadarGame.Entities.Enemys;
 using RadarGame.Physics;
 
 namespace RadarGame;
@@ -51,6 +52,7 @@ public class Gamestate
                     EntityManager.AddObject(new Pauser());
                     EntityManager.AddObject(new Score(0, new Vector2(100,100), new Vector2(30,30)));
                     EntityManager.AddObject(new Mapp( new Vector2(50000,50000), Vector2.Zero));
+                    EntityManager.AddObject(new EnemyManager());
                     
                     
                 }
