@@ -10,7 +10,7 @@ public class PercentageBar
     static private ColoredRectangle bar = new ColoredRectangle( new Vector2(0,0), new Vector2(0,0), new Color4(0,0,0,0.5f), "bar", false);
     public static void  DrawBar(View surface,Vector2 position,  Vector2 size, float percentage, Color4 color, bool centered = false)
     {
-        
+        percentage = Math.Clamp(percentage, 0, 1);
         if (centered)
         {
             position = new Vector2(position.X - size.X / 2, position.Y - size.Y / 2);

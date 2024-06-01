@@ -4,6 +4,7 @@ using Engine.graphics.Template;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using RadarGame.others;
 using RadarGame.Physics;
 
 namespace RadarGame.Entities.Enemys;
@@ -21,6 +22,7 @@ public class Mine : IEnemie, IDrawObject, IColisionObject, IcanBeHurt
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
     static int id = 0;
+    private bool mouseHover = false;
     public float Rotation { get; set; }
     private PlayerObject target;
     private float Explosiontimer = 0;
@@ -30,7 +32,7 @@ public class Mine : IEnemie, IDrawObject, IColisionObject, IcanBeHurt
     private bool ligth = false;
     private float explosiondistance = 500;
     public string Name { get; set; }
-    private TextureAtlasRectangle texture = new TextureAtlasRectangle(  new Vector2(0,0), new Vector2(    100,100), new Vector2(1,2), new Texture("resources/Enemies/Mine.png"), "Mine");
+    private static TextureAtlasRectangle texture = new TextureAtlasRectangle(  new Vector2(0,0), new Vector2(    100,100), new Vector2(1,2), new Texture("resources/Enemies/Mine.png"), "Mine");
     
     public Mine(Vector2 position, EnemyManager entityManager)
     {
@@ -90,6 +92,15 @@ public class Mine : IEnemie, IDrawObject, IColisionObject, IcanBeHurt
             Explosiontimer = 0;
             blinkSpeed = 0.1f;
         }
+        var mouse = DrawSystem.DrawSystem.ScreenToWorldcord(mouseState.Position);
+        if ( (mouse - Position).Length < 200)
+        {
+            mouseHover = true;
+        }
+        else
+        {
+            mouseHover = false;
+        }
 
       
         
@@ -124,6 +135,11 @@ public class Mine : IEnemie, IDrawObject, IColisionObject, IcanBeHurt
 
     public void Draw(List<View> surface)
     {
+        PercentageBar.DrawBar(  surface[1], Position + new Vector2(0,100),  new Vector2(200,50), 1,  Color4.DarkRed, true );
+        if (mouseHover){
+           
+            TextRenderer.Write( "1/1",Position + new Vector2(0, 150), new Vector2( 50,50), surface[1], Color4.White, true);
+        }
         texture.setAtlasIndex(1, ligth? 1 : 2);
         texture.drawInfo.Position = Position;
         texture.drawInfo.Rotation = Rotation;

@@ -1,83 +1,17 @@
-using System.ComponentModel;
 using App.Engine;
-using App.Engine.Template;
 using Engine.graphics.Template;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using RadarGame.Entities.Weapons;
 using RadarGame.Physics;
 
-namespace RadarGame.Entities.Weapons;
+namespace RadarGame.Entities.Enemys;
 
-public class Canon : Weapon
+public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisionObject
 {
-    private IPhysicsObject trackingObject;
-    private Spaceship spaceship; 
-    private float rotation = 0;
-    private Vector2 direction;
-    
-    
-    public Canon()
-    {
-        Damage = 100;
-        cooldown = 0.5f;
-        energyCost = 20;
-        Name = "Canon";
-        Description = "Canon";
-        state = Weponstate.ready;
-        icon = new TexturedRectangle(Vector2.Zero, new Vector2(50, 50), new Texture("resources/Canon/canonBullet.png"), "Canon", true);
-    }
-
-    public override void fire()
-    {
-        base.fire();
-        if (state == Weponstate.fiering)
-        {
-            Console.WriteLine("fire Canon");
-            ((PlayerObject)  trackingObject).spaceship.shoot(); 
-            state = Weponstate.coolingdown;
-            Console.WriteLine( spaceship.canonRotation);
-          
-            //rotate offset
-            direction.Normalize();
-           var  offset =  direction * 100;
-            
-            
-            Bullet b = new Bullet(trackingObject.Position + offset ,  direction , this);
-            EntityManager.AddObject(b);
-            Vector2 position =trackingObject.Position;
-            Console.WriteLine("Position " + position);
-             
-        }
-    }
-
-    public override void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
-    {
-      
-        base.Update(args, keyboardState, mouseState); 
-        if (trackingObject == null)
-        {
-            trackingObject= (IPhysicsObject) EntityManager.GetObject("Player");
-            spaceship = ((PlayerObject) trackingObject).spaceship;
-        }else
-        {
-           var s = DrawSystem.DrawSystem.ScreenToWorldcord(mouseState.Position, 1);
-                  direction = s - trackingObject.Position;
-            
-        }
-       
-        
-        
-    }
-    
-    
-    
-}
-
-public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisionObject, Ifriendly
-{
-    private static Random _random = new Random();
-    
+    private static int id = 0;
+    private  bool exploding = false;
     private float bullettimer = 0;
     private float animationtimer = 0;
     private static TextureAtlasRectangle _bulletTexture = new TextureAtlasRectangle(Vector2.Zero, new Vector2(50,50), new Vector2(4, 1),   new Texture("resources/Canon/canonBullet.png" ), "canonBullet.png");
@@ -87,7 +21,7 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
     {
         if (! (colidedObject is PlayerObject))
         {
-         _state = Bulletstate.exploding;
+         _state = Weapons.Bullet.Bulletstate.exploding;
         }
        
     }
@@ -101,19 +35,20 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
     
     private float _explosionRadius = 500;
     private int _damage = 100;
-    private Bulletstate _state = Bulletstate.fiering;
+    private Weapons.Bullet.Bulletstate _state = Weapons.Bullet.Bulletstate.fiering;
     public enum Bulletstate
     {
-       
         fiering,
         exploding
     }
-    private Canon Parent;
+    private int size;
 
-    public Bullet(Vector2 position, Vector2 direction,Canon Parent, string name = "Bullet")
+    public Bullet(Vector2 position, Vector2 direction, int size,int damage, int explosionradous, string name = "BulletEnemei" )
     {
-        this.Parent = Parent;
-        Name = name + _random.Next(0, 10000);
+        _explosionRadius =  explosionradous;
+        this.size = size;
+        _damage = damage;
+        Name = name + id++;
         Position = position;
         Rotation =   MathF.Atan2(direction.Y, direction.X);
         Vector2 acceleration = direction;
@@ -130,19 +65,21 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
         };
         
         Static = false;
+        
         CollisonShape = new List<Vector2>
         {
-            new Vector2(-10, -15),
-            new Vector2(10, -15),
-            new Vector2(10, 15),
-            new Vector2(-10, 15)
+            new Vector2(-size/2, -size/2),
+            new Vector2(size/2, -size/2),
+            new Vector2(size/2, size/2),
+            new Vector2(-size/2, size/2)
         };
+        
     }
     
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
       
-         if (_state == Bulletstate.exploding)
+         if (_state == Weapons.Bullet.Bulletstate.exploding)
          {
                 AnimatedExposion.newExplosion(Position, _explosionRadius);
                var t =ColisionSystem.getinRadius( Position, _explosionRadius/2);
@@ -152,11 +89,8 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
                    {
                        //apply damage distance based
                        int damage = (int) (_damage - Math.Clamp( _damage* (Position - v.Position).Length /_explosionRadius,0,_damage)) ;
-                       if( ((IcanBeHurt) v).applyDamage(damage))
-                       { 
-                          Parent.setScore();
-                           Parent.manager.addEnergy(10);
-                       }
+                       ((IcanBeHurt)v).applyDamage(damage);
+
                    }
                }
                 EntityManager.RemoveObject(this);
@@ -180,6 +114,7 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
 
     public void Draw(List<View> surface)
     {
+        _bulletTexture.drawInfo.Size = new Vector2(size,size);
         _bulletTexture.drawInfo.Position = Position;
         _bulletTexture.drawInfo.Rotation = Rotation + MathF.PI / 2;
         _bulletTexture.setAtlasIndex( ( int ) (animationtimer*10) %4  ,0);
@@ -190,7 +125,7 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
     {
         if (bullettimer > 1)
         {
-            _state = Bulletstate.exploding;
+            _state = Weapons.Bullet.Bulletstate.exploding;
             return true;
         }
         

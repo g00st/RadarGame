@@ -19,7 +19,7 @@ public class TextRenderer
         
     );
     
-    public static void Write(string text, OpenTK.Mathematics.Vector2 position, OpenTK.Mathematics.Vector2 size,  View surface,Color4 color )
+    public static void Write(string text, OpenTK.Mathematics.Vector2 position, OpenTK.Mathematics.Vector2 size,  View surface,Color4 color , bool centered = false)
     {
         for (int i = 0; i < text.Length; i++)
         {
@@ -28,11 +28,19 @@ public class TextRenderer
             
             _texturedRectangle.setAtlasIndex(ch % 8, 11-ch / 8);
             _texturedRectangle.drawInfo.mesh.Shader.setUniform4v("color", color.R,color.G,color.B,color.A);
-            _texturedRectangle.drawInfo.Position = position + new OpenTK.Mathematics.Vector2(i * size.X, 0);
+            if (centered)
+            {
+                _texturedRectangle.drawInfo.Position = position + new OpenTK.Mathematics.Vector2(i * size.X,  0)- new OpenTK.Mathematics.Vector2(text.Length * size.X / 2 -size.X / 2, 0);
+            }
+            else
+            {
+                _texturedRectangle.drawInfo.Position = position + new OpenTK.Mathematics.Vector2(i * size.X, 0);
+            }
             _texturedRectangle.drawInfo.Size = size;
             _texturedRectangle.drawInfo.Rotation = 0;
             surface.Draw(_texturedRectangle);
         }
+        
     }
     
 }

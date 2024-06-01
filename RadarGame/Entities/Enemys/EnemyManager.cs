@@ -14,6 +14,7 @@ public class EnemyManager: IEntitie
         typeof(Mine),
         typeof(Mine),
         typeof(Mine),
+        typeof(Turret)        
     };
     private View view;
     private Camera camera;
@@ -24,6 +25,7 @@ public class EnemyManager: IEntitie
     private int MaxEnemyCount { get; set; }
     private float SpawnRate { get; set; }
     private float SpawnTimer { get; set; }
+    private float difficultytimer { get; set; } = 0;
     private List<IEnemie> Enemies = new List<IEnemie>();
      Random random = new Random();
     public string Name { get; set; }
@@ -37,12 +39,20 @@ public class EnemyManager: IEntitie
         InviewSize = view.vsize;
         InviewPosition = view.vpossition;
         OutviewSize = view.vsize * 1.5f;
-        MaxEnemyCount = 100;
+        MaxEnemyCount = 20;
         SpawnRate = 0.5f;
     }
 
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
+        difficultytimer += (float)args.Time;
+        if (difficultytimer > 20)
+        {
+            difficultytimer = 0;
+            MaxEnemyCount += 2;
+        }
+       
+        
         
         if (camera == null)
         {
@@ -50,9 +60,8 @@ public class EnemyManager: IEntitie
         }else
         {
             OutviewSize = camera.getMaxsize() *2;
+            InviewSize = camera.getMaxsize();
         }
-        
-        InviewSize = view.vsize;
         InviewPosition = view.vpossition;
         // Check if we need to spawn a new enemy
         SpawnTimer += (float)args.Time;
@@ -124,7 +133,7 @@ public class EnemyManager: IEntitie
             (float)(InviewSize.X / 2 * Math.Cos(angle)),
             (float)(InviewSize.Y / 2 * Math.Sin(angle))
         );
-        var offset = new Vector2((float)(((float)(random.NextDouble()) * 200 + 100) * Math.Cos(angle)),
+        var offset = new Vector2((float) (100* Math.Cos(angle)),
             (float)(100 * Math.Sin(angle)));
         position += offset;
         position += InviewPosition;

@@ -91,7 +91,7 @@ public class Missile : IEntitie, IDrawObject, IPhysicsObject, IColisionObject , 
         {
             Velocity = vel,
             Mass = 2f,
-            Drag = 0.01f,
+            Drag = 0.001f,
             Acceleration = new Vector2(0f, 0f),
             AngularAcceleration = 0f,
             AngularVelocity = 0f
@@ -115,22 +115,15 @@ public class Missile : IEntitie, IDrawObject, IPhysicsObject, IColisionObject , 
         Vector2 targetDirection = worldcords - Position;
         targetDirection.Normalize();
 
-        Vector2 missileDirection = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
-        missileDirection.Normalize();
-
-        // Calculate the rotation rate using the dot product of the target and missile directions
-        float rotationRate = Vector2.Dot(targetDirection, missileDirection);
-
-        // Apply a force in the direction the missile is currently facing
+        // Apply a force in the direction of the target
+        // Adjust the multiplier as needed
         Vector2 force = new Vector2(0, 2000);
-        // Apply an angular force based on the rotation rate
-        float angularForce = rotationRate * 10;
 
         PhysicsSystem.ApllyForceRotated(this, force);
-        PhysicsSystem.ApplyAngularForce(this, -angularForce);
+        this.Rotation = (float)Math.Atan2(targetDirection.Y,targetDirection.X) - (float)Math.PI/2;
         this.PhysicsData = this.PhysicsData with
         {
-            AngularVelocity = Math.Clamp(this.PhysicsData.AngularVelocity, -1f, 1f)
+            AngularVelocity = Math.Clamp(this.PhysicsData.AngularVelocity, -0.5f, 0.5f)
         };
 
 

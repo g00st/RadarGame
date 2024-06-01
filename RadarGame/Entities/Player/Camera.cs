@@ -14,7 +14,7 @@ public class Camera : IEntitie, IDrawObject
     private Vector2 _position = new Vector2(0, 0);
     private Vector2 _baseSize = new Vector2(1920, 1080)* 0.5f;
     private Vector2 _size = new Vector2(1920, 1080) ;
-    private float _maxZoom = 50;
+    private float _maxZoom = 30;
     private float _minZoom = 10f;
     private Vector2 _shake = Vector2.Zero;
     private float _shakeActive = 0;

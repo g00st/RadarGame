@@ -62,7 +62,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         {
             Velocity = new Vector2(0, 0),
             Mass = 5f,
-            Drag = 0.01f,
+            Drag = 0.02f,
             Acceleration = new Vector2(0f, 0f),
             AngularAcceleration = 0f,
             AngularVelocity = 0f
@@ -81,7 +81,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
-      
+        this.PhysicsData = this.PhysicsData with { AngularVelocity = Math.Clamp(this.PhysicsData.AngularVelocity, -5f, 5f) };
        
         spaceship.Update(Position, Rotation, args);
         var t=  DrawSystem.DrawSystem.ScreenToWorldcord(mouseState.Position);
@@ -116,11 +116,11 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         }
         if (keyboardState.IsKeyDown(Keys.E))
         {
-            torque -= 3f;
+            torque -= 10f;
         }
         if (keyboardState.IsKeyDown(Keys.Q))
         {
-            torque += 3f;
+            torque += 10f;
         }
         if (keyboardState.IsKeyDown(Keys.LeftShift))
         {
@@ -129,7 +129,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
        
         
         spaceship.Accelerate(force);
-        spaceship.Rotate(torque);
+        spaceship.Rotate(torque*0.5F);
         PhysicsSystem.ApplyAngularForce( this, torque);
         Vector2 rotatedForce = new Vector2(
             force.X * (float)Math.Cos(Rotation) - force.Y * (float)Math.Sin(Rotation),

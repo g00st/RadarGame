@@ -35,6 +35,9 @@ public class Machineguns : Weapon , IDrawObject
     base.fire();
     if (state == Weponstate.fiering)
     {
+       
+        
+        
         Console.WriteLine("fire Machineguns");
         state = Weponstate.coolingdown;
         Vector2 direction = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
@@ -51,7 +54,6 @@ public class Machineguns : Weapon , IDrawObject
 
         // Add the offset to the position
         Vector2 position = Position + offset;
-
         bullets.Add(new Vector4(position.X, position.Y, direction.X, direction.Y));
         Console.WriteLine("Position " + position);
     }
@@ -93,7 +95,7 @@ public class Machineguns : Weapon , IDrawObject
                 }
                 bullets.RemoveAt(i);
             }
-            if (Vector2.Distance(Position, bullet.Xy) > 5000)
+            else if(Vector2.Distance(Position, bullet.Xy) > 5000)
             {
                 bullets.RemoveAt(i);
             }
