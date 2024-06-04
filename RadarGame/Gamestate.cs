@@ -1,6 +1,7 @@
 using App.Engine;
 using OpenTK.Mathematics;
 using RadarGame.Entities;
+using RadarGame.Entities.Enemys;
 using RadarGame.Physics;
 
 namespace RadarGame;
@@ -34,20 +35,24 @@ public class Gamestate
         switch (neState)
         {
             case State.MainMenu:
+                foreach (var entity in currentEntities)
+                {
+                    entity.onDeleted();
+                }
                EntityManager.ClearObjects();
                EntityManager.AddObject(new StartScreen());
                 //TODO: Entities.EntityManager.AddObject( Startscreen elementens);
                 break;
             case State.Game:
                 if (CurrState == State.MainMenu )
-                {
-                    EntityManager.DeleteObject( EntityManager.GetObject("Startscreen"));
+                {  EntityManager.ClearObjects();
                     EntityManager.AddObject(new cursor());
                     EntityManager.AddObject(new PlayerObject( Vector2.Zero, 0f, "Player"));
                     EntityManager.AddObject(new CompasPanel( DrawSystem.DrawSystem.getViewSize(2) - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
                     EntityManager.AddObject(new Pauser());
                     EntityManager.AddObject(new Score(0, new Vector2(100,100), new Vector2(30,30)));
                     EntityManager.AddObject(new Mapp( new Vector2(50000,50000), Vector2.Zero));
+                    EntityManager.AddObject(new EnemyManager());
                     
                     
                 }

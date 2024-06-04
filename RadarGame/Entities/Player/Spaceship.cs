@@ -61,7 +61,7 @@ public class Spaceship : IDisposable
     private bool Fast = false;
     private int atlsindext = 0;
     private int atlsindexc = 3;
-    private float canonRotation = 0;
+    public float canonRotation = 0;
     
     
     private bool shootbool = false;
@@ -189,7 +189,7 @@ public class Spaceship : IDisposable
         AccelerationR = force.X > 0;
         AccelerationL = force.X < 0;
         AccelerationF = force.Y > 0;
-        Fast = force.Y > 100;
+        Fast = force.Y > 300;
         
         AccelerationB = force.Y < 0;
       
@@ -208,6 +208,7 @@ public class Spaceship : IDisposable
     
     public void setCanonRotation(float rotation)
     {
+        canonRotation = rotation;
         Canon.drawInfo.Rotation = rotation;
     }
     public void shoot()

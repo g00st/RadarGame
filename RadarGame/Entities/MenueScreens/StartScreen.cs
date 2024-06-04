@@ -38,7 +38,7 @@ public class StartScreen : IDrawObject ,IEntitie
         surface[2].Draw(Background);
         StartButton.Draw(surface);
         
-        TextRenderer.Write("00000 abcdefg Hello 123" + counter, new Vector2(100, 100), new Vector2(30, 30), surface[2], Color4.White);
+        TextRenderer.Write("00000 abcdefgABCDEFG Hello 123" + counter, new Vector2(100, 100), new Vector2(30, 30), surface[2], Color4.White);
     } 
 
     public string Name { get; set; }

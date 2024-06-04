@@ -84,6 +84,7 @@ public class Shader : IDisposable
        
         if (currentShader != this) GL.UseProgram(_Handle);
         currentShader = this;
+        ErrorChecker.CheckForGLErrors("Shader Bind");
     } 
     public void Unbind (){GL.UseProgram(0);}
 
@@ -92,26 +93,43 @@ public class Shader : IDisposable
     public void setUniform1i(string name,int v1)
     {
         GL.Uniform1( GL.GetUniformLocation(_Handle, name),v1);
+        ErrorChecker.CheckForGLErrors("Shader Bind");
     }
     public void setUniform1v(string name,float v1)
     {
         GL.Uniform1( GL.GetUniformLocation(_Handle, name),v1);
+        ErrorChecker.CheckForGLErrors("Shader Bind");
     }
 
     public void setUniformV2f(string name, Vector2 v2)
     {
         GL.Uniform2( GL.GetUniformLocation(_Handle, name),v2);
+        ErrorChecker.CheckForGLErrors("Shader Bind");
     }   
     
     public void setUniformM4(string name,Matrix4 v1)
     {
       
         GL.UniformMatrix4( GL.GetUniformLocation(_Handle, name),false,ref v1);
+        ErrorChecker.CheckForGLErrors("Shader Bind");
     }   
     
     public void setUniform4v(string name,float v1,float v2,float v3,float v4)
     {
         GL.Uniform4( GL.GetUniformLocation(_Handle, name),v1,v2,v3,v4);
+        ErrorChecker.CheckForGLErrors("Shader Bind");
+    }
+    
+    public void setuniform2vArray(string name, Vector2[] v2)
+    {
+        float[] data = new float[v2.Length * 2];
+        for (int i = 0; i < v2.Length; i++)
+        {
+            data[i * 2] = v2[i].X;
+            data[i * 2 + 1] = v2[i].Y;
+        }
+        GL.Uniform2(GL.GetUniformLocation(_Handle, name), v2.Length, data);
+        ErrorChecker.CheckForGLErrors("Shader Bind");
     }
 
     public void Dispose()

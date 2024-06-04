@@ -22,15 +22,20 @@ namespace RadarGame.UiSystem
             currentscore = newscore;
         }
 
-        public static void addHighscore(int newscore)
+       public static void addHighscore(int newscore)
         {
-            for(int i = 0; i < highscore.Length; i++)
-            {
-                if(highscore[i] <= newscore)
-                {
-                    highscore[i] = newscore;
-                }
-            }
+    
+             int minScoreIndex = Array.IndexOf(highscore, highscore.Min());
+
+   
+           if (newscore > highscore[minScoreIndex])
+           {
+               highscore[minScoreIndex] = newscore;
+           }
+
+   
+             Array.Sort(highscore);
+             Array.Reverse(highscore);
         }
 
         public static int[] getHighscore()

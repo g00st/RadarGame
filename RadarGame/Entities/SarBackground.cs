@@ -38,7 +38,8 @@ public class SarBackground :IEntitie, IDrawObject
 
     public void onDeleted()
     {
-        throw new NotImplementedException();
+        shader.Dispose();
+        background.Dispose();
     }
 
     public void Draw(List<View> surface)

@@ -149,6 +149,12 @@ public static class EntityManager
         ImGuiNET.ImGui.Text("toDelete: " + _toDelete.Count);
         ImGuiNET.ImGui.Text("toRemove: " + _toRemove.Count);
         ImGuiNET.ImGui.Text("toAdd: " + _toAdd.Count);
+        
+        //mak loop for all objects
+        foreach (var gameObject in GameObjects)
+        {
+            ImGuiNET.ImGui.Text(gameObject.Name);
+        }
         ImGuiNET.ImGui.End();
       
     }

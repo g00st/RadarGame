@@ -184,6 +184,46 @@ public static class ColisionSystem
             return s * MathF.Sqrt(d);
         
     }
+    
+    public static  List<IColisionObject> getinRadius(Vector2 point, float radius, bool onStatic = false, bool onDynamic = true)
+    {
+        List<IColisionObject> result = new List<IColisionObject>();
+        if (onDynamic)
+        {
+            foreach (var ob in _colisionData)
+            {
+                if (Vector2.Distance(point, ob.O.Position) < ob.Distance + radius)
+                {
+                    if (fastSDF(point, ob) < radius)
+                    {
+                        if (exacktSDF(point, ob) < radius)
+                        {
+                            result.Add(ob.O);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (onStatic)
+        {
+            foreach (var ob in _staticObjects)
+            {
+                if (Vector2.Distance(point, ob.O.Position) < ob.Distance + radius)
+                {
+                    if (fastSDF(point, ob) < radius)
+                    {
+                        if (exacktSDF(point, ob) < radius)
+                        {
+                            result.Add(ob.O);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 
 
     public static IColisionObject getNearest(Vector2 point, out float dist)

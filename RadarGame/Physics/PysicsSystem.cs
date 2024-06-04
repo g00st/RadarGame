@@ -72,6 +72,16 @@ public  static class PhysicsSystem
     {
         physicsObject.PhysicsData = physicsObject.PhysicsData with {Acceleration = physicsObject.PhysicsData.Acceleration + force / physicsObject.PhysicsData.Mass};
     }
+    
+    public static void ApllyForceRotated(IPhysicsObject physicsObject, Vector2 force)
+    {
+        var rotation = physicsObject.Rotation;
+        Vector2 rotatedForce = new Vector2(
+            force.X * (float)Math.Cos(rotation) - force.Y * (float)Math.Sin(rotation),
+            force.X * (float)Math.Sin(rotation) + force.Y * (float)Math.Cos(rotation)
+        );
+        ApplyForce(physicsObject, rotatedForce);
+    }
 
     public static void ApplyAngularForce(IPhysicsObject physicsObject, float torque)
     {

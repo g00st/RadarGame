@@ -8,7 +8,7 @@ using RadarGame.Physics;
 
 namespace RadarGame.Entities;
 
-public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject
+public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject , IcanBeHurt
 {
     //--------------------------------------------------------------------------------
     // THis is a simple game object that can be used to test the Project and Systems
@@ -49,7 +49,12 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     }
     private Polygon DebugPolygon = Polygon.Circle( new Vector2(0, 0), 50, 100,new SimpleColorShader(Color4.Ivory), "SDF", true);
     
-
+    public bool applyDamage(int damage)
+    {
+        Console.WriteLine("Apply Damage");
+        EntityManager.RemoveObject(this);
+        return true;
+    }
     public bool Static { get; set; }
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
@@ -133,7 +138,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
 
     public void onDeleted()
     {
-        Console.WriteLine("Deleted");
+       //  Console.WriteLine("Deleted");
         DebugColoredRectangle.Dispose();
     }
 
