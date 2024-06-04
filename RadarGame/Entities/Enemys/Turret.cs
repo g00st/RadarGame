@@ -103,8 +103,7 @@ public class Turret : IEnemie, IDrawObject, IColisionObject, IcanBeHurt
 
     public void onDeleted()
     {
-        texture.Dispose();
-        distance.Dispose();
+
     }
 
     public EnemyManager EnemyManager { get; set; }
