@@ -123,7 +123,7 @@ public class Mine : IEnemie, IDrawObject, IColisionObject, IcanBeHurt
 
     public void onDeleted()
     {
-       
+        texture.Dispose();
     }
 
     public EnemyManager EnemyManager { get; set; }

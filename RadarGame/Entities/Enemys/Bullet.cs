@@ -109,7 +109,7 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
 
     public void onDeleted()
     {
-       // throw new NotImplementedException();
+        _bulletTexture.Dispose();
     }
 
     public void Draw(List<View> surface)
