@@ -261,7 +261,7 @@ public static class ColisionSystem
         return nearest; 
     }
     
-    public static IColisionObject? castRay(Vector2 start, Vector2 end)
+    public static IColisionObject? castRay(Vector2 start, Vector2 end, IColisionObject ignoreObject)
     {
         IColisionObject? nearest = null;
         float min = float.MaxValue;
@@ -283,7 +283,7 @@ public static class ColisionSystem
                 if (distance < min)
                 {
                     distance = exacktSDF(start, ob);
-                    if (distance < min)
+                    if (distance < min && nearest != ignoreObject) // CHECK IF BROKEN
                     {
                         min = distance;
                         nearest = ob.O;
@@ -306,7 +306,7 @@ public static class ColisionSystem
                 if (distance < min)
                 {
                     distance = exacktSDF(start, ob);
-                    if (distance < min)
+                    if (distance < min && nearest != ignoreObject)   // CHECK IF BROKEN
                     {
                         min = distance;
                         nearest = ob.O;
