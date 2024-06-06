@@ -31,6 +31,10 @@ namespace RadarGame.Entities.Enemys
         public bool Static { get ; set ; }
         private bool isDead = false;
         private bool isInRange = false;
+        private Vector2 visionRangeMin;
+        private Vector2 visionRangeMax;
+        private float visionThreshold = 50f;  // maybe change
+        private int direction = 0;
 
         //fake, stolen from Mine
         private static TextureAtlasRectangle texture = new TextureAtlasRectangle(new Vector2(0, 0), new Vector2(100, 100), new Vector2(1, 2), new Texture("resources/Enemies/Mine.png"), "Mine");
@@ -41,6 +45,8 @@ namespace RadarGame.Entities.Enemys
             EnemyManager = enemyManager;
             Name = "Searcher" + id++;
             Static = false;
+            visionRangeMin = new Vector2(0f, 1f);   // CHECK IF REALISTIC
+            visionRangeMax = new Vector2(0f, visionThreshold);
             PlayerObject target = (PlayerObject)EntityManager.GetObject("Player");
 
             PhysicsData = new PhysicsDataS
@@ -126,9 +132,40 @@ namespace RadarGame.Entities.Enemys
 
         private void Behaviour()
         {
-            // think about it later
+            Vector2 randomDirection = new Vector2(0, 0);
+
             // should check if player is in range and then engage
+            if ((Vector2.Distance(target.Position, Position)) > visionThreshold) 
+            {
+                //spieler ist in vision, do move towards
+                Movement(target.Position);
+            } else
+            {
+
+                //check with raycast for asteroid infront
+                IColisionObject? ifStuff = ColisionSystem.castRay(visionRangeMin, visionRangeMax, this);
+                if (ifStuff != null)
+                {
+                    // asteroid is in raycast, avoid
+
+                    randomDirection = new Vector2(1, -1); // noch nich fest, aber das is die richtung
+                    
+                } else
+                {
+                    // asteroid is not in raycast, move
+                    randomDirection = new Vector2(0, 1); // noch nich fest, aber das is die richtung
+                }
+
+                Movement(randomDirection);
+                
+            }
             return;
+        }
+
+        private void Movement(Vector2 inputMovement)
+        {
+            // WEEEE
+
         }
     }
 }

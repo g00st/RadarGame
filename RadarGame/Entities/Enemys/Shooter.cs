@@ -133,6 +133,16 @@ namespace RadarGame.Entities.Enemys
             //if in range it should try to shoot the target
             return;
         }
+
+        private void Movement(Vector2 input)
+        {
+            // WEEE
+        }
+
+        private void shoot()
+        {
+            // pew pew
+        }
     }
 
 }
