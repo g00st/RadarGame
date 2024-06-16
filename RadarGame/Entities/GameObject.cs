@@ -25,7 +25,7 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
         {
             //Todo: Add sound effect Kaboom 
          //   Console.WriteLine("Colision with " + colidedObject);
-            SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
+            //SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
             EntityManager.RemoveObject((IEntitie)colidedObject);
             EntityManager.RemoveObject(this);
         }

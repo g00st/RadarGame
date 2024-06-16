@@ -9,7 +9,7 @@ using RadarGame.Entities;
 using RadarGame.DrawSystem;
 using RadarGame.Physics;
 
-using RadarGame.SoundSystem;
+//using RadarGame.SoundSystem;
 
 namespace RadarGame;
 
@@ -52,7 +52,7 @@ public class App : EngineWindow
         Gamestate.CurrState = Gamestate.State.MainMenu;
 
         // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
-        SoundSystem.SinusWave.SetUpSound(); // once per start
+        //SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
         DrawSystem.DrawSystem.Init( MainView,3);
@@ -103,7 +103,7 @@ public class App : EngineWindow
         _ColisionTimeList[_ColisionTimeListIndex] = (float)_ColisionTime ;
         _ColisionTimeListIndex = (_ColisionTimeListIndex + 1) % _ColisionTimeList.Length;
         _stopwatch.Restart();
-        SoundSystem.SoundSystem.Update(args, KeyboardState);
+        //SoundSystem.SoundSystem.Update(args, KeyboardState);
 
 
     }
@@ -147,7 +147,7 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("LautSt�rke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautSt�rke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
-        SoundSystem.SoundSystem.DebugDraw();
+       // SoundSystem.SoundSystem.DebugDraw();
         EntityManager.DebugDraw();
         DrawSystem.DrawSystem.DebugDraw();
     }
@@ -155,7 +155,7 @@ public class App : EngineWindow
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
         base.OnClosing(e);
-        SoundSystem.SinusWave.CleanUp();
+        //SoundSystem.SinusWave.CleanUp();
     }
     
     

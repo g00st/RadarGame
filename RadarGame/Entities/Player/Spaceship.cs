@@ -216,7 +216,7 @@ public class Spaceship : IDisposable
         if (shootbool) return;
         shootbool = true;
         atlsindexc = 4;
-        SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
+       //SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
     }
 
     public void Draw(View surface)

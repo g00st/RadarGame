@@ -36,7 +36,7 @@ public class cursor: IEntitie , IDrawObject
            distance.drawInfo.Size = new OpenTK.Mathematics.Vector2(xx);
            start = x;
            end = x + new Vector2(1000, 0);
-
+        /*
            if (ColisionSystem.castRay(start, end) == null)
                                              {
                                                  _shader.setColor(Color4.Blue);
@@ -45,7 +45,7 @@ public class cursor: IEntitie , IDrawObject
                                              {
                                                  _shader.setColor(Color4.Green);
                                              }
-       
+       */
     }
 
     public void onDeleted()
