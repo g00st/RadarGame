@@ -27,26 +27,21 @@ namespace RadarGame.Entities
                 new Texture("resources/Buttons/startbutton_OnHover.png"),
                 new Texture("resources/Buttons/startbutton_On.png")
             );
-
             Name = "Startscreen";
-
-            _target = DrawSystem.DrawSystem.GetView(0);
-            var target2 = DrawSystem.DrawSystem.GetView(1);
-
-            var size = (int)(Math.Sqrt(_target.vsize.X * _target.vsize.X + _target.vsize.Y * _target.vsize.Y) * 0.5f);
-            Texture texture = new Texture(_target.Width, _target.Height);
+            _target = DrawSystem.DrawSystem.GetView(2);
             _shader = new Shader("resources/Background/star_bg.vert", "resources/Background/star_bg.frag");
-            Background = new TexturedRectangle(Vector2.Zero, new Vector2(_target.Width, _target.Height), null, _shader, true);
+            Background = new TexturedRectangle(Vector2.Zero, new Vector2(_target.vsize.X, _target.vsize.Y), null, _shader, true);
         }
 
         public void Draw(List<View> surface)
-        {
+        { 
+            Background.drawInfo.Position = new Vector2(surface[2].vsize.X/2, surface[2].vsize.Y/2);
+            Background.drawInfo.Size = new Vector2(surface[2].vsize.X, surface[2].vsize.Y); // Ensure the size matches the surface
             _shader.Bind();
-            _shader.setUniformV2f("iResolution", new Vector2(surface[0].Width, surface[0].Height));
-            _shader.setUniform1v("iTime", _time);
-            Background.drawInfo.Position = new Vector2(surface[0].Width / 2, surface[0].Height / 2);
-            Background.drawInfo.Size = new Vector2(surface[0].Width, surface[0].Height); // Ensure the size matches the surface
-            surface[0].Draw(Background);
+            _shader.setUniformV2f("iResolution", new Vector2(surface[2].vsize.X, surface[2].vsize.Y));
+            _shader.setUniform1v("iTime", _time); 
+            
+            surface[2].Draw(Background);
             _shader.Unbind();
 
             StartButton.Draw(surface);
