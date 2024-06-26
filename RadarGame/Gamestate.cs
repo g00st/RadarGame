@@ -46,7 +46,7 @@ namespace RadarGame
                     if (CurrState == State.MainMenu)
                     {
                         EntityManager.ClearObjects();
-                        EntityManager.AddObject(new cursor());
+                        // EntityManager.AddObject(new cursor());
                         EntityManager.AddObject(new PlayerObject(Vector2.Zero, 0f, "Player"));
                         EntityManager.AddObject(new CompasPanel(DrawSystem.DrawSystem.getViewSize(2) - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
                         EntityManager.AddObject(new Pauser());
