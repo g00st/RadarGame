@@ -35,7 +35,7 @@ public class Weaponmanager: IEntitie ,IDrawObject
         weapons.Add(new Machineguns());
         weapons.Add(new Canon());
         weapons.Add(new GuidedMissile());
-        currentWeapon = weapons[0];
+        currentWeapon = weapons[1];
         weapons[2].cooldown = 1f;
 
         foreach (var w in weapons)
@@ -70,9 +70,9 @@ public class Weaponmanager: IEntitie ,IDrawObject
             energyRegenTimer = 0;
         }
         
-        for (int i = 0; i < weapons.Count; i++)
+        for (int i = 1; i < weapons.Count; i++)
         {
-            if (keyboardState.IsKeyDown(Keys.D1 + i))
+            if (keyboardState.IsKeyDown(Keys.D1 + i-1))
             {
                 currentWeapon = weapons[i];
             }

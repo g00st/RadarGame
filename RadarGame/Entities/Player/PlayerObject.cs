@@ -81,7 +81,7 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
     }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
-        this.PhysicsData = this.PhysicsData with { AngularVelocity = Math.Clamp(this.PhysicsData.AngularVelocity, -5f, 5f) };
+        this.PhysicsData = this.PhysicsData with { AngularVelocity = Math.Clamp(this.PhysicsData.AngularVelocity, -1f, 1f) };
        
         spaceship.Update(Position, Rotation, args);
         var t=  DrawSystem.DrawSystem.ScreenToWorldcord(mouseState.Position);
@@ -100,25 +100,25 @@ public class PlayerObject : IEntitie, IPhysicsObject, IDrawObject , IColisionObj
         
         if (keyboardState.IsKeyDown(Keys.W))
         {
-            force += new Vector2(0f, 200f);
+            force += new Vector2(0f, 500f);
         }
-        if (keyboardState.IsKeyDown(Keys.A))
+        if (keyboardState.IsKeyDown(Keys.Q))
         {
-           force += new Vector2(-200f, 0f);
+           force += new Vector2(-500f, 0f);
         }
         if (keyboardState.IsKeyDown(Keys.S))
         {
-            force += new Vector2(0f, -200f);
-        }
-        if (keyboardState.IsKeyDown(Keys.D))
-        {
-          force += new Vector2(200f, 0f);
+            force += new Vector2(0f, -500f);
         }
         if (keyboardState.IsKeyDown(Keys.E))
         {
+          force += new Vector2(500f, 0f);
+        }
+        if (keyboardState.IsKeyDown(Keys.D))
+        {
             torque -= 10f;
         }
-        if (keyboardState.IsKeyDown(Keys.Q))
+        if (keyboardState.IsKeyDown(Keys.A))
         {
             torque += 10f;
         }
