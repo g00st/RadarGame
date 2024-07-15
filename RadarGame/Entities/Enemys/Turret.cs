@@ -86,7 +86,7 @@ public class Turret : IEnemie, IDrawObject, IColisionObject, IcanBeHurt
                 fireTimer = 0;
                 direction.Normalize();
                 
-                EntityManager. AddObject(new Bullet(Position + direction*size.X, direction,50, 10, 100));
+                EntityManager.AddObject(new Bullet(Position + direction*size.X, direction,50, 10, 100));
             }
         }
         

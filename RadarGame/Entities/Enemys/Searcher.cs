@@ -36,6 +36,7 @@ namespace RadarGame.Entities.Enemys
         private float visionThreshold = 50f;  // maybe change
         private int direction = 0;
 
+        private float explosiondistance = 500;
         //fake, stolen from Mine
         private static TextureAtlasRectangle texture = new TextureAtlasRectangle(new Vector2(0, 0), new Vector2(100, 100), new Vector2(1, 2), new Texture("resources/Enemies/Mine.png"), "Mine");
 
@@ -119,7 +120,7 @@ namespace RadarGame.Entities.Enemys
         {
             if (IsDead()) return;
             isDead = true;
-            /* 
+          
          AnimatedExposion.newExplosion(Position, explosiondistance*2);
          foreach (var colisionObject in ColisionSystem.getinRadius( Position, explosiondistance, false,true))
          {
@@ -127,7 +128,7 @@ namespace RadarGame.Entities.Enemys
              {
                  ((IcanBeHurt)colisionObject).applyDamage( (int) (50f * (1 - (Position - colisionObject.Position).Length / explosiondistance)));
              }
-         } */
+         }
         }
 
         private void Behaviour()
