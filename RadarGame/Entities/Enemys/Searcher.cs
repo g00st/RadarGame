@@ -44,7 +44,7 @@ namespace RadarGame.Entities.Enemys
 
         private float explosiondistance = 500;
         //fake, stolen from Mine
-        private static TextureAtlasRectangle texture = new TextureAtlasRectangle(new Vector2(0, 0), new Vector2(100, 100), new Vector2(1, 2), new Texture("resources/Enemies/Mine.png"), "Mine");
+        private static TextureAtlasRectangle texture = new TextureAtlasRectangle(new Vector2(0, 0), new Vector2(100, 100), new Vector2(1, 2), new Texture("resources/Enemies/Searcher.png"), "Searcher");
 
         public Searcher(Vector2 position, EnemyManager enemyManager)
         {
@@ -131,7 +131,7 @@ namespace RadarGame.Entities.Enemys
             }
             texture.setAtlasIndex(1, ligth ? 1 : 2);
             texture.drawInfo.Position = Position;
-            texture.drawInfo.Rotation = Rotation;
+            texture.drawInfo.Rotation = Rotation - ((float)Math.PI) * 0.5f;
             surface[1].Draw(texture);
         }
 

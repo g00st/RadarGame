@@ -48,7 +48,7 @@ namespace RadarGame.Entities.Enemys
 
         //fake, stolen from Mine and Turret
         private static Polygon distance = Polygon.Circle(Vector2.Zero, 100, 100, new SimpleColorShader(Color4.Blue), "indicatorTurret", true);
-        private static TexturedRectangle texture = new TexturedRectangle(new Vector2(0, 0), new Vector2(100, 100), new Texture("resources/Enemies/Turret.png"), "Turret", true);
+        private static TexturedRectangle texture = new TexturedRectangle(new Vector2(0, 0), new Vector2(100, 100), new Texture("resources/Enemies/Shooter.png"), "Shooter", true);
         public Shooter(Vector2 position, EnemyManager enemyManager)
         {
             Position = position;

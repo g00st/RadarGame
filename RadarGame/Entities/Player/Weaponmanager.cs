@@ -21,7 +21,9 @@ public class Weaponmanager: IEntitie ,IDrawObject
     private TexturedRectangle IconframeBackground = new TexturedRectangle(  new Texture("resources/Player/IconBackground.png") , true);
      Vector2 iconSize = new Vector2(80,80);
     Vector2 iconPosition = new Vector2(1920/2 - 80*1.5f,100);
-   
+
+    private bool toggle = false;
+
     private float energyRegenRate = 2;
     private float energyRegenTimer = 0;
     public string Name { get; set; }
@@ -62,6 +64,14 @@ public class Weaponmanager: IEntitie ,IDrawObject
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
         energyRegenTimer += (float)args.Time;
+        if(toggle)
+        {
+            if (weapons[0].state == Weapon.Weponstate.ready && energy >= weapons[0].energyCost)
+            {
+                weapons[0].fire();
+                energy -= weapons[0].energyCost;
+            }
+        }
         if (energyRegenTimer >= energyRegenRate)
         {
             energy += energyRegen;
@@ -77,13 +87,9 @@ public class Weaponmanager: IEntitie ,IDrawObject
                 currentWeapon = weapons[i];
             }
         }
-        if (keyboardState.IsKeyDown( Keys.Space))
+        if (keyboardState.IsKeyReleased(Keys.Space))
         {
-            if (weapons[0].state == Weapon.Weponstate.ready && energy >= weapons[0].energyCost)
-            {
-                weapons[0].fire();
-                energy -= weapons[0].energyCost;
-            }
+            toggle = !toggle;
         }
        
         if (mouseState.IsButtonDown( MouseButton.Left))
