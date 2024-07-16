@@ -39,6 +39,9 @@ namespace RadarGame.Entities.Enemys
         private int maxHealth = 30;
         private float fireTimer = 0;
         float range = 3000;
+        private Vector2 visionRangeMin;
+        private Vector2 visionRangeMax;
+        private float visionThreshold = 50f;
 
         private Vector2 size = new Vector2(300, 200);
         private float explosiondistance = 500;
@@ -53,6 +56,8 @@ namespace RadarGame.Entities.Enemys
             Name = "Shooter" + id++;
             Static = false;
             PlayerObject target = (PlayerObject)EntityManager.GetObject("Player");
+            visionRangeMin = new Vector2(0f, 1f);   // CHECK IF REALISTIC
+            visionRangeMax = new Vector2(0f, visionThreshold);
 
             PhysicsData = new PhysicsDataS
             {
@@ -188,11 +193,11 @@ namespace RadarGame.Entities.Enemys
 
         private void Movement(Vector2 input, FrameEventArgs args)
         {
+
             // WEEE
             Vector2 direction = input - Position;
             direction.Normalize();
             direction = direction * (float)args.Time * 5000;
-            
             PhysicsSystem.ApplyForce(this, direction);
         }
 

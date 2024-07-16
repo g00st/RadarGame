@@ -12,9 +12,10 @@ public class EnemyManager: IEntitie
     private List<Type> EnemieTypes = new List<Type>()
     {
         typeof(Mine),
-        typeof(Shooter),
-        typeof(Shooter),
-        typeof(Mine)        
+        typeof(Mine),
+        typeof(Searcher),
+        typeof(Turret),
+        typeof(Shooter)        
     };
     private View view;
     private Camera camera;

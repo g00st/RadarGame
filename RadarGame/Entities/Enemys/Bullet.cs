@@ -123,7 +123,7 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
 
     public bool applyDamage(int damage)
     {
-        if (bullettimer > 1)
+        if (bullettimer > 0.05)
         {
             _state = Weapons.Bullet.Bulletstate.exploding;
             return true;
