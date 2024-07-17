@@ -88,8 +88,9 @@ public class Bullet : IEntitie, IPhysicsObject, IDrawObject, IcanBeHurt, IColisi
                    if( v is IcanBeHurt)
                    {
                        //apply damage distance based
-                       int damage = (int) (_damage - Math.Clamp( _damage* (Position - v.Position).Length /_explosionRadius,0,_damage)) ;
-                       ((IcanBeHurt)v).applyDamage(damage);
+                      // int damage = (int) (_damage - Math.Clamp( _damage* (Position - v.Position).Length /_explosionRadius,0,_damage)) ;
+                      
+                       ((IcanBeHurt)v).applyDamage(_damage);
 
                    }
                }
