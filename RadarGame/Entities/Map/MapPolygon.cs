@@ -1,19 +1,44 @@
+using System.Drawing;
 using App.Engine;
 using App.Engine.Template;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using RadarGame.Physics;
 
 
 namespace RadarGame.Entities;
 
-public class MapPolygon : IEntitie , IDrawObject
+public class MapPolygon : IEntitie , IDrawObject , IColisionObject
 {
     private Polygon _polygon;
+    public static Vector2 offset = new Vector2(0,0);
     private ColoredRectangle _debugColoredRectangle;
+    private float _rotation;
+    //private static Shader _shader = new SimpleColorShader(Color4.Gray);
+    private static Texture _texture = new Texture("resources/Map/moon.png");
+    private static Shader _shader = new Shader("resources/Template/simple_texture.vert", "resources/Map/Map.frag");
+    private static Random _random = new Random();
+    private float rand;
+    public List<Vector2> CollisonShape { get; set; }
+    public void OnColision(IColisionObject colidedObject)
+    {
+        return;
+    }
+
+    public bool Static { get; set; }
     public Vector2 Position { get; set; }
+
+    float IColisionObject.Rotation
+    {
+        get => _rotation;
+        set => _rotation = value;
+    }
+
     public Vector2 Rotation { get; set; }
+    public Vector2 Size { get; set; }
     public List<Vector2> Points { get; set; }
+    public List<Vector2> ShaderPoints { get; set; }
     public string Name { get; set; }
     public void Update(FrameEventArgs args, KeyboardState keyboardState, MouseState mouseState)
     {
@@ -22,40 +47,80 @@ public class MapPolygon : IEntitie , IDrawObject
 
     public void onDeleted()
     {
-        return;
+        //_polygon.Dispose();
     }
 
-    public MapPolygon(List<Vector2> points  , Vector2 position, Vector2 rotation, string name)
+    public MapPolygon(List<Vector2> points  , Vector2 position, Vector2 rotation, Vector2 Size ,string name)
     {
         Points = points;
         Position = position;
         Rotation = rotation;
         Name = name;
-        _polygon = new Polygon(points, new SimpleColorShader(Color4.Red), Position, new Vector2(1)  , 0, lines:true);
-        _debugColoredRectangle = new ColoredRectangle(
+        _polygon = new Polygon(points, _shader, Position, Size , 0,name +"poly", lines:false);
+        _polygon.drawInfo.mesh.Texture = _texture;
+        rand = (float)_random.NextDouble();
+        
+     /*   _debugColoredRectangle = new ColoredRectangle(
             Position,
             new Vector2(10, 10),
             Color4.Aqua,
-            Name,
+            Name +"Center",
             true
         );
+        */
+        //scale to size
+        
+        //shaderpoints is Points + 1,1 
+        ShaderPoints =  new List<Vector2>(points.ConvertAll( x => x + new Vector2(1,1)));
+        
+        
+        
+        CollisonShape = new List<Vector2>(points);
+        for (int i = 0; i < CollisonShape.Count; i++)
+        {
+            CollisonShape[i] *= Size;
+        }
+        Static = true;
     }
     
-    public static MapPolygon CreateRandomPolygon(Vector2 center, Vector2 maxwidth, Vector2 minwidth, int pointCount, string name, Random random)
+    public static MapPolygon CreateRandomPolygon(Vector2 center, Vector2 maxwidth, float minradius, int pointCount, string name , Random random)
     {
-       
+        List<Vector2> points = GenerateRandomConvexPolygon(new Vector2(1,1), pointCount, random);
+        
+        
+        
+        
+        //find center
+        Vector2 sum = new Vector2(0,0);
+        foreach (var point in points)
+        {
+            sum += point;
+        }
+        var center2 = sum / points.Count;
+        
+        //move to center
+        for (int i = 0; i < points.Count; i++)
+        {
+            points[i] -= center2;
+        }
+        //fix minwidth if any point is outside of center + /minwidth
 
-       // return new MapPolygon(points, center, new Vector2(0,0), name);
+        foreach (int i in Enumerable.Range(0, points.Count))
+        {
+            var point = points[i];
+            if (point.Length < 1/minradius)
+            {
+                point.Normalize();
+                point *= 1/minradius;
+            }
+        }
+        
+        return new MapPolygon(points, center, new Vector2(0,0),maxwidth ,name);
         return null;
     }
 
-    public void Draw(View surface)
-    {
-        
-        surface.Draw(_polygon);
-        surface.Draw(_debugColoredRectangle);
-    }
-    /*
+   
+    
      public static List<Vector2> GenerateRandomConvexPolygon(Vector2 bounds, int n, Random RAND)
     {
         // Generate two lists of random X and Y coordinates
@@ -84,9 +149,10 @@ public class MapPolygon : IEntitie , IDrawObject
 
         double lastTop = minX, lastBot = minX;
 
+        double x;
         for (int i = 1; i < n - 1; i++)
         {
-            double x = xPool[i];
+            x = xPool[i];
 
             if (RAND.NextDouble() < 0.5)
             {
@@ -105,9 +171,10 @@ public class MapPolygon : IEntitie , IDrawObject
 
         double lastLeft = minY, lastRight = minY;
 
+        double y;
         for (int i = 1; i < n - 1; i++)
         {
-            double y = yPool[i];
+            y = yPool[i];
 
             if (RAND.NextDouble() < 0.5)
             {
@@ -140,7 +207,8 @@ public class MapPolygon : IEntitie , IDrawObject
 
         // Lay them end-to-end
         
-        double x = 0, y = 0;
+        x = 0;
+        y = 0;
         double minPolygonX = 0;
         double minPolygonY = 0;
         List<Vector2> points = new List<Vector2>(n);
@@ -182,5 +250,14 @@ public class MapPolygon : IEntitie , IDrawObject
             list[n] = value;
         }
     }
-    */
+    
+    public void Draw(List<View> surface)
+    {
+        _shader.Bind();
+        _shader.setUniform1v("random", rand);
+        _shader.setUniformV2f("offset", offset);
+        _shader.setuniform2vArray("points", Points.ToArray());
+        surface[1].Draw(_polygon);
+     //   surface[1].Draw(_debugColoredRectangle);
+    }
 }

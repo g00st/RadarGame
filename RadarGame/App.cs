@@ -8,13 +8,17 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Entities;
 using RadarGame.DrawSystem;
 using RadarGame.Physics;
-using RadarGame.Radarsystem;
-using RadarGame.SoundSystem;
+
+//using RadarGame.SoundSystem;
 
 namespace RadarGame;
 
 public class App : EngineWindow
 {
+    
+    /// <summary>
+    /// Debug stufff
+    /// </summary>
    private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
    private double fps = 0;
    private float[] fpsList = new float[100];
@@ -41,36 +45,33 @@ public class App : EngineWindow
     private int _AudioVolumeListIndex = 0;
     private float[] AudioVolumeList = new float[100];
 
+ 
 
 
     public App() : base(1440, 900, "Radargame"){
+        Gamestate.CurrState = Gamestate.State.MainMenu;
 
         // SoundSystem.SoundSystem.TrySinusIsUnsafe();  // FUNZT :D
-      //  SoundSystem.SinusWave.SetUpSound(); // once per start
+        //SoundSystem.SinusWave.SetUpSound(); // once per start
         // SoundSystem.SoundSystem.PlayFileDotWave(path); // probe wav is fehlerhaft? not sure yet
         WindowState = WindowState.Maximized;
-        
-        EntityManager.AddObject(new Background());
-        EntityManager.AddObject(new cursor());
-        EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
-        EntityManager.AddObject( new cursor( "cursor4"));
+        DrawSystem.DrawSystem.Init( MainView,3);
+        //EntityManager.AddObject(new cursor());
+        //EntityManager.AddObject(new PlayerObject( MainView.vpossition, 0f, "Player"));
+        //EntityManager.AddObject( new cursor( "cursor4"));
+        //EntityManager.AddObject(new CompasPanel( MainView.vsize - new Vector2(200, 200), new Vector2(150, 150), "CompasPanel"));
        // EntityManager.AddObject(new Mapp( new Vector2(1000), new Vector2(0,0)));
       
         
-        for (int i = 0; i < 50; i++)
+       /* for (int i = 0; i < 100; i++)
         {
-            GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i);
+            GameObject gameObject = new GameObject( MainView.vpossition, 0f, "test"+i, 0);
             EntityManager.AddObject(gameObject);
         }
-        
+        */
+        EntityManager.AddObject(new StartScreen());
 
-        var size = MainView.vsize.Y;
-       
-        EntityManager.AddObject(new RadarPanel( new Vector2(MainView.vsize.X/2 -size/2,0), new Vector2(size))); 
-        EntityManager.AddObject(new CompasPanel(new Vector2(100,MainView.vsize.Y - 400), new Vector2(300,300) ,"CompasPanel"));
-       // EntityManager.AddObject( new cursor( "cursore"));
-       
-        
+        // EntityManager.AddObject( new cursor( "cursore"));
 
 
     }
@@ -102,13 +103,7 @@ public class App : EngineWindow
         _ColisionTimeList[_ColisionTimeListIndex] = (float)_ColisionTime ;
         _ColisionTimeListIndex = (_ColisionTimeListIndex + 1) % _ColisionTimeList.Length;
         _stopwatch.Restart();
-        RadarSystem.Update( args);
-        RadarTime = _stopwatch.Elapsed.TotalMilliseconds;
-        RadarTimeList[RadarTimeListIndex] = (float)RadarTime;
-        RadarTimeListIndex = (RadarTimeListIndex + 1) % RadarTimeList.Length;
-
-        SoundSystem.SoundSystem.Update(args, KeyboardState);
-        SoundSystem.SinusWave.Update(args, KeyboardState);
+        //SoundSystem.SoundSystem.Update(args, KeyboardState);
 
 
     }
@@ -116,10 +111,7 @@ public class App : EngineWindow
     protected override void Draw()
     {
         _stopwatch.Restart();
-      
-        DrawSystem.DrawSystem.Draw(MainView); 
-        RadarSystem.Render();
-        
+        DrawSystem.DrawSystem.Draw(MainView);
         _DrawTime = _stopwatch.Elapsed.TotalMilliseconds;
         _DrawTimeList[_DrawTimeListIndex] = (float) _DrawTime;
         _DrawTimeListIndex = (_DrawTimeListIndex + 1) % _DrawTimeList.Length;
@@ -129,7 +121,17 @@ public class App : EngineWindow
     
     protected override void Debugdraw()
     {
+        
+        
         ImGuiNET.ImGui.Begin("Debug");
+        
+        //offset slider 
+        
+        System.Numerics.Vector2 of = new System.Numerics.Vector2(MapPolygon.offset.X, MapPolygon.offset.Y);
+            ImGuiNET.ImGui.DragFloat2("Offset"  , ref of, 0.1f);
+         MapPolygon.offset = new Vector2(of.X, of.Y);   
+            
+        
         ImGuiNET.ImGui.Text("FPS: " + fps);
         ImGuiNET.ImGui.Text("Entity Update Time: " + _EntityTime);
         ImGuiNET.ImGui.Text("Physics Update Time: " + _PhysicsTime);
@@ -140,21 +142,20 @@ public class App : EngineWindow
         ImGuiNET.ImGui.PlotLines("Entity Update Time", ref _EntityTimeList[0], _EntityTimeList.Length, _EntityTimeListIndex, "Entity Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Physics Update Time", ref _PhysicsTimeList[0], _PhysicsTimeList.Length, _PhysicsTimeListIndex, "Physics Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Colision Update Time", ref _ColisionTimeList[0], _ColisionTimeList.Length, _ColisionTimeListIndex, "Colision Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
-        ImGuiNET.ImGui.PlotLines("Radar Update Time", ref RadarTimeList[0], RadarTimeList.Length, RadarTimeListIndex, "Radar Update Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.PlotLines("Draw Time", ref _DrawTimeList[0], _DrawTimeList.Length, _DrawTimeListIndex, "Draw Time", 0, 100,  new System.Numerics.Vector2(0, 100));
         // Wenn Lautst�rke auslesbar hier verzeichnen bitte
         ImGuiNET.ImGui.PlotLines("LautSt�rke", ref AudioVolumeList[0], AudioVolumeList.Length, _AudioVolumeListIndex, "LautSt�rke", 0, 100, new System.Numerics.Vector2(0, 100));
         ImGuiNET.ImGui.End();
         Physics.PhysicsSystem.DebugDraw();
-        SoundSystem.SoundSystem.DebugDraw();
-        SoundSystem.SinusWave.DebugDraw();
-        RadarSystem.DebugDraw();
+       // SoundSystem.SoundSystem.DebugDraw();
+        EntityManager.DebugDraw();
+        DrawSystem.DrawSystem.DebugDraw();
     }
     
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
         base.OnClosing(e);
-        SoundSystem.SinusWave.CleanUp();
+        //SoundSystem.SinusWave.CleanUp();
     }
     
     

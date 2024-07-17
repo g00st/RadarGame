@@ -4,11 +4,11 @@ using App.Engine.Template;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using RadarGame.Physics;
-using RadarGame.Radarsystem;
+
 
 namespace RadarGame.Entities;
 
-public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject, IRadarObject
+public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObject , IcanBeHurt
 {
     //--------------------------------------------------------------------------------
     // THis is a simple game object that can be used to test the Project and Systems
@@ -17,44 +17,60 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     
     public PhysicsDataS PhysicsData { get; set; }
     public List<Vector2> CollisonShape { get; set; }
+
+    static string filepath = "resources/Sounds/kaboommeme.wav";
     public void OnColision(IColisionObject colidedObject)
     {
         if (((IEntitie)colidedObject).Name.Contains("Bullet"))
         {
-            Console.WriteLine("Colision with " + colidedObject);
+            //Todo: Add sound effect Kaboom 
+         //   Console.WriteLine("Colision with " + colidedObject);
+            //SoundSystem.SoundSystem.PlayThisTrack(filepath, 2);
             EntityManager.RemoveObject((IEntitie)colidedObject);
             EntityManager.RemoveObject(this);
         }
         else
         {
 
-
-            IPhysicsObject physicsObject = (IPhysicsObject)colidedObject;
-            var differencevector = physicsObject.Position - Position;
-            PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            if (colidedObject is IPhysicsObject physicsObject)
+            {
+                var differencevector = physicsObject.Position - Position;
+                PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            }
+            else
+            {
+                var differencevector = colidedObject.Position - Position;
+                PhysicsSystem.ApplyForce(this, -differencevector * 100);
+            }
+            
+            
+          
         }
     }
     private Polygon DebugPolygon = Polygon.Circle( new Vector2(0, 0), 50, 100,new SimpleColorShader(Color4.Ivory), "SDF", true);
     
-
+    public bool applyDamage(int damage)
+    {
+        Console.WriteLine("Apply Damage");
+        EntityManager.RemoveObject(this);
+        return true;
+    }
     public bool Static { get; set; }
     public Vector2 Position { get; set; }
     public Vector2 Center { get; set; }
     public float Rotation { get; set; }
-    public float RadarSdf(Vector2 Position)
-    {
-       //use circular sdf
-        return (Position - this.Position).Length - 50;
-    }
+    private int i =0;
+    
 
     public string Name { get; set; }
 
-    public GameObject( Vector2 position, float rotation, string name)
+    public GameObject( Vector2 position, float rotation, string name, int i)
     {
         Position = position;
         Rotation = rotation;
         Static = false;
         Name = name;
+        this.i = 1;
         Random random = new Random();
         PhysicsData = PhysicsData with { 
             Velocity = new Vector2((float)random.NextDouble()*100-50 , (float)random.NextDouble()*100-50),
@@ -81,14 +97,15 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
     }
     public GameObject  (Vector2 position, float rotation, string name, Vector2 vel , float angVel)
     {
+        i = 1;
         Static = false;
         Position = position;
         Rotation = rotation;
         Name = name;
         PhysicsData = PhysicsData with { 
             Velocity = vel, 
-            Mass = 1f, 
-            Drag = 0.00f,
+            Mass = 5f, 
+            Drag = 0.01f,
             Acceleration = new Vector2(0f, 0f), 
             AngularAcceleration = 0f,
             AngularVelocity = angVel };  
@@ -121,14 +138,13 @@ public class GameObject : IEntitie, IPhysicsObject , IDrawObject, IColisionObjec
 
     public void onDeleted()
     {
-        Console.WriteLine("Deleted");
+       //  Console.WriteLine("Deleted");
         DebugColoredRectangle.Dispose();
     }
 
 
-    public void Draw(View surface)
+    public void Draw(List<View> surface)
     {
-        surface.Draw(DebugColoredRectangle);
-        surface.Draw(DebugPolygon);
+        surface[i].Draw(DebugColoredRectangle);
     }
 }

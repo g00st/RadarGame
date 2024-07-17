@@ -1,6 +1,8 @@
+/*
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Engine.Audio;
@@ -22,6 +24,9 @@ public static class SoundSystem
     static float globalVolume = 0.5f;
     static bool ToggleSinus = true; // To Toggle between Sinus and Soundsystem Key bindings
     static string samplePath = "resources/Sounds/Laser3.wav";
+
+    // ID history:
+    // ID 2: Systemsounds, example bullet shot
 
     public static void DebugDraw()
     {
@@ -76,7 +81,7 @@ public static class SoundSystem
         var volumeProvider = new VolumeSampleProvider(audioFile);
 
         // volume between 0.00 and 1.00
-        volumeProvider.Volume = 0.5f;
+        volumeProvider.Volume = globalVolume;
         Console.WriteLine("Before Wave Out");
         var waveOut = new WaveOutEvent();
         waveOut.Init(volumeProvider);
@@ -88,13 +93,14 @@ public static class SoundSystem
 
     // provide relative filepath like "resources/Sounds/Laser3.wav"
     // volume between 0.00f and 1.00f, int id to specify tracks
-    public static void PlayThisTrack(String filepath, float volume, int id)
+    public static void PlayThisTrack(String filepath, int id)
     {
-        var audioFileTrack = new AudioFileReader(filepath);
-        Console.WriteLine(audioFileTrack);
-        var volumeProvider = new VolumeSampleProvider(audioFileTrack);
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
+        var audioFile = new AudioFileReader(filepath);
+        Console.WriteLine(audioFile);
+        var volumeProvider = new VolumeSampleProvider(audioFile);
         // volume between 0.00 and 1.00
-        volumeProvider.Volume = volume;
+        volumeProvider.Volume = globalVolume;
         var newTrack = new WaveOutEvent();
         newTrack.Init(volumeProvider);
         Sounds.Add(newTrack, id);
@@ -103,6 +109,8 @@ public static class SoundSystem
 
     public static void StopAllTracks()
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
+
         foreach (var track in Sounds)
         {
             track.Key.Stop();
@@ -113,6 +121,7 @@ public static class SoundSystem
 
     public static void StopSpecificTracks(int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         foreach(var track in Sounds)
         {
             if(track.Value == id)
@@ -125,6 +134,8 @@ public static class SoundSystem
 
     public static void PauseSpecificTrack(int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
+        
         foreach(var track in Sounds)
         {
             if(track.Value == id) track.Key.Pause();
@@ -133,6 +144,7 @@ public static class SoundSystem
 
     public static void UnpauseSpecificTrack(int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         foreach (var track in Sounds)
         {
             if (track.Value == id) track.Key.Play();
@@ -141,6 +153,7 @@ public static class SoundSystem
 
     public static void ChangeVolumeAll(float newVolume)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         if (newVolume < 0.00f || newVolume > 1.00f) return;
         foreach(var track in Sounds)
         {
@@ -152,6 +165,7 @@ public static class SoundSystem
 
     public static void ChangeVolumeSpecific(float newVolume, int id)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return;
         if(newVolume < 0.00f || newVolume > 1.00f) return;
         foreach(var track in Sounds)
         {
@@ -166,3 +180,4 @@ public static class SoundSystem
 
 
 }
+*/

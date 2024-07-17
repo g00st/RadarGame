@@ -20,12 +20,23 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="resources\Laser3.wav" />
+      <None Remove="resources\Template\texture_atlastexture.frag" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
         <PackageReference Include="OpenTK" Version="4.8.2" />
         <PackageReference Include="StbImageSharp" Version="2.27.13" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bin\Debug\net6.0\" />
+      <Folder Include="resources\Buttons\" />
+      <Folder Include="resources\Canon\" />
+      <Folder Include="resources\Explosion\" />
+      <Folder Include="resources\Machinegun\" />
+      <Folder Include="resources\PercentageBar\" />
+      <Folder Include="resources\Player\" />
     </ItemGroup>
 
 </Project>
