@@ -6,7 +6,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace RadarGame.UiSystem;
 
-public class MenueButton
+public class MenueButton : IDisposable
 {
     private TextureAtlasRectangle button;
     private OpenTK.Mathematics.Vector2 position;
@@ -18,7 +18,6 @@ public class MenueButton
         this.button = new TextureAtlasRectangle( position,size, new Vector2( 1,2) , new Texture(buttonTexture), buttonTexture);
         this.position = position;
         this.size = size;
-      
     }
     
     public bool Update(MouseState mouseState)
@@ -55,5 +54,9 @@ public class MenueButton
         button.drawInfo.Size = size;
         surface.Draw(button);
     }
-    
+
+    public void Dispose()
+    {
+        button.Dispose();
+    }
 }
