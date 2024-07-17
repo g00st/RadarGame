@@ -5,12 +5,15 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Collections.Generic;
 using System;
+using Engine;
+using RadarGame.UiSystem;
 
 namespace RadarGame.Entities
 {
     public class StartScreen : IDrawObject, IEntitie
     {
-        private Button StartButton;
+        private MenueButton StartButton;
+        private MenueButton QuitButton;
         private TexturedRectangle Background;
         private Shader _shader;
         private float _time;
@@ -19,13 +22,15 @@ namespace RadarGame.Entities
 
         public StartScreen()
         {
-            StartButton = new Button(
+            StartButton = new MenueButton(
                 DrawSystem.DrawSystem.getViewSize(2) / 2,
-                new Vector2(100, 100),
-                new Texture("resources/Buttons/startbutton_On.png"),
-                new Texture("resources/Buttons/startbutton_On.png"),
-                new Texture("resources/Buttons/startbutton_OnHover.png"),
-                new Texture("resources/Buttons/startbutton_On.png")
+                new Vector2(500, 100),
+                "resources/Buttons/Start.png"
+            );
+            QuitButton = new MenueButton(
+                DrawSystem.DrawSystem.getViewSize(2) / 2 + new Vector2(0, 200),
+                new Vector2(500, 100),
+                "resources/Buttons/Quit.png"
             );
             Name = "Startscreen";
             _target = DrawSystem.DrawSystem.GetView(2);
@@ -44,7 +49,8 @@ namespace RadarGame.Entities
             surface[2].Draw(Background);
             _shader.Unbind();
 
-            StartButton.Draw(surface);
+            StartButton.Draw(surface[2]);
+            QuitButton.Draw(surface[2]);
             TextRenderer.Write("00000 abcdefgABCDEFG Hello 123" + counter, new Vector2(100, 100), new Vector2(30, 30), surface[2], Color4.White);
         }
 
@@ -53,8 +59,12 @@ namespace RadarGame.Entities
         {
             counter++;
             _time += (float)args.Time;
-            StartButton.Update(args, keyboardState, mouseState);
-            if (!StartButton.isOn())
+            if (QuitButton.Update( mouseState))
+            {
+                Console.WriteLine("QuitButton Pressed");
+                EngineWindow.Quit();
+            }
+            if ( StartButton.Update( mouseState))
             {
                 Console.WriteLine("StartButton Pressed");
                 Gamestate.CurrState = Gamestate.State.Game;
@@ -63,7 +73,7 @@ namespace RadarGame.Entities
 
         public void onDeleted()
         {
-            StartButton.onDeleted();
+           // StartButton.onDeleted();
             Background.Dispose();
             _shader.Dispose();
         }
