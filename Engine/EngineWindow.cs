@@ -19,7 +19,7 @@ public class EngineWindow : GameWindow
     protected View MainView = new View();
     private const int TargetFPS = 60; // Set your target FPS here
     private DateTime _lastFrameTime;
-    protected bool _debug = true;
+    protected bool _debug = false;
 
 
     public static void Quit()
@@ -40,6 +40,7 @@ public class EngineWindow : GameWindow
             })
     {
        //ErrorChecker.InitializeGLDebugCallback();
+       Instance = this;
         _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
         this.Resize += e => this.resize();
         GL.Enable(EnableCap.Blend);
